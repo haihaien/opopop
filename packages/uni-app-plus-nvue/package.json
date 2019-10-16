@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-app-plus-nvue",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "uni-app app-plus-nvue",
   "main": "dist/index.js",
   "repository": {

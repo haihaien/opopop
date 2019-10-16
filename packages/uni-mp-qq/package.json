@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-mp-qq",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "uni-app mp-qq",
   "main": "dist/index.js",
   "repository": {

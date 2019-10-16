@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-template-compiler",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "uni-template-compiler",
   "main": "lib/index.js",
   "repository": {
