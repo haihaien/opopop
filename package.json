@@ -1,6 +1,6 @@
 {
-  "name": "uniapp-js-framework",
-  "version": "0.0.1",
+  "name": "yu-app-framework",
+  "version": "0.1.0",
   "scripts": {
     "build:service:legacy": "npm run lint && rollup -c build/rollup.config.service.js",
     "lint": "eslint --fix --config package.json --ext .js --ext .vue --ignore-path .eslintignore build src",
