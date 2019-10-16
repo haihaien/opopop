@@ -1,6 +1,6 @@
 {
   "name": "@yump/vue-cli-plugin-uni",
-  "version": "2.0.0-23320190923002",
+  "version": "0.1.0",
   "description": "uni-app plugin for vue-cli 3",
   "main": "index.js",
   "repository": {
@@ -17,7 +17,7 @@
   "author": "fxy060608",
   "license": "Apache-2.0",
   "dependencies": {
-    "@yump/uni-stat": "^2.0.0-23320190923002",
+    "@yump/uni-stat": "^0.1.0",
     "copy-webpack-plugin": "^4.6.0",
     "cross-env": "^5.2.0",
     "envinfo": "^6.0.1",

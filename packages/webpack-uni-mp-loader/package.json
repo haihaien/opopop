@@ -1,6 +1,6 @@
 {
   "name": "@yump/webpack-uni-mp-loader",
-  "version": "2.0.0-23320190923002",
+  "version": "0.1.0",
   "description": "webpack-uni-mp-loader",
   "main": "index.js",
   "repository": {
