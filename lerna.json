@@ -1,5 +1,5 @@
 {
-  "npmClient": "yarn",
+  "npmClient": "npm",
   "useWorkspaces": false,
   "packages": [
     "packages/*"
@@ -9,9 +9,9 @@
   },
   "command": {
     "publish": {
-      "registry": "http://192.168.251.162:8081/repository/yx-npm-hosted-test",
+      "registry": "http://192.168.251.162:8081/repository/yx-npm-hosted-test/",
       "message": "chore(release): publish %s"
     }
   },
-  "version": "0.1.3"
+  "version": "0.1.4"
 }

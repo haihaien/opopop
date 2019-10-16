@@ -1,6 +1,6 @@
 {
   "name": "@yump/webpack-uni-pages-loader",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "uni-app pages.json loader",
   "main": "lib/index.js",
   "repository": {
@@ -23,5 +23,5 @@
   "uni-app": {
     "compilerVersion": "2.3.3"
   },
-  "gitHead": "10184426b19cb76e01c93fb25c982c72887557e8"
+  "gitHead": "e202aec124d69ef0cd07a4728f0d61692a2d90ad"
 }

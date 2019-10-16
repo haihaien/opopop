@@ -1,6 +1,6 @@
 {
   "name": "@yump/vue-cli-plugin-uni-optimize",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "uni-app optimize plugin for vue-cli 3",
   "main": "index.js",
   "repository": {
@@ -13,5 +13,5 @@
   },
   "author": "fxy060608",
   "license": "Apache-2.0",
-  "gitHead": "10184426b19cb76e01c93fb25c982c72887557e8"
+  "gitHead": "e202aec124d69ef0cd07a4728f0d61692a2d90ad"
 }
