@@ -5,13 +5,13 @@
     "packages/*"
   ],
   "publishConfig": {
-    "registry": "http://192.168.251.162:8081/repository/yx-npm-hosted-test",
     "access": "public"
   },
   "command": {
     "publish": {
+      "registry": "http://192.168.251.162:8081/repository/yx-npm-hosted-test",
       "message": "chore(release): publish %s"
     }
   },
-  "version": "0.1.2"
+  "version": "0.1.3"
 }
