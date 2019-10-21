@@ -1,5 +1,5 @@
 {
-  "name": "yu-app-framework",
+  "name": "@yump/p-yu-app-framework",
   "version": "0.1.0",
   "scripts": {
     "build:service:legacy": "npm run lint && rollup -c build/rollup.config.service.js",
