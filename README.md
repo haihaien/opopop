@@ -6,3 +6,9 @@
 
 # 私库发布地址
 yarn config set registry http://192.168.251.162:8081/repository/yx-npm-hosted-test/
+
+#仓库源码管理
+## 1-登录仓库，输入用户名&密码
+npm login --registry=http://192.168.251.162:8081/repository/yx-npm-hosted-test/
+## 2-执行lerna publish
+lerna publish
