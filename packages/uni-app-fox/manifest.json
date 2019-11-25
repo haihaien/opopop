@@ -642,15 +642,15 @@
     "offWindowResize": [
         "/platforms/app-fox/service/api/ui/window.js",
         []
-    ],
-    "startPullDownRefresh": [
-        "/platforms/app-fox/service/api/ui/pull-down-refresh.js",
-        []
-    ],
-    "stopPullDownRefresh": [
-        "/platforms/app-fox/service/api/ui/pull-down-refresh.js",
-        []
-    ],
+		],
+		"startPullDownRefresh": [
+			"/platforms/app-fox/service/api/ui/pull-down-refresh.js",
+			[]
+		],
+		"stopPullDownRefresh": [
+			"/platforms/app-fox/service/api/ui/pull-down-refresh.js",
+			[]
+		],
     "createSelectorQuery": [
         "/platforms/app-fox/service/api/ui/create-selector-query.js",
         [
