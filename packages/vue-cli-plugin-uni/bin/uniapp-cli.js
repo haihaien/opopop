@@ -34,7 +34,7 @@ const service = new Service(process.env.VUE_CLI_CONTEXT || process.cwd())
 
 const command = (
   process.env.NODE_ENV === 'development' &&
-    process.env.UNI_PLATFORM === 'h5'
+        (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox')
 ) ? 'uni-serve'
   : 'uni-build'
 

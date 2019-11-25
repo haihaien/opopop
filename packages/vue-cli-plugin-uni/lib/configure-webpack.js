@@ -198,7 +198,7 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
     }
 
     let useBuiltIns = 'entry'
-    if (process.env.UNI_PLATFORM === 'h5') { // 兼容旧版本 h5
+    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') { // 兼容旧版本 h5
       useBuiltIns = 'usage'
       try {
         const babelConfig = require(path.resolve(process.env.UNI_CLI_CONTEXT, 'babel.config.js'))
@@ -209,10 +209,15 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
     const statCode = process.env.UNI_USING_STAT ? `import '@yump/uni-stat';` : ''
 
     let beforeCode = ''
-
+    // TODO解决ES6兼容性问题
     if (process.env.UNI_PLATFORM === 'h5') {
       beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
         `import 'uni-pages';import 'uni-${process.env.UNI_PLATFORM}';`
+    } else if (process.env.UNI_PLATFORM === 'app-fox') {
+      beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
+                `import 'uni-pages';import 'uni-app-fox';`
+                // 这里引用的还是uni-h5,会导致@dcloudio/uni-app-fox不生效
+                // 若引用需要npm安装，否则会提示安装错误，直接拷贝到node_module中不生效
     } else {
       beforeCode = `import 'uni-pages';`
     }

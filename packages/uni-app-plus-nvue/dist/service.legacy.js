@@ -756,6 +756,7 @@ const interceptors = {
 
 
 var apis = /*#__PURE__*/Object.freeze({
+  __proto__: null,
   upx2px: upx2px,
   $on: $on,
   $once: $once,

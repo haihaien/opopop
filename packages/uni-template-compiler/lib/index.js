@@ -129,7 +129,8 @@ at ${resourcePath}.vue:1`)
       if (
         process.UNI_ENTRY[resourcePath] &&
         process.env.UNI_PLATFORM !== 'app-plus' &&
-        process.env.UNI_PLATFORM !== 'h5'
+        process.env.UNI_PLATFORM !== 'h5' &&
+        process.env.UNI_PLATFORM !== 'app-fox'
       ) {
         // 检查是否启用 shadow
         let colorType = false

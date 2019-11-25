@@ -8,6 +8,7 @@
     "dev:h5": "npm run lint && cross-env NODE_ENV=production UNI_WATCH=true UNI_PLATFORM=h5 node build/build.js",
     "build:h5": "npm run lint && cross-env NODE_ENV=production UNI_WATCH=false UNI_PLATFORM=h5 node build/build.js",
     "build:h5:ui": "cross-env NODE_ENV=production UNI_WATCH=false UNI_PLATFORM=h5 UNI_UI=true node build/build.js",
+    "build:app-fox": "npm run lint && cross-env NODE_ENV=production UNI_WATCH=false UNI_PLATFORM=app-fox node build/build.js",
     "build:app-plus": "cross-env UNI_PLATFORM=app-plus rollup -c build/rollup.config.mp.js",
     "build:app:all": "npm run lint && npm run build:app:nvue && npm run build:app:legacy",
     "build:app:nvue": "cross-env UNI_PLATFORM=app-plus-nvue rollup -c build/rollup.config.app.js",
@@ -23,7 +24,8 @@
     "test:unit": "cross-env NODE_ENV=test UNI_PLATFORM=h5 mocha-webpack --require tests/unit/setup.js --webpack-config build/webpack.config.test.js tests/unit/**/*.spec.js",
     "release": "npm run lint:cli && lerna publish --force-publish=*",
     "release:alpha": "npm run lint:cli && lerna publish --force-publish=* --npm-tag=alpha",
-    "release:next": "npm run lint:cli && lerna publish --force-publish=* --npm-tag=next"
+    "release:next": "npm run lint:cli && lerna publish --force-publish=* --npm-tag=next",
+    "app-fox:debug": "node --inspect-brk build/build.js"
   },
   "dependencies": {
     "base64-arraybuffer": "^0.2.0",

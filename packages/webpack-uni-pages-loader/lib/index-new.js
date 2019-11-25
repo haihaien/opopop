@@ -52,7 +52,7 @@ module.exports = function (content) {
     process.UNI_TRANSFORM_PX = true
   }
 
-  if (process.env.UNI_PLATFORM === 'h5') {
+  if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') {
     return require('./platforms/h5')(pagesJson, manifestJson)
   }
 

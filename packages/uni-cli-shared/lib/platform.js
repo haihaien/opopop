@@ -104,6 +104,36 @@ const PLATFORMS = {
       ]
     }
   },
+  'app-fox': {
+    global: '',
+    exts: false,
+    vue: '@yump/vue-cli-plugin-uni/packages/h5-vue',
+    compiler: false,
+    megalo: false,
+    filterTag: 'wxs',
+    subPackages: false,
+    cssVars: {
+      '--status-bar-height': '0px'
+    },
+    copyWebpackOptions ({
+      assetsDir
+    }) {
+      return [
+        ...getStaticCopyOptions(assetsDir),
+        {
+          from: require.resolve('@yump/uni-h5/dist/index.css'),
+          to: assetsDir,
+          transform (content) {
+            if (process.env.NODE_ENV === 'production') {
+              return content + getShadowCss()
+            }
+            return content
+          }
+        },
+        ...getCopyOptions(['hybrid/html'])
+      ]
+    }
+  },
   'app-plus': {
     global: 'wx',
     exts: {
@@ -487,7 +517,7 @@ module.exports = {
     return platform.vue
   },
   getPlatformCompiler () {
-    if (process.env.UNI_USING_COMPONENTS || process.env.UNI_PLATFORM === 'h5') {
+    if (process.env.UNI_USING_COMPONENTS || process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') {
       return require(uniCompiler)
     }
     return require(platform.compiler)

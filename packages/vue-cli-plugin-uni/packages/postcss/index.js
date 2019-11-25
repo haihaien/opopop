@@ -30,7 +30,7 @@ const parseWord = function (node, opts) {
     if (u === 'px' && process.UNI_TRANSFORM_PX) { // TODO px 转换为 upx
       u = 'upx'
     }
-    if (process.env.UNI_PLATFORM === 'h5') {
+        if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') {
       if (u === 'upx' || u === 'rpx') {
         node.value = `%?${num}?%`
       }
@@ -157,7 +157,7 @@ module.exports = postcss.plugin('postcss-uniapp-plugin', function (opts) {
     ...opts
   }
   return function (root, result) {
-    if (process.env.UNI_PLATFORM === 'h5') {
+        if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') {
       // Transform CSS AST here
 
       const bgDecls = []

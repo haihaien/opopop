@@ -44,6 +44,9 @@ module.exports = function (content) {
   if (process.env.UNI_USING_COMPONENTS || process.env.UNI_PLATFORM === 'h5') {
     return require('./index-new').call(this, content)
   }
+  if (process.env.UNI_USING_COMPONENTS || process.env.UNI_PLATFORM === 'app-fox') {
+    return require('./index-new').call(this, content)
+  }
 
   this.cacheable && this.cacheable()
 
@@ -66,7 +69,7 @@ module.exports = function (content) {
   } else {
     process.UNI_TRANSFORM_PX = true
   }
-  if (process.env.UNI_PLATFORM === 'h5') {
+  if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') {
     return require('./platforms/h5')(pagesJson, manifestJson)
   }
 

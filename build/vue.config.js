@@ -15,12 +15,13 @@ if (process.env.UNI_PLATFORM === 'h5' && process.env.UNI_UI === 'true') {
 module.exports = {
   publicPath: '/',
   outputDir,
-  lintOnSave: true, // or error
-  runtimeCompiler: false,
-  transpileDependencies: [],
-  productionSourceMap: false,
+  lintOnSave: true, // or error//是否在开发环境下通过 eslint-loader 在每次保存时 lint 代码
+
+  runtimeCompiler: false, // 是否使用包含运行时编译器的 Vue 构建版本
+  transpileDependencies: [], // 默认情况下 babel-loader 会忽略所有 node_modules 中的文件
+  productionSourceMap: false, // 生产环境的 source map
   configureWebpack: webpackConfig,
-  chainWebpack: config => {
+  chainWebpack: config => { // 内部的 webpack 配置进行更细粒度的修改
     config.devtool('source-map')
 
     config.module
@@ -38,6 +39,6 @@ module.exports = {
     config.plugins.delete('hmr') // remove hot module reload
   },
   css: {
-    extract: true
+    extract: true // 将组件中的 CSS 提取至一个独立的 CSS 文件中
   }
 }
