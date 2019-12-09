@@ -12,3 +12,11 @@ yarn config set registry http://192.168.251.162:8081/repository/yx-npm-mirrors/
 npm login --registry=http://192.168.251.162:8081/repository/yx-npm-hosted-test/
 ## 2-执行lerna publish
 lerna publish
+
+
+#资源版本管理
+## 更新资源版本
+yarn upgrade
+## 更新yarn.lock
+rimraf yarn.lock
+yarn install
