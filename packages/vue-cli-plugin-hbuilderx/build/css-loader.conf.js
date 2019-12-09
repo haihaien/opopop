@@ -44,6 +44,7 @@ if (isSass) {
   @import "@/assets/styles/variables.scss";`
 }
 
+
 const scssLoader = {
   loader: 'sass-loader',
   options: {

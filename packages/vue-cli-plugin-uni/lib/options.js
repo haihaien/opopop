@@ -65,6 +65,7 @@ module.exports = function initOptions (options) {
   @import "@/assets/styles/variables.scss";`
   }
 
+  
   if (sassLoaderVersion < 8) {
     options.css.loaderOptions.sass.data = sassData
   } else {
