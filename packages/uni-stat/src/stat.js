@@ -57,21 +57,21 @@ class Util {
     this.__licationShow = false;
     this._lastPageRoute = '';
     this.statData = {
-      uuid: getUuid(),
+      uuid: getUuid(),//设备UUID
       ut: getPlatformName(),
       mpn: getPackName(),
-      ak: statConfig.appid,
-      usv: STAT_VERSION,
-      v: getVersion(),
-      ch: getChannel(),
-      cn: '',
-      pn: '',
-      ct: '',
-      t: getTime(),
+      ak: statConfig.appid,//uni-stat的APPID
+      usv: STAT_VERSION,//uni-stat版本
+      v: getVersion(),//plus.runtime.version
+      ch: getChannel(),//渠道
+      cn: '',//国家
+      pn: '',//省份
+      ct: '',//城市
+      t: getTime(),//当前时间
       tt: '',
-      p: resultOptions.platform === 'android' ? 'a' : 'i',
-      brand: resultOptions.brand || '',
-      md: resultOptions.model,
+      p: resultOptions.platform === 'android' ? 'a' : 'i',//平台类型
+      brand: resultOptions.brand || '',//品牌
+      md: resultOptions.model,//类型
       sv: resultOptions.system.replace(/(Android|iOS)\s/, ''),
       mpsdk: resultOptions.SDKVersion || '',
       mpv: resultOptions.version || '',

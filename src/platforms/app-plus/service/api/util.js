@@ -10,6 +10,10 @@ export function callApiSync (api, args, name, alias) {
   return ret
 }
 
+/**
+ * 获取栈顶的webview
+ * TODO：封装成自己的webview对象
+ */
 export function getLastWebview () {
   try {
     const pages = getCurrentPages()
