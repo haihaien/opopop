@@ -54,17 +54,18 @@ module.exports = function initOptions (options) {
   }
 
   // sass 全局变量
-  const isSass = fs.existsSync(path.resolve(process.env.UNI_INPUT_DIR, 'uni.sass'))
-  const isScss = fs.existsSync(path.resolve(process.env.UNI_INPUT_DIR, 'uni.scss'))
+  const isSass = fs.existsSync(path.resolve(process.env.UNI_INPUT_DIR, 'assets/styles/variables.sass'))
+  const isScss = fs.existsSync(path.resolve(process.env.UNI_INPUT_DIR, 'assets/styles/variables.scss'))
   let sassData = isSass ? getPlatformSass() : getPlatformScss()
 
   if (isSass) {
-    sassData = `@import "@/uni.sass"`
+    sassData = `@import "@/assets/styles/variables.sass"`
   } else if (isScss) {
     sassData = `${sassData}
-  @import "@/uni.scss";`
+  @import "@/assets/styles/variables.scss";`
   }
 
+  
   if (sassLoaderVersion < 8) {
     options.css.loaderOptions.sass.data = sassData
   } else {

@@ -1,6 +1,6 @@
 {
   "name": "@yump/vue-cli-plugin-hbuilderx",
-  "version": "0.1.4",
+  "version": "0.1.10",
   "description": "HBuilderX plugin for vue-cli 3",
   "main": "index.js",
   "repository": {
@@ -18,5 +18,5 @@
     "css": "~2.2.1",
     "escodegen": "^1.8.1"
   },
-  "gitHead": "e202aec124d69ef0cd07a4728f0d61692a2d90ad"
+  "gitHead": "98b8f8adc35202d8295f75b726afa7019ee69d34"
 }
