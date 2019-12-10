@@ -20,9 +20,9 @@ module.exports = {
   runtimeCompiler: false, // 是否使用包含运行时编译器的 Vue 构建版本
   transpileDependencies: [], // 默认情况下 babel-loader 会忽略所有 node_modules 中的文件
   productionSourceMap: false, // 生产环境的 source map
-	configureWebpack: webpackConfig,
-	//禁用关闭多线程编译，避免menifest编译失败
-	parallel: !~['h5','app-fox'].indexOf(process.env.UNI_PLATFORM) || process.env.UNI_WATCH !== 'false' || process.env.UNI_UI === 'true',
+  configureWebpack: webpackConfig,
+  // 禁用关闭多线程编译，避免menifest编译失败
+  parallel: !~['h5', 'app-fox'].indexOf(process.env.UNI_PLATFORM) || process.env.UNI_WATCH !== 'false' || process.env.UNI_UI === 'true',
   chainWebpack: config => { // 内部的 webpack 配置进行更细粒度的修改
     config.devtool('source-map')
 

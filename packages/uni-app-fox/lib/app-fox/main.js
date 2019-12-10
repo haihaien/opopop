@@ -23,6 +23,8 @@ global.uni = uni
 
 global.wx = global.uni
 
+global.yu = global.uni
+
 global.getApp = getApp
 global.getCurrentPages = getCurrentPages
 
