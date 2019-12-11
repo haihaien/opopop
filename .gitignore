@@ -6,3 +6,5 @@ unpackage/
 .DS_Store
 .setting
 lerna-debug.log
+webpack.config.dev.js
+webpack.config.pro.js

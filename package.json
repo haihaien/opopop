@@ -25,7 +25,9 @@
     "release": "npm run lint:cli && lerna publish --force-publish=*",
     "release:alpha": "npm run lint:cli && lerna publish --force-publish=* --npm-tag=alpha",
     "release:next": "npm run lint:cli && lerna publish --force-publish=* --npm-tag=next",
-    "app-fox:debug": "node --inspect-brk build/build.js"
+    "app-fox:debug": "node --inspect-brk build/build.js",
+    "inspect:dev": "npx vue-cli-service inspect --mode development >> webpack.config.dev.js",
+    "inspect:pro": "npx vue-cli-service inspect --mode production  >> webpack.config.pro.js"
   },
   "dependencies": {
     "base64-arraybuffer": "^0.2.0",
