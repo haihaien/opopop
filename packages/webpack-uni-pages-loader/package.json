@@ -1,6 +1,6 @@
 {
   "name": "@yump/webpack-uni-pages-loader",
-  "version": "0.1.13",
+  "version": "0.1.15",
   "description": "uni-app pages.json loader",
   "main": "lib/index.js",
   "repository": {
