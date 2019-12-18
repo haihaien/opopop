@@ -202,7 +202,7 @@ export default {
     }
   },
   created () {
-    if (__PLATFORM__ === 'h5') {
+    if (__PLATFORM__ === 'h5' || __PLATFORM__ === 'app-fox') {
       document.title = this.navigationBar.titleText
     }
   }

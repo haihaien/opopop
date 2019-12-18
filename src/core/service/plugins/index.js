@@ -100,7 +100,7 @@ export default {
     }
 
     /* eslint-disable no-undef */
-    if (__PLATFORM__ === 'h5') {
+    if (__PLATFORM__ === 'h5' || __PLATFORM__ === 'app-fox') {
       if (entryRoute.meta && entryRoute.meta.name) {
         document.body.className = 'uni-body ' + entryRoute.meta.name
         if (entryRoute.meta.isNVue) {

@@ -17,7 +17,7 @@ export function normalizeDataset (dataset = {}) {
   // ios8.x,9.x Object.assign({},dataset) 始终返回 {}
   // http://ask.dcloud.net.cn/question/70246
   const result = JSON.parse(JSON.stringify(dataset))
-  if (__PLATFORM__ === 'h5') {
+  if (__PLATFORM__ === 'h5' || __PLATFORM__ === 'app-fox') {
     const keys = Object.keys(result)
     const len = keys.length
     if (len) {

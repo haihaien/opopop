@@ -68,6 +68,7 @@ export const getPlatformName = () => {
   const platformList = {
     'app-plus': 'n',
     'h5': 'h5',
+    'app-fox': 'fox',
     'mp-weixin': 'wx',
     'mp-alipay': 'ali',
     'mp-baidu': 'bd',

@@ -1,5 +1,6 @@
 const PLATFORMS = [
   'h5',
+  'app-fox',
   'app-plus',
   'mp-weixin',
   'mp-qq',

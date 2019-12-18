@@ -46,7 +46,7 @@ export default function initSubscribe (subscribe) {
 
   subscribe('pageScrollTo', pageScrollTo)
 
-  if (__PLATFORM__ === 'h5') {
+  if (__PLATFORM__ === 'h5' || __PLATFORM__ === 'app-fox') {
     let scrollListener = false
     let disableScrollListener = false
 

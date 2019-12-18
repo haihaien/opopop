@@ -3,7 +3,8 @@ const path = require('path')
 
 const {
   getPlatforms,
-  getH5Options,
+  // getH5Options,
+  getAppFoxOptions,
   getFlexDirection,
   getNetworkTimeout
 } = require('@yump/uni-cli-shared')
@@ -58,9 +59,11 @@ const getPageComponents = function (inputDir, pagesJson) {
 
   const globalStyle = pagesJson.globalStyle || {}
 
+  // 修复pages.json中配置的key为app-fox
   process.UNI_H5_PAGES_JSON = {
     pages: {},
-    globalStyle: Object.assign({}, globalStyle, globalStyle['app-plus'] || {}, globalStyle['h5'] || {})
+    // globalStyle: Object.assign({}, globalStyle, globalStyle['app-plus'] || {}, globalStyle['h5'] || {})
+    globalStyle: Object.assign({}, globalStyle, globalStyle['app-plus'] || {}, globalStyle['h5'] || {}, globalStyle['app-fox'] || {})
   }
 
   removePlatformStyle(process.UNI_H5_PAGES_JSON.globalStyle)
@@ -80,7 +83,9 @@ const getPageComponents = function (inputDir, pagesJson) {
       }
     }
     // 解析 titleNView，pullToRefresh
-    const h5Options = Object.assign({}, props['app-plus'] || {}, props['h5'] || {})
+    // 修复属性名称
+    // const h5Options = Object.assign({}, props['app-plus'] || {}, props['h5'] || {})
+    const h5Options = Object.assign({}, props['app-plus'] || {}, props['h5'] || {}, props['app-fox'] || {})
 
     removePlatformStyle(h5Options)
 
@@ -91,7 +96,7 @@ const getPageComponents = function (inputDir, pagesJson) {
       props.pullToRefresh = h5Options.pullToRefresh
     }
 
-    let windowTop = 44
+    let windowTop = 44 // 默认值
     let pageStyle = Object.assign({}, globalStyle, props)
     if (pageStyle.navigationStyle === 'custom' || (props.titleNView && props.titleNView.type ===
         'transparent')) {
@@ -101,6 +106,7 @@ const getPageComponents = function (inputDir, pagesJson) {
     // 删除 app-plus 平台配置
     delete props['app-plus']
     delete props['h5']
+    delete props['app-fox']
 
     process.UNI_H5_PAGES_JSON.pages[page.path] = props
 
@@ -114,6 +120,7 @@ const getPageComponents = function (inputDir, pagesJson) {
       isTabBar,
       tabBarIndex,
       isQuit: isEntry || isTabBar,
+      needAuth: page.needAuth || false, // 在pages.json新增 "needAuth"字段,if true 则需要登录,否则不需要登录
       windowTop
     }
   }).filter(pageComponents => !!pageComponents)
@@ -171,7 +178,8 @@ const genPageRoutes = function (pageComponents) {
       isEntry,
       isTabBar,
       windowTop,
-      tabBarIndex
+      tabBarIndex,
+      needAuth
     }) => {
       return `
 {
@@ -198,6 +206,7 @@ component: {
 },
 meta:{${isQuit ? '\nid:' + (id++) + ',' : ''}
   name:'${name}',
+  needAuth:'${needAuth}',
   isNVue:${isNVue},
   pagePath:'${route}'${isQuit ? ',\nisQuit:true' : ''}${isEntry ? ',\nisEntry:true' : ''}${isTabBar ? ',\nisTabBar:true' : ''}${tabBarIndex !== -1 ? (',\ntabBarIndex:' + tabBarIndex) : ''},
   windowTop:${windowTop}
@@ -297,13 +306,15 @@ module.exports = function (pagesJson, manifestJson) {
   delete pagesJson.pages
   delete pagesJson.subPackages
 
-  const h5 = getH5Options(manifestJson)
+  // const h5 = getH5Options(manifestJson)
+
+  const appFox = getAppFoxOptions(manifestJson)
 
   const networkTimeoutConfig = getNetworkTimeout(manifestJson)
 
   let qqMapKey = 'XVXBZ-NDMC4-JOGUS-XGIEE-QVHDZ-AMFV2'
 
-  const sdkConfigs = h5.sdkConfigs || {}
+  const sdkConfigs = appFox.sdkConfigs || {}
   if (
     sdkConfigs.maps &&
     sdkConfigs.maps.qqmap &&
@@ -314,11 +325,11 @@ module.exports = function (pagesJson, manifestJson) {
 
   return `
 import Vue from 'vue'
-global['____${h5.appid}____'] = true;
-delete global['____${h5.appid}____'];
+global['____${appFox.appid}____'] = true;
+delete global['____${appFox.appid}____'];
 global.__uniConfig = ${JSON.stringify(pagesJson)};
-global.__uniConfig.router = ${JSON.stringify(h5.router)};
-global.__uniConfig['async'] = ${JSON.stringify(h5['async'])};
+global.__uniConfig.router = ${JSON.stringify(appFox.router)};
+global.__uniConfig['async'] = ${JSON.stringify(appFox['async'])};
 global.__uniConfig.debug = ${manifestJson.debug === true};
 global.__uniConfig.networkTimeout = ${JSON.stringify(networkTimeoutConfig)};
 global.__uniConfig.sdkConfigs = ${JSON.stringify(sdkConfigs)};

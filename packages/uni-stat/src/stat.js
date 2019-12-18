@@ -360,7 +360,7 @@ class Util {
       uni.removeStorageSync('__UNI__STAT__DATA')
     }
 
-    if (data.ut === 'h5') {
+    if (data.ut === 'h5' || data.ut === 'fox') {
       this.imageRequest(optionsData)
       return
     }

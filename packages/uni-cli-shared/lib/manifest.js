@@ -85,9 +85,57 @@ function getH5Options (manifestJson) {
   return h5
 }
 
+// 新增manifest.json文件中app-fox:配置项
+function getAppFoxOptions (manifestJson) {
+  if (!manifestJson) {
+    manifestJson = getManifestJson()
+  }
+
+  const appFox = manifestJson['app-fox'] || {}
+
+  appFox.appid = (manifestJson.appid || '').replace('__UNI__', '')
+
+  appFox.title = appFox.title || manifestJson.name || ''
+
+  appFox.router = Object.assign({}, defaultRouter, appFox.router || {})
+
+  appFox['async'] = Object.assign({}, defaultAsync, appFox['async'] || {})
+
+  let base = appFox.router.base
+
+  if (base.indexOf('/') !== 0) {
+    base = '/' + base
+  }
+
+  if (base.substr(-1) !== '/') {
+    base = base + '/'
+  }
+
+  appFox.router.base = base
+
+  if (process.env.NODE_ENV === 'production') { // 生产模式，启用 publicPath
+    appFox.publicPath = appFox.publicPath || base
+
+    if (appFox.publicPath.substr(-1) !== '/') {
+      appFox.publicPath = appFox.publicPath + '/'
+    }
+  } else { // 其他模式，启用 base
+    appFox.publicPath = base
+  }
+
+  /* eslint-disable no-mixed-operators */
+  appFox.template = appFox.template && path.resolve(process.env.UNI_INPUT_DIR, appFox.template) || path.resolve(__dirname,
+    '../../../../public/index.html')
+
+  appFox.devServer = appFox.devServer || {}
+
+  return appFox
+}
+
 module.exports = {
   getManifestJson,
   parseManifestJson,
   getNetworkTimeout,
-  getH5Options
+  getH5Options,
+  getAppFoxOptions
 }

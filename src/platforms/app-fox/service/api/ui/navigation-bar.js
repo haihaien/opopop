@@ -36,7 +36,7 @@ function setNavigationBar (type, args) {
           title
         } = args
         page.navigationBar.titleText = title
-        if (__PLATFORM__ === 'h5') {
+        if (__PLATFORM__ === 'h5' || __PLATFORM__ === 'app-fox') {
           document.title = title
         }
         break

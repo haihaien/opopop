@@ -4,6 +4,7 @@ const crypto = require('crypto')
 
 const PLATFORMS = [
   'h5',
+  'app-fox',
   'app-plus',
   'mp-qq',
   'mp-weixin',

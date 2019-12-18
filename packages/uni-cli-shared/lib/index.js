@@ -7,6 +7,7 @@ const {
 
 const {
   getH5Options,
+  getAppFoxOptions,
   getManifestJson,
   getNetworkTimeout,
   parseManifestJson
@@ -75,6 +76,7 @@ module.exports = {
   parseEntry,
   parsePages,
   getH5Options,
+  getAppFoxOptions,
   getMainEntry,
   getNVueMainEntry,
   getPagesJson,
