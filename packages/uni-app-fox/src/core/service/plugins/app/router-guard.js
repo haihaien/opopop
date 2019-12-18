@@ -142,7 +142,7 @@ function beforeEach (to, from, next, routes) {
       console.debug(`Core：keepAliveInclude=${JSON.stringify(this.keepAliveInclude)}`)
     }
     /* eslint-disable no-undef */
-    if (__PLATFORM__ === 'h5') {
+    if (__PLATFORM__ === 'h5' || __PLATFORM__ === 'app-fox') {
       if (to.meta && to.meta.name) {
         document.body.className = 'uni-body ' + to.meta.name
         const nvueDirKey = 'nvue-dir-' + __uniConfig.nvue['flex-direction']
@@ -204,7 +204,7 @@ function afterEach (to, from) {
       setTimeout(function () {
         callPageHook(toVm, 'onShow')
       }, 0)
-      if (__PLATFORM__ === 'h5') {
+      if (__PLATFORM__ === 'h5' || __PLATFORM__ === 'app-fox') {
         document.title = toVm.$parent.$parent.navigationBar.titleText
       }
     }
