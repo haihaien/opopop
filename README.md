@@ -20,3 +20,27 @@ yarn upgrade
 ## 更新yarn.lock
 rimraf yarn.lock
 yarn install
+
+
+
+#框架新增路由配置项
+在业务工程中pages.json新增needAuth字段，如：
+```{
+    "path": "pages/ebank/main/function-all/function-all",
+    "needAuth":true,//判断进入此页面是否需要登录
+    "style": {
+    "navigationBarTitleText": "全部功能"
+    }
+}```
+
+#框架新增打包配置项
+在业务工程中manifest.json配置文件中，新增app-fox配置项。如：
+```
+"app-fox": {
+    "publicPath": "../app-fox/",
+    "router": {
+      "mode": "hash",
+      "base": ""
+    }
+  },
+```
