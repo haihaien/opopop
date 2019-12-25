@@ -1,17 +1,17 @@
 import { version } from '../package.json';
 
-const STAT_VERSION = version;
-const STAT_URL = 'https://tongji.dcloud.io/uni/stat';
-const STAT_H5_URL = 'https://tongji.dcloud.io/uni/stat.gif'; 
-const PAGE_PVER_TIME = 1800;
-const APP_PVER_TIME = 300;
-const OPERATING_TIME = 10;
+var STAT_VERSION = version;
+var STAT_URL = 'https://tongji.dcloud.io/uni/stat';
+var STAT_H5_URL = 'https://tongji.dcloud.io/uni/stat.gif'; 
+var PAGE_PVER_TIME = 1800;
+var APP_PVER_TIME = 300;
+var OPERATING_TIME = 10;
 
-const UUID_KEY = '__DC_STAT_UUID';
-const UUID_VALUE = '__DC_UUID_VALUE';
+var UUID_KEY = '__DC_STAT_UUID';
+var UUID_VALUE = '__DC_UUID_VALUE';
 
 function getUuid() {
-  let uuid = '';
+  var uuid = '';
   if (getPlatformName() === 'n') {
     try {
       uuid = plus.runtime.getDCloudId();
@@ -38,11 +38,11 @@ function getUuid() {
   return uuid;
 }
 
-const getSgin = (statData) => {
-  let arr = Object.keys(statData);
-  let sortArr = arr.sort();
-  let sgin = {};
-  let sginStr = '';
+var getSgin = function (statData) {
+  var arr = Object.keys(statData);
+  var sortArr = arr.sort();
+  var sgin = {};
+  var sginStr = '';
   for (var i in sortArr) {
     sgin[sortArr[i]] = statData[sortArr[i]];
     sginStr += sortArr[i] + '=' + statData[sortArr[i]] + '&';
@@ -56,20 +56,20 @@ const getSgin = (statData) => {
   };
 };
 
-const getSplicing = (data) => {
-  let str = '';
+var getSplicing = function (data) {
+  var str = '';
   for (var i in data) {
     str += i + '=' + data[i] + '&';
   }
   return str.substr(0, str.length - 1)
 };
 
-const getTime = () => {
+var getTime = function () {
   return parseInt(new Date().getTime() / 1000);
 };
 
-const getPlatformName = () => {
-  const platformList = {
+var getPlatformName = function () {
+  var platformList = {
     'app-plus': 'n',
     'h5': 'h5',
     'app-fox': 'fox',
@@ -82,30 +82,30 @@ const getPlatformName = () => {
   return platformList[process.env.VUE_APP_PLATFORM];
 };
 
-const getPackName = () => {
-  let packName = '';
+var getPackName = function () {
+  var packName = '';
   if (getPlatformName() === 'wx' || getPlatformName() === 'qq') {
     packName = uni.getAccountInfoSync().miniProgram.appId || '';
   }
   return packName
 };
 
-const getVersion = () => {
+var getVersion = function () {
   return getPlatformName() === 'n' ? plus.runtime.version : '';
 };
 
-const getChannel = () => {
-  const platformName = getPlatformName();
-  let channel = '';
+var getChannel = function () {
+  var platformName = getPlatformName();
+  var channel = '';
   if (platformName === 'n') {
     channel = plus.runtime.channel;
   }
   return channel;
 };
 
-const getScene = (options) => {
-  const platformName = getPlatformName();
-  let scene = '';
+var getScene = function (options) {
+  var platformName = getPlatformName();
+  var scene = '';
   if (options) {
     return options;
   }
@@ -114,12 +114,12 @@ const getScene = (options) => {
   }
   return scene;
 };
-const First__Visit__Time__KEY = 'First__Visit__Time';
-const Last__Visit__Time__KEY = 'Last__Visit__Time';
+var First__Visit__Time__KEY = 'First__Visit__Time';
+var Last__Visit__Time__KEY = 'Last__Visit__Time';
 
-const getFirstVisitTime = () => {
-  const timeStorge = uni.getStorageSync(First__Visit__Time__KEY);
-  let time = 0;
+var getFirstVisitTime = function () {
+  var timeStorge = uni.getStorageSync(First__Visit__Time__KEY);
+  var time = 0;
   if (timeStorge) {
     time = timeStorge;
   } else {
@@ -130,9 +130,9 @@ const getFirstVisitTime = () => {
   return time;
 };
 
-const getLastVisitTime = () => {
-  const timeStorge = uni.getStorageSync(Last__Visit__Time__KEY);
-  let time = 0;
+var getLastVisitTime = function () {
+  var timeStorge = uni.getStorageSync(Last__Visit__Time__KEY);
+  var time = 0;
   if (timeStorge) {
     time = timeStorge;
   } else {
@@ -143,12 +143,12 @@ const getLastVisitTime = () => {
 };
 
 
-const PAGE_RESIDENCE_TIME = '__page__residence__time';
-let First_Page_residence_time = 0;
-let Last_Page_residence_time = 0;
+var PAGE_RESIDENCE_TIME = '__page__residence__time';
+var First_Page_residence_time = 0;
+var Last_Page_residence_time = 0;
 
 
-const setPageResidenceTime = () => {
+var setPageResidenceTime = function () {
   First_Page_residence_time = getTime();
   if (getPlatformName() === 'n') {
     uni.setStorageSync(PAGE_RESIDENCE_TIME, getTime());
@@ -156,17 +156,17 @@ const setPageResidenceTime = () => {
   return First_Page_residence_time
 };
 
-const getPageResidenceTime = () => {
+var getPageResidenceTime = function () {
   Last_Page_residence_time = getTime();
   if (getPlatformName() === 'n') {
     First_Page_residence_time = uni.getStorageSync(PAGE_RESIDENCE_TIME);
   }
   return Last_Page_residence_time - First_Page_residence_time
 };
-const TOTAL__VISIT__COUNT = 'Total__Visit__Count';
-const getTotalVisitCount = () => {
-  const timeStorge = uni.getStorageSync(TOTAL__VISIT__COUNT);
-  let count = 1;
+var TOTAL__VISIT__COUNT = 'Total__Visit__Count';
+var getTotalVisitCount = function () {
+  var timeStorge = uni.getStorageSync(TOTAL__VISIT__COUNT);
+  var count = 1;
   if (timeStorge) {
     count = timeStorge;
     count++;
@@ -175,34 +175,34 @@ const getTotalVisitCount = () => {
   return count;
 };
 
-const GetEncodeURIComponentOptions = (statData) => {
-  let data = {};
-  for (let prop in statData) {
+var GetEncodeURIComponentOptions = function (statData) {
+  var data = {};
+  for (var prop in statData) {
     data[prop] = encodeURIComponent(statData[prop]);
   }
   return data;
 };
 
-let Set__First__Time = 0;
-let Set__Last__Time = 0;
+var Set__First__Time = 0;
+var Set__Last__Time = 0;
 
-const getFirstTime = () => {
-  let time = new Date().getTime();
+var getFirstTime = function () {
+  var time = new Date().getTime();
   Set__First__Time = time;
   Set__Last__Time = 0;
   return time;
 };
 
 
-const getLastTime = () => {
-  let time = new Date().getTime();
+var getLastTime = function () {
+  var time = new Date().getTime();
   Set__Last__Time = time;
   return time;
 };
 
 
-const getResidenceTime = (type) => {
-  let residenceTime = 0;
+var getResidenceTime = function (type) {
+  var residenceTime = 0;
   if (Set__First__Time !== 0) {
     residenceTime = Set__Last__Time - Set__First__Time;
   }
@@ -210,30 +210,30 @@ const getResidenceTime = (type) => {
   residenceTime = parseInt(residenceTime / 1000);
   residenceTime = residenceTime < 1 ? 1 : residenceTime;
   if (type === 'app') {
-    let overtime = residenceTime > APP_PVER_TIME ? true : false;
+    var overtime = residenceTime > APP_PVER_TIME ? true : false;
     return {
-      residenceTime,
-      overtime
+      residenceTime: residenceTime,
+      overtime: overtime
     };
   }
   if (type === 'page') {
-    let overtime = residenceTime > PAGE_PVER_TIME ? true : false;
+    var overtime$1 = residenceTime > PAGE_PVER_TIME ? true : false;
     return {
-      residenceTime,
-      overtime
+      residenceTime: residenceTime,
+      overtime: overtime$1
     };
   }
 
   return {
-    residenceTime
+    residenceTime: residenceTime
   };
 
 };
 
-const getRoute = () => {
+var getRoute = function () {
   var pages = getCurrentPages();
   var page = pages[pages.length - 1];
-  let _self = page.$vm;
+  var _self = page.$vm;
 
   if (getPlatformName() === 'bd') {
     return _self.$mp && _self.$mp.page.is;
@@ -242,12 +242,12 @@ const getRoute = () => {
   }
 };
 
-const getPageRoute = (self) => {
+var getPageRoute = function (self) {
   var pages = getCurrentPages();
   var page = pages[pages.length - 1];
-  let _self = page.$vm;
-  let query = self._query;
-  let str = query && JSON.stringify(query) !== '{}' ? '?' + JSON.stringify(query) : '';
+  var _self = page.$vm;
+  var query = self._query;
+  var str = query && JSON.stringify(query) !== '{}' ? '?' + JSON.stringify(query) : '';
   // clear
   self._query = '';
   if (getPlatformName() === 'bd') {
@@ -257,35 +257,35 @@ const getPageRoute = (self) => {
   }
 };
 
-const getPageTypes = (self) => {
+var getPageTypes = function (self) {
   if (self.mpType === 'page' || (self.$mp && self.$mp.mpType === 'page') || self.$options.mpType === 'page') {
     return true;
   }
   return false;
 };
 
-const calibration = (eventName, options) => {
+var calibration = function (eventName, options) {
   //  login 、 share 、pay_success 、pay_fail 、register 、title
   if(!eventName){
-    console.error(`uni.report 缺少 [eventName] 参数`);
+    console.error("uni.report 缺少 [eventName] 参数");
     return true
   }
   if (typeof eventName !== 'string') {
-    console.error(`uni.report [eventName] 参数类型错误,只能为 String 类型`);
+    console.error("uni.report [eventName] 参数类型错误,只能为 String 类型");
     return true
   }
   if (eventName.length > 255) {
-    console.error(`uni.report [eventName] 参数长度不能大于 255`);
+    console.error("uni.report [eventName] 参数长度不能大于 255");
     return true
   }
 
   if (typeof options !== 'string' && typeof options !== 'object') {
-    console.error(`uni.report [options] 参数类型错误,只能为 String 或 Object 类型`);
+    console.error("uni.report [options] 参数类型错误,只能为 String 或 Object 类型");
     return true
   }
 
   if (typeof options === 'string' && options.length > 255) {
-    console.error(`uni.report [options] 参数长度不能大于 255`);
+    console.error("uni.report [options] 参数长度不能大于 255");
     return true
   }
 
@@ -295,406 +295,407 @@ const calibration = (eventName, options) => {
   }
 };
 
-const PagesJson = require('uni-pages?{"type":"style"}').default;
-const statConfig = require('uni-stat-config').default || require('uni-stat-config');
+var PagesJson = require('uni-pages?{"type":"style"}').default;
+var statConfig = require('uni-stat-config').default || require('uni-stat-config');
 
-const resultOptions = uni.getSystemInfoSync();
+var resultOptions = uni.getSystemInfoSync();
 
-class Util {
-  constructor() {
-    this.self = '';
-    this._retry = 0;
-    this._platform = '';
-    this._query = {};
+var Util = function Util() {
+  this.self = '';
+  this._retry = 0;
+  this._platform = '';
+  this._query = {};
+  this._navigationBarTitle = {
+    config: '',
+    page: '',
+    report: '',
+    lt: ''
+  };
+  this._operatingTime = 0;
+  this._reportingRequestData = {
+    '1': [],
+    '11': []
+  };
+  this.__prevent_triggering = false;
+
+  this.__licationHide = false;
+  this.__licationShow = false;
+  this._lastPageRoute = '';
+  this.statData = {
+    uuid: getUuid(),//设备UUID
+    ut: getPlatformName(),
+    mpn: getPackName(),
+    ak: statConfig.appid,//uni-stat的APPID
+    usv: STAT_VERSION,//uni-stat版本
+    v: getVersion(),//plus.runtime.version
+    ch: getChannel(),//渠道
+    cn: '',//国家
+    pn: '',//省份
+    ct: '',//城市
+    t: getTime(),//当前时间
+    tt: '',
+    p: resultOptions.platform === 'android' ? 'a' : 'i',//平台类型
+    brand: resultOptions.brand || '',//品牌
+    md: resultOptions.model,//类型
+    sv: resultOptions.system.replace(/(Android|iOS)\s/, ''),
+    mpsdk: resultOptions.SDKVersion || '',
+    mpv: resultOptions.version || '',
+    lang: resultOptions.language,
+    pr: resultOptions.pixelRatio,
+    ww: resultOptions.windowWidth,
+    wh: resultOptions.windowHeight,
+    sw: resultOptions.screenWidth,
+    sh: resultOptions.screenHeight
+  };
+
+};
+
+Util.prototype._applicationShow = function _applicationShow () {
+  if (this.__licationHide) {
+    getLastTime();
+    var time = getResidenceTime('app');
+    if (time.overtime) {
+      var options = {
+        path: this._lastPageRoute,
+        scene: this.statData.sc
+      };
+      this._sendReportRequest(options);
+    }
+    this.__licationHide = false;
+  }
+};
+
+Util.prototype._applicationHide = function _applicationHide (self, type) {
+
+  this.__licationHide = true;
+  getLastTime();
+  var time = getResidenceTime();
+  getFirstTime();
+  var route = getPageRoute(this);
+  this._sendHideRequest({
+    urlref: route,
+    urlref_ts: time.residenceTime
+  }, type);
+};
+
+Util.prototype._pageShow = function _pageShow () {
+  var route = getPageRoute(this);
+  var routepath = getRoute();
+  this._navigationBarTitle.config = PagesJson &&
+    PagesJson.pages[routepath] &&
+    PagesJson.pages[routepath].titleNView &&
+    PagesJson.pages[routepath].titleNView.titleText ||
+    PagesJson &&
+    PagesJson.pages[routepath] &&
+    PagesJson.pages[routepath].navigationBarTitleText || '';
+
+  if (this.__licationShow) {
+    getFirstTime();
+    this.__licationShow = false;
+    // console.log('这是 onLauch 之后执行的第一次 pageShow ，为下次记录时间做准备');
+    this._lastPageRoute = route;
+    return;
+  }
+
+  getLastTime();
+  this._lastPageRoute = route;
+  var time = getResidenceTime('page');
+  if (time.overtime) {
+    var options = {
+      path: this._lastPageRoute,
+      scene: this.statData.sc
+    };
+    this._sendReportRequest(options);
+  }
+  getFirstTime();
+};
+
+Util.prototype._pageHide = function _pageHide () {
+  if (!this.__licationHide) {
+    getLastTime();
+    var time = getResidenceTime('page');
+    this._sendPageRequest({
+      url: this._lastPageRoute,
+      urlref: this._lastPageRoute,
+      urlref_ts: time.residenceTime
+    });
     this._navigationBarTitle = {
       config: '',
       page: '',
       report: '',
       lt: ''
     };
-    this._operatingTime = 0;
-    this._reportingRequestData = {
-      '1': [],
-      '11': []
-    };
-    this.__prevent_triggering = false;
-
-    this.__licationHide = false;
-    this.__licationShow = false;
-    this._lastPageRoute = '';
-    this.statData = {
-      uuid: getUuid(),
-      ut: getPlatformName(),
-      mpn: getPackName(),
-      ak: statConfig.appid,
-      usv: STAT_VERSION,
-      v: getVersion(),
-      ch: getChannel(),
-      cn: '',
-      pn: '',
-      ct: '',
-      t: getTime(),
-      tt: '',
-      p: resultOptions.platform === 'android' ? 'a' : 'i',
-      brand: resultOptions.brand || '',
-      md: resultOptions.model,
-      sv: resultOptions.system.replace(/(Android|iOS)\s/, ''),
-      mpsdk: resultOptions.SDKVersion || '',
-      mpv: resultOptions.version || '',
-      lang: resultOptions.language,
-      pr: resultOptions.pixelRatio,
-      ww: resultOptions.windowWidth,
-      wh: resultOptions.windowHeight,
-      sw: resultOptions.screenWidth,
-      sh: resultOptions.screenHeight
-    };
-
+    return;
   }
+};
 
-  _applicationShow() {
-    if (this.__licationHide) {
-      getLastTime();
-      const time = getResidenceTime('app');
-      if (time.overtime) {
-        let options = {
-          path: this._lastPageRoute,
-          scene: this.statData.sc
-        };
-        this._sendReportRequest(options);
-      }
-      this.__licationHide = false;
+Util.prototype._login = function _login () {
+  this._sendEventRequest({
+    key: 'login'
+  }, 0);
+};
+
+Util.prototype._share = function _share () {
+  this._sendEventRequest({
+    key: 'share'
+  }, 0);
+};
+Util.prototype._payment = function _payment (key) {
+  this._sendEventRequest({
+    key: key
+  }, 0);
+};
+Util.prototype._sendReportRequest = function _sendReportRequest (options) {
+
+  this._navigationBarTitle.lt = '1';
+  var query = options.query && JSON.stringify(options.query) !== '{}' ? '?' + JSON.stringify(options.query) : '';
+  this.statData.lt = '1';
+  this.statData.url = (options.path + query) || '';
+  this.statData.t = getTime();
+  this.statData.sc = getScene(options.scene);
+  this.statData.fvts = getFirstVisitTime();
+  this.statData.lvts = getLastVisitTime();
+  this.statData.tvc = getTotalVisitCount();
+  if (getPlatformName() === 'n') {
+    this.getProperty();
+  } else {
+    this.getNetworkInfo();
+  }
+};
+
+Util.prototype._sendPageRequest = function _sendPageRequest (opt) {
+  var url = opt.url;
+    var urlref = opt.urlref;
+    var urlref_ts = opt.urlref_ts;
+  this._navigationBarTitle.lt = '11';
+  var options = {
+    ak: this.statData.ak,
+    uuid: this.statData.uuid,
+    lt: '11',
+    ut: this.statData.ut,
+    url: url,
+    tt: this.statData.tt,
+    urlref: urlref,
+    urlref_ts: urlref_ts,
+    ch: this.statData.ch,
+    usv: this.statData.usv,
+    t: getTime(),
+    p: this.statData.p
+  };
+  this.request(options);
+};
+
+Util.prototype._sendHideRequest = function _sendHideRequest (opt, type) {
+  var urlref = opt.urlref;
+    var urlref_ts = opt.urlref_ts;
+  var options = {
+    ak: this.statData.ak,
+    uuid: this.statData.uuid,
+    lt: '3',
+    ut: this.statData.ut,
+    urlref: urlref,
+    urlref_ts: urlref_ts,
+    ch: this.statData.ch,
+    usv: this.statData.usv,
+    t: getTime(),
+    p: this.statData.p
+  };
+  this.request(options, type);
+};
+Util.prototype._sendEventRequest = function _sendEventRequest (ref) {
+    if ( ref === void 0 ) ref = {};
+    var key = ref.key; if ( key === void 0 ) key = '';
+    var value = ref.value; if ( value === void 0 ) value = "";
+
+  var route = this._lastPageRoute;
+  var options = {
+    ak: this.statData.ak,
+    uuid: this.statData.uuid,
+    lt: '21',
+    ut: this.statData.ut,
+    url: route,
+    ch: this.statData.ch,
+    e_n: key,
+    e_v: typeof(value) === 'object' ? JSON.stringify(value) : value.toString(),
+    usv: this.statData.usv,
+    t: getTime(),
+    p: this.statData.p
+  };
+  this.request(options);
+};
+
+Util.prototype.getNetworkInfo = function getNetworkInfo () {
+    var this$1 = this;
+
+  uni.getNetworkType({
+    success: function (result) {
+      this$1.statData.net = result.networkType;
+      this$1.getLocation();
     }
-  }
+  });
+};
 
-  _applicationHide(self, type) {
+Util.prototype.getProperty = function getProperty () {
+    var this$1 = this;
 
-    this.__licationHide = true;
-    getLastTime();
-    const time = getResidenceTime();
-    getFirstTime();
-    const route = getPageRoute(this);
-    this._sendHideRequest({
-      urlref: route,
-      urlref_ts: time.residenceTime
-    }, type);
-  }
+  plus.runtime.getProperty(plus.runtime.appid, function (wgtinfo) {
+    this$1.statData.v = wgtinfo.version || '';
+    this$1.getNetworkInfo();
+  });
+};
 
-  _pageShow() {
-    const route = getPageRoute(this);
-    const routepath = getRoute();
-    this._navigationBarTitle.config = PagesJson &&
-      PagesJson.pages[routepath] &&
-      PagesJson.pages[routepath].titleNView &&
-      PagesJson.pages[routepath].titleNView.titleText ||
-      PagesJson &&
-      PagesJson.pages[routepath] &&
-      PagesJson.pages[routepath].navigationBarTitleText || '';
+Util.prototype.getLocation = function getLocation () {
+    var this$1 = this;
 
-    if (this.__licationShow) {
-      getFirstTime();
-      this.__licationShow = false;
-      // console.log('这是 onLauch 之后执行的第一次 pageShow ，为下次记录时间做准备');
-      this._lastPageRoute = route;
-      return;
-    }
+  if (statConfig.getLocation) {
+    uni.getLocation({
+      type: 'wgs84',
+      geocode: true,
+      success: function (result) {
+        if (result.address) {
+          this$1.statData.cn = result.address.country;
+          this$1.statData.pn = result.address.province;
+          this$1.statData.ct = result.address.city;
+        }
 
-    getLastTime();
-    this._lastPageRoute = route;
-    const time = getResidenceTime('page');
-    if (time.overtime) {
-      let options = {
-        path: this._lastPageRoute,
-        scene: this.statData.sc
-      };
-      this._sendReportRequest(options);
-    }
-    getFirstTime();
-  }
-
-  _pageHide() {
-    if (!this.__licationHide) {
-      getLastTime();
-      const time = getResidenceTime('page');
-      this._sendPageRequest({
-        url: this._lastPageRoute,
-        urlref: this._lastPageRoute,
-        urlref_ts: time.residenceTime
-      });
-      this._navigationBarTitle = {
-        config: '',
-        page: '',
-        report: '',
-        lt: ''
-      };
-      return;
-    }
-  }
-
-  _login() {
-    this._sendEventRequest({
-      key: 'login'
-    }, 0);
-  }
-
-  _share() {
-    this._sendEventRequest({
-      key: 'share'
-    }, 0);
-  }
-  _payment(key) {
-    this._sendEventRequest({
-      key
-    }, 0);
-  }
-  _sendReportRequest(options) {
-
-    this._navigationBarTitle.lt = '1';
-    let query = options.query && JSON.stringify(options.query) !== '{}' ? '?' + JSON.stringify(options.query) : '';
-    this.statData.lt = '1';
-    this.statData.url = (options.path + query) || '';
-    this.statData.t = getTime();
-    this.statData.sc = getScene(options.scene);
-    this.statData.fvts = getFirstVisitTime();
-    this.statData.lvts = getLastVisitTime();
-    this.statData.tvc = getTotalVisitCount();
-    if (getPlatformName() === 'n') {
-      this.getProperty();
-    } else {
-      this.getNetworkInfo();
-    }
-  }
-
-  _sendPageRequest(opt) {
-    let {
-      url,
-      urlref,
-      urlref_ts
-    } = opt;
-    this._navigationBarTitle.lt = '11';
-    let options = {
-      ak: this.statData.ak,
-      uuid: this.statData.uuid,
-      lt: '11',
-      ut: this.statData.ut,
-      url,
-      tt: this.statData.tt,
-      urlref,
-      urlref_ts,
-      ch: this.statData.ch,
-      usv: this.statData.usv,
-      t: getTime(),
-      p: this.statData.p
-    };
-    this.request(options);
-  }
-
-  _sendHideRequest(opt, type) {
-    let {
-      urlref,
-      urlref_ts
-    } = opt;
-    let options = {
-      ak: this.statData.ak,
-      uuid: this.statData.uuid,
-      lt: '3',
-      ut: this.statData.ut,
-      urlref,
-      urlref_ts,
-      ch: this.statData.ch,
-      usv: this.statData.usv,
-      t: getTime(),
-      p: this.statData.p
-    };
-    this.request(options, type);
-  }
-  _sendEventRequest({
-    key = '',
-    value = ""
-  } = {}) {
-    const route = this._lastPageRoute;
-    let options = {
-      ak: this.statData.ak,
-      uuid: this.statData.uuid,
-      lt: '21',
-      ut: this.statData.ut,
-      url: route,
-      ch: this.statData.ch,
-      e_n: key,
-      e_v: typeof(value) === 'object' ? JSON.stringify(value) : value.toString(),
-      usv: this.statData.usv,
-      t: getTime(),
-      p: this.statData.p
-    };
-    this.request(options);
-  }
-
-  getNetworkInfo() {
-    uni.getNetworkType({
-      success: (result) => {
-        this.statData.net = result.networkType;
-        this.getLocation();
+        this$1.statData.lat = result.latitude;
+        this$1.statData.lng = result.longitude;
+        this$1.request(this$1.statData);
       }
     });
+  } else {
+    this.statData.lat = 0;
+    this.statData.lng = 0;
+    this.request(this.statData);
   }
+};
 
-  getProperty() {
-    plus.runtime.getProperty(plus.runtime.appid, (wgtinfo) => {
-      this.statData.v = wgtinfo.version || '';
-      this.getNetworkInfo();
-    });
+Util.prototype.request = function request (data, type) {
+    var this$1 = this;
+
+  var time = getTime();
+  var title = this._navigationBarTitle;
+  data.ttn = title.page;
+  data.ttpj = title.config;
+  data.ttc = title.report;
+
+  var requestData = this._reportingRequestData;
+  if (getPlatformName() === 'n') {
+    requestData = uni.getStorageSync('__UNI__STAT__DATA') || {};
   }
-
-  getLocation() {
-    if (statConfig.getLocation) {
-      uni.getLocation({
-        type: 'wgs84',
-        geocode: true,
-        success: (result) => {
-          if (result.address) {
-            this.statData.cn = result.address.country;
-            this.statData.pn = result.address.province;
-            this.statData.ct = result.address.city;
-          }
-
-          this.statData.lat = result.latitude;
-          this.statData.lng = result.longitude;
-          this.request(this.statData);
-        }
-      });
-    } else {
-      this.statData.lat = 0;
-      this.statData.lng = 0;
-      this.request(this.statData);
-    }
+  if (!requestData[data.lt]) {
+    requestData[data.lt] = [];
   }
+  requestData[data.lt].push(data);
 
-  request(data, type) {
-    let time = getTime();
-    const title = this._navigationBarTitle;
-    data.ttn = title.page;
-    data.ttpj = title.config;
-    data.ttc = title.report;
-
-    let requestData = this._reportingRequestData;
-    if (getPlatformName() === 'n') {
-      requestData = uni.getStorageSync('__UNI__STAT__DATA') || {};
-    }
-    if (!requestData[data.lt]) {
-      requestData[data.lt] = [];
-    }
-    requestData[data.lt].push(data);
-
-    if (getPlatformName() === 'n') {
-      uni.setStorageSync('__UNI__STAT__DATA', requestData);
-    }
-    if (getPageResidenceTime() < OPERATING_TIME && !type) {
-      return
-    }
-    let uniStatData = this._reportingRequestData;
-    if (getPlatformName() === 'n') {
-      uniStatData = uni.getStorageSync('__UNI__STAT__DATA');
-    }
-    // 时间超过，重新获取时间戳
-    setPageResidenceTime();
-    let firstArr = [];
-    let contentArr = [];
-    let lastArr = [];
-
-    for (let i in uniStatData) {
-      const rd = uniStatData[i];
-      rd.forEach((elm) => {
-        const newData = getSplicing(elm);
-        if (i === 0) {
-          firstArr.push(newData);
-        } else if (i === 3) {
-          lastArr.push(newData);
-        } else {
-          contentArr.push(newData);
-        }
-      });
-    }
-
-    firstArr.push(...contentArr, ...lastArr);
-    let optionsData = {
-      usv: STAT_VERSION, //统计 SDK 版本号
-      t: time, //发送请求时的时间戮
-      requests: JSON.stringify(firstArr),
-    };
-
-    this._reportingRequestData = {};
-    if (getPlatformName() === 'n') {
-      uni.removeStorageSync('__UNI__STAT__DATA');
-    }
-
-    if (data.ut === 'h5' || data.ut === 'fox') {
-      this.imageRequest(optionsData);
-      return
-    }
-
-    if (getPlatformName() === 'n' && this.statData.p === 'a') {
-      setTimeout(() => {
-        this._sendRequest(optionsData);
-      }, 200);
-      return
-    }
-    this._sendRequest(optionsData);
+  if (getPlatformName() === 'n') {
+    uni.setStorageSync('__UNI__STAT__DATA', requestData);
   }
-  _sendRequest(optionsData) {
-    uni.request({
-      url: STAT_URL,
-      method: 'POST',
-      // header: {
-      //   'content-type': 'application/json' // 默认值
-      // },
-      data: optionsData,
-      success: () => {
-        // if (process.env.NODE_ENV === 'development') {
-        //   console.log('stat request success');
-        // }
-      },
-      fail: (e) => {
-        if (++this._retry < 3) {
-          setTimeout(() => {
-            this._sendRequest(optionsData);
-          }, 1000);
-        }
+  if (getPageResidenceTime() < OPERATING_TIME && !type) {
+    return
+  }
+  var uniStatData = this._reportingRequestData;
+  if (getPlatformName() === 'n') {
+    uniStatData = uni.getStorageSync('__UNI__STAT__DATA');
+  }
+  // 时间超过，重新获取时间戳
+  setPageResidenceTime();
+  var firstArr = [];
+  var contentArr = [];
+  var lastArr = [];
+
+  var loop = function ( i ) {
+    var rd = uniStatData[i];
+    rd.forEach(function (elm) {
+      var newData = getSplicing(elm);
+      if (i === 0) {
+        firstArr.push(newData);
+      } else if (i === 3) {
+        lastArr.push(newData);
+      } else {
+        contentArr.push(newData);
       }
     });
-  }
-  /**
-   * h5 请求
-   */
-  imageRequest(data) {
-    let image = new Image();
-    let options = getSgin(GetEncodeURIComponentOptions(data)).options;
-    image.src = STAT_H5_URL + '?' + options;
+  };
+
+    for (var i in uniStatData) loop( i );
+
+  firstArr.push.apply(firstArr, contentArr.concat( lastArr ));
+  var optionsData = {
+    usv: STAT_VERSION, //统计 SDK 版本号
+    t: time, //发送请求时的时间戮
+    requests: JSON.stringify(firstArr),
+  };
+
+  this._reportingRequestData = {};
+  if (getPlatformName() === 'n') {
+    uni.removeStorageSync('__UNI__STAT__DATA');
   }
 
-  sendEvent(key, value) {
-    // 校验 type 参数
-    if (calibration(key, value)) return
+  if (data.ut === 'h5' || data.ut === 'fox') {
+    this.imageRequest(optionsData);
+    return
+  }
 
-    if (key === 'title') {
-      this._navigationBarTitle.report = value;
-      return
+  if (getPlatformName() === 'n' && this.statData.p === 'a') {
+    setTimeout(function () {
+      this$1._sendRequest(optionsData);
+    }, 200);
+    return
+  }
+  this._sendRequest(optionsData);
+};
+Util.prototype._sendRequest = function _sendRequest (optionsData) {
+    var this$1 = this;
+
+  uni.request({
+    url: STAT_URL,
+    method: 'POST',
+    // header: {
+    // 'content-type': 'application/json' // 默认值
+    // },
+    data: optionsData,
+    success: function () {
+      // if (process.env.NODE_ENV === 'development') {
+      // console.log('stat request success');
+      // }
+    },
+    fail: function (e) {
+      if (++this$1._retry < 3) {
+        setTimeout(function () {
+          this$1._sendRequest(optionsData);
+        }, 1000);
+      }
     }
-    this._sendEventRequest({
-      key,
-      value: typeof(value) === 'object' ? JSON.stringify(value) : value
-    }, 1);
+  });
+};
+/**
+ * h5 请求
+ */
+Util.prototype.imageRequest = function imageRequest (data) {
+  var image = new Image();
+  var options = getSgin(GetEncodeURIComponentOptions(data)).options;
+  image.src = STAT_H5_URL + '?' + options;
+};
+
+Util.prototype.sendEvent = function sendEvent (key, value) {
+  // 校验 type 参数
+  if (calibration(key, value)) { return }
+
+  if (key === 'title') {
+    this._navigationBarTitle.report = value;
+    return
   }
-}
+  this._sendEventRequest({
+    key: key,
+    value: typeof(value) === 'object' ? JSON.stringify(value) : value
+  }, 1);
+};
 
 
-class Stat extends Util {
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new Stat();
-    }
-    return this.instance;
-  }
-  constructor() {
-    super();
+var Stat = /*@__PURE__*/(function (Util) {
+  function Stat() {
+    Util.call(this);
     this.instance = null;
     // 注册拦截器
     if (typeof uni.addInterceptor === 'function') {
@@ -705,53 +706,64 @@ class Stat extends Util {
     }
   }
 
-  addInterceptorInit() {
-    let self = this;
+  if ( Util ) Stat.__proto__ = Util;
+  Stat.prototype = Object.create( Util && Util.prototype );
+  Stat.prototype.constructor = Stat;
+
+  Stat.getInstance = function getInstance () {
+    if (!this.instance) {
+      this.instance = new Stat();
+    }
+    return this.instance;
+  };
+
+  Stat.prototype.addInterceptorInit = function addInterceptorInit () {
+    var self = this;
     uni.addInterceptor('setNavigationBarTitle', {
-      invoke(args) {
+      invoke: function invoke(args) {
         self._navigationBarTitle.page = args.title;
       }
     });
-  }
+  };
 
-  interceptLogin() {
-    let self = this;
+  Stat.prototype.interceptLogin = function interceptLogin () {
+    var self = this;
     uni.addInterceptor('login', {
-      complete() {
+      complete: function complete() {
         self._login();
       }
     });
-  }
+  };
 
-  interceptShare(type) {
-    let self = this;
+  Stat.prototype.interceptShare = function interceptShare (type) {
+    var self = this;
     if (!type) {
       self._share();
       return
     }
     uni.addInterceptor('share', {
-      success() {
+      success: function success() {
         self._share();
       },
-      fail() {
+      fail: function fail() {
         self._share();
       }
     });
-  }
+  };
 
-  interceptRequestPayment() {
-    let self = this;
+  Stat.prototype.interceptRequestPayment = function interceptRequestPayment () {
+    var self = this;
     uni.addInterceptor('requestPayment', {
-      success() {
+      success: function success() {
         self._payment('pay_success');
       },
-      fail() {
+      fail: function fail() {
         self._payment('pay_fail');
       }
     });
-  }
+  };
 
-  report(options, self) {
+  Stat.prototype.report = function report (options, self) {
     this.self = self;
     // if (process.env.NODE_ENV === 'development') {
     //   console.log('report init');
@@ -759,54 +771,54 @@ class Stat extends Util {
     setPageResidenceTime();
     this.__licationShow = true;
     this._sendReportRequest(options, true);
-  }
+  };
 
-  load(options, self) {
+  Stat.prototype.load = function load (options, self) {
     if (!self.$scope && !self.$mp) {
-      const page = getCurrentPages();
+      var page = getCurrentPages();
       self.$scope = page[page.length - 1];
     }
     this.self = self;
     this._query = options;
-  }
+  };
 
-  show(self) {
+  Stat.prototype.show = function show (self) {
     this.self = self;
     if (getPageTypes(self)) {
       this._pageShow(self);
     } else {
       this._applicationShow(self);
     }
-  }
+  };
 
-  ready(self) {
+  Stat.prototype.ready = function ready (self) {
     // this.self = self;
     // if (getPageTypes(self)) {
     //   this._pageShow(self);
     // }
-  }
-  hide(self) {
+  };
+  Stat.prototype.hide = function hide (self) {
     this.self = self;
     if (getPageTypes(self)) {
       this._pageHide(self);
     } else {
       this._applicationHide(self, true);
     }
-  }
-  error(em) {
+  };
+  Stat.prototype.error = function error (em) {
     if (this._platform === 'devtools') {
       if (process.env.NODE_ENV === 'development') {
         console.info('当前运行环境为开发者工具，不上报数据。');
       }
       // return;
     }
-    let emVal = '';
+    var emVal = '';
     if (!em.message) {
       emVal = JSON.stringify(em);
     } else {
       emVal = em.stack;
     }
-    let options = {
+    var options = {
       ak: this.statData.ak,
       uuid: this.statData.uuid,
       lt: '31',
@@ -821,45 +833,47 @@ class Stat extends Util {
       p: this.statData.p
     };
     this.request(options);
-  }
-}
+  };
 
-const stat = Stat.getInstance();
-let isHide = false;
-const lifecycle = {
-  onLaunch(options) {
+  return Stat;
+}(Util));
+
+var stat = Stat.getInstance();
+var isHide = false;
+var lifecycle = {
+  onLaunch: function onLaunch(options) {
     stat.report(options, this);
   },
-  onReady() {
+  onReady: function onReady() {
     stat.ready(this);
   },
-  onLoad(options) {
+  onLoad: function onLoad(options) {
     stat.load(options, this);
     // 重写分享，获取分享上报事件
     if (this.$scope && this.$scope.onShareAppMessage) {
-      let oldShareAppMessage = this.$scope.onShareAppMessage;
+      var oldShareAppMessage = this.$scope.onShareAppMessage;
       this.$scope.onShareAppMessage = function(options) {
         stat.interceptShare(false);
         return oldShareAppMessage.call(this, options)
       };
     }
   },
-  onShow() {
+  onShow: function onShow() {
     isHide = false;
     stat.show(this);
   },
-  onHide() {
+  onHide: function onHide() {
     isHide = true;
     stat.hide(this);
   },
-  onUnload() {
+  onUnload: function onUnload() {
     if (isHide) {
       isHide = false;
       return
     }
     stat.hide(this);
   },
-  onError(e) {
+  onError: function onError(e) {
     stat.error(e);
   }
 };
@@ -868,7 +882,7 @@ function main() {
   if (process.env.NODE_ENV === 'development') {
     uni.report = function(type, options) {};
   }else{
-    const Vue = require('vue');
+    var Vue = require('vue');
     (Vue.default || Vue).mixin(lifecycle);
     uni.report = function(type, options) {
       stat.sendEvent(type, options);

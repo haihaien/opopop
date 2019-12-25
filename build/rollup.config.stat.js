@@ -1,3 +1,6 @@
+import babel from 'rollup-plugin-babel';
+import buble from 'rollup-plugin-buble';
+
 module.exports = {
   input: 'packages/uni-stat/src/index.js',
   output: {
@@ -5,5 +8,12 @@ module.exports = {
     format: 'es'
   },
   external: ['vue', '../package.json'],
-  plugins: []
+  plugins: [
+    // https://github.com/rollup/rollup-plugin-babel#modules
+    babel({
+      babelrc: false,
+      presets: [['env', { modules: false }]]
+    }),
+    buble()
+  ]
 }
