@@ -3,7 +3,8 @@ const path = require('path')
 
 const {
   getMainEntry,
-  getH5Options,
+  //getH5Options,
+  getAppFoxOptions,
   getPlatformCompiler,
   getPlatformCssnano
 } = require('@yump/uni-cli-shared')
@@ -19,7 +20,7 @@ const {
   publicPath,
   template,
   devServer
-} = getH5Options()
+} = getAppFoxOptions()
 
 const plugins = []
 
