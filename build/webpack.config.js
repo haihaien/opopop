@@ -38,7 +38,11 @@ module.exports = {
       // h5 components
       'uni-h5-app-components': resolve('src/platforms/h5/components/app/popup/index'),
       'uni-h5-app-mixins': resolve('src/platforms/h5/components/app/popup/mixins/index'),
-      'uni-h5-system-routes': resolve('src/platforms/h5/components/system-routes/index')
+      'uni-h5-system-routes': resolve('src/platforms/h5/components/system-routes/index'),
+      //app-fox components
+      'app-fox-app-components': resolve('src/platforms/app-fox/components/app/popup/index'),
+      'app-fox-app-mixins': resolve('src/platforms/app-fox/components/app/popup/mixins/index'),
+      'app-fox-system-routes': resolve('src/platforms/app-fox/components/system-routes/index')
     }
   },
   module: {
