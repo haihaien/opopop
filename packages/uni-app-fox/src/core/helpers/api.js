@@ -230,6 +230,7 @@ function createInvokeCallback (apiName, params = {}, extras = {}) {
 }
 
 export function invokeCallbackHandler (invokeCallbackId, res) {
+  console.log('执行回调...\n')
   if (typeof invokeCallbackId === 'number') {
     const invokeCallback = invokeCallbacks[invokeCallbackId]
     if (invokeCallback) {
@@ -249,6 +250,7 @@ export function wrapperUnimplemented (name) {
 }
 
 export function wrapper (name, invokeMethod, extras) {
+  console.debug('src/core/helpers/api.js-Function:wrapper')
   if (!isFn(invokeMethod)) {
     return invokeMethod
   }

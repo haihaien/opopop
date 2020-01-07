@@ -33,6 +33,11 @@ service.run('build', {
   entry
 }).then(function () {
   if (process.env.UNI_UI !== 'true') {
+    console.log('process.UNI_SERVICE_API_MANIFEST:\n')
+    console.log(process.UNI_SERVICE_API_MANIFEST)
+    console.log('===============')
+    console.log('process.UNI_SERVICE_API_PROTOCOL:\n')
+    console.log(process.UNI_SERVICE_API_PROTOCOL)
     generateApiManifest(
       JSON.parse(JSON.stringify(process.UNI_SERVICE_API_MANIFEST)),
       JSON.parse(JSON.stringify(process.UNI_SERVICE_API_PROTOCOL))
