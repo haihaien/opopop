@@ -98,6 +98,7 @@
       "getApp": true,
       "getCurrentPages": true,
       "plus": true,
+      "foxsdk": true,
       "uni": true,
       "Vue": true,
       "wx": true,
