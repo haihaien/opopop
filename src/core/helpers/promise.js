@@ -33,18 +33,11 @@ export function isTaskApi (name) {
 
 function handlePromise (promise) {
   return promise.then(data => {
-    alert(JSON.stringify(process.env))
-    if (process.env.UNI_PLATFORM === 'app-fox' && process.env.FOX_SDK_ENABLE) {
-      return data
-    } else {
-      return [null, data]
-    }
+    return data
+    // return [null, data]
   }).catch(err => {
-    if (process.env.UNI_PLATFORM === 'app-fox' && process.env.FOX_SDK_ENABLE) {
-      return err
-    } else {
-      return [err]
-    }
+    return err
+    // return [err]
   })
 }
 
