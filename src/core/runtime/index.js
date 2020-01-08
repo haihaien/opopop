@@ -28,6 +28,8 @@ import createApp from './wrapper/create-app'
 import createPage from './wrapper/create-page'
 import createComponent from './wrapper/create-component'
 
+console.log('yu fox api inject.....')
+
 todos.forEach(todoApi => {
   protocols[todoApi] = false
 })
@@ -51,6 +53,7 @@ if (typeof Proxy !== 'undefined' && __PLATFORM__ !== 'app-plus') {
       if (baseApi[name]) {
         return baseApi[name]
       }
+      console.log('promisify:' + api[name])
       if (api[name]) {
         return promisify(name, api[name])
       }

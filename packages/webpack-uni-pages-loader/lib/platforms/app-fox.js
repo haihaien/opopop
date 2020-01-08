@@ -331,6 +331,7 @@ global.__uniConfig = ${JSON.stringify(pagesJson)};
 global.__uniConfig.router = ${JSON.stringify(appFox.router)};
 global.__uniConfig['async'] = ${JSON.stringify(appFox['async'])};
 global.__uniConfig.debug = ${manifestJson.debug === true};
+global.__uniConfig.foxsdk = ${manifestJson.foxsdk &&  manifestJson.foxsdk.debug === true};
 global.__uniConfig.networkTimeout = ${JSON.stringify(networkTimeoutConfig)};
 global.__uniConfig.sdkConfigs = ${JSON.stringify(sdkConfigs)};
 global.__uniConfig.qqMapKey = ${JSON.stringify(qqMapKey)};

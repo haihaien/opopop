@@ -1,7 +1,7 @@
 const unshift = Array.prototype.unshift
 
 function format (args) {
-  unshift.call(args, '[system]')
+  unshift.call(args, '[app-fox]')
   return args
 }
 
