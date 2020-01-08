@@ -33,11 +33,11 @@ export function isTaskApi (name) {
 
 function handlePromise (promise) {
   return promise.then(data => {
-    return data
-    // return [null, data]
+    //return data
+    return [null, data]
   }).catch(err => {
-    return err
-    // return [err]
+    //return err
+    return [err]
   })
 }
 
