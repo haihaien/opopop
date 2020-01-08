@@ -26,7 +26,7 @@ const isIOS = /iphone|ipad|ipod/i.test(ua)
 /**
  * 重写系统信息-异步
  */
-export function getSystemInfoSync () {
+export function getSystemInfoSync22 () {
   console.log('rewrite获取系统信息........')
   return new Promise((resolve, reject) => {
     foxsdk.device.getSystemInfo(ret => {
@@ -43,7 +43,7 @@ export function getSystemInfoSync () {
 /**
  * 获取系统信息-同步
  */
-export function getSystemInfoSync222 () {
+export function getSystemInfoSync () {
   console.log('获取系统信息........')
   console.log('foxsdk:\n')
   console.log(foxsdk)
