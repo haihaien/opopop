@@ -1,5 +1,8 @@
 import getWindowOffset from 'uni-platform/helpers/get-window-offset'
 import safeAreaInsets from 'safe-area-insets'
+// import {
+//   publish
+// } from '../../bridge'
 
 const ua = navigator.userAgent
 /**
@@ -10,16 +13,47 @@ const isAndroid = /android/i.test(ua)
  * 是否iOS设备
  */
 const isIOS = /iphone|ipad|ipod/i.test(ua)
+
+// const callbacks = []
+// onMethod('getSystemInfo', function (res) {
+//   // callbacks.forEach(callbackId => {
+//   //   invoke(callbackId, res)
+//   // })
+//   console.log(res)
+//   alert('getsysteminfo')
+// })
+
+/**
+ * 重写系统信息-异步
+ */
+export function getSystemInfoSync () {
+  console.log('rewrite获取系统信息........')
+  return new Promise((resolve, reject) => {
+    foxsdk.device.getSystemInfo(ret => {
+      console.log('app-fox device/getSystemInfo===status: ' + ret.status + ',message: ' + ret.message + ',payload: ' + JSON.stringify(ret.payload))
+      if (ret.status === '0') {
+        resolve(ret.payload)
+      } else {
+        reject(ret.message)
+      }
+    })
+  })
+}
+
 /**
  * 获取系统信息-同步
  */
-export function getSystemInfoSync () {
+export function getSystemInfoSync222 () {
   console.log('获取系统信息........')
   console.log('foxsdk:\n')
   console.log(foxsdk)
 
   try {
     foxsdk.device.getSystemInfo(ret => {
+      // publish('getSystemInfo', {
+      //   data: ret.payload,
+      //   errMsg: 'getSystemInfo:ok'
+      // })
       console.log('device/getSystemInfo===status: ' + ret.status + ',message: ' + ret.message + ',payload: ' + JSON.stringify(ret.payload))
     })
   } catch (error) {
