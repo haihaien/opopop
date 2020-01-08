@@ -16,8 +16,15 @@ const isIOS = /iphone|ipad|ipod/i.test(ua)
 export function getSystemInfoSync () {
   console.log('获取系统信息........')
   console.log('foxsdk:\n')
-  console.log(_foxSdkEsm)
   console.log(foxsdk)
+
+  try {
+    foxsdk.device.getSystemInfo(ret => {
+      console.log('device/getSystemInfo===status: ' + ret.status + ',message: ' + ret.message + ',payload: ' + JSON.stringify(ret.payload))
+    })
+  } catch (error) {
+    console.error('获取设备信息报错了。。。。。。。')
+  }
 
   var windowWidth = window.innerWidth
   var windowHeight = window.innerHeight
