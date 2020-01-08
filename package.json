@@ -99,6 +99,7 @@
       "getCurrentPages": true,
       "plus": true,
       "foxsdk": true,
+      "_foxSdkEsm": true,
       "uni": true,
       "Vue": true,
       "wx": true,
