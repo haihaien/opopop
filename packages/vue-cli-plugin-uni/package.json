@@ -1,6 +1,6 @@
 {
   "name": "@yump/vue-cli-plugin-uni",
-  "version": "1.0.5-alpha.0",
+  "version": "1.0.6-alpha.0",
   "description": "uni-app plugin for vue-cli 3",
   "main": "index.js",
   "repository": {
