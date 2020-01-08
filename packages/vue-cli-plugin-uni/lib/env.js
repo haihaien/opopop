@@ -66,7 +66,11 @@ process.UNI_STAT_CONFIG = {
 }
 
 //add foxsdk 调试
-process.env.FOX_SDK_ENABLE = manifestJsonObj.foxsdk || false;
+process.env.FOX_SDK_ENABLE = false
+if (process.env.NODE_ENV === 'development') {
+  //在项目工程中manifest.json配置foxsdk=>debug属性
+  process.env.FOX_SDK_ENABLE = manifestJsonObj.foxsdk && manifestJsonObj.foxsdk.debug;
+}
 
 // 默认启用 自定义组件模式
 // if (isInHBuilderXAlpha) {

@@ -219,7 +219,7 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
       //foxsdk调式,工程中引入
       if (process.env.FOX_SDK_ENABLE) {
         beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
-                  `import foxsdk from '@/native-api/dist/fox.sdk.umd.js';` +
+                  `import foxsdk from '@/native-api/dist/fox.sdk.esm.js';` +
                   `window.foxsdk = foxsdk;` +
                   `import 'uni-pages';import '@yump/uni-app-fox';`
       } else {
