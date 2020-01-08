@@ -214,8 +214,8 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
       beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
         `import 'uni-pages';import 'uni-${process.env.UNI_PLATFORM}';`
     } else if (process.env.UNI_PLATFORM === 'app-fox') {
-      console.log('FOX_SDK_ENABLE:\n')
-      console.log(FOX_SDK_ENABLE)
+      console.log('=============FOX_SDK_ENABLE=================:\n')
+      console.log(process.env.FOX_SDK_ENABLE)
       //foxsdk调式,工程中引入
       if (process.env.FOX_SDK_ENABLE) {
         beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
