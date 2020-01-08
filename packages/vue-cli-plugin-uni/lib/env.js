@@ -65,6 +65,9 @@ process.UNI_STAT_CONFIG = {
   appid: manifestJsonObj.appid
 }
 
+//add foxsdk 调试
+process.env.FOX_SDK_ENABLE = manifestJsonObj.foxsdk || false;
+
 // 默认启用 自定义组件模式
 // if (isInHBuilderXAlpha) {
 let usingComponentsAbsent = false
