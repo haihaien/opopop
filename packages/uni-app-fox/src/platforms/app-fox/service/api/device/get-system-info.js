@@ -14,8 +14,9 @@ const isIOS = /iphone|ipad|ipod/i.test(ua)
  * 获取系统信息-同步
  */
 export function getSystemInfoSync () {
-  console.log('获取系统信息....')
+  console.log('获取系统信息........')
   console.log('foxsdk:\n')
+  console.log(_foxSdkEsm)
   console.log(foxsdk)
 
   var windowWidth = window.innerWidth
