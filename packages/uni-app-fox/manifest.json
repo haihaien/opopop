@@ -398,6 +398,10 @@
             ]
         ]
     ],
+    "scanCode": [
+        "/platforms/app-fox/service/api/device/scan-code.js",
+        []
+    ],
     "vibrateLong": [
         "/platforms/app-fox/service/api/device/vibrate.js",
         []
@@ -772,5 +776,13 @@
             ]
         ],
         true
+    ],
+    "onBackEnd": [
+        "/platforms/app-fox/service/api/events/bf-end.js",
+        []
+    ],
+    "onFrontEnd": [
+        "/platforms/app-fox/service/api/events/bf-end.js",
+        []
     ]
 }

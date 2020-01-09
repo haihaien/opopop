@@ -192,6 +192,11 @@ const third = [
   'requireNativePlugin',
   'upx2px'
 ]
+//foxsdk专有API
+const foxsdk = [
+  'onBackEnd',//应用切换到后台
+  'onFrontEnd'//应用切换到前台
+]
 
 const apis = [
   ...base,
@@ -206,7 +211,8 @@ const apis = [
   ...event,
   ...file,
   ...canvas,
-  ...third
+  ...third,
+  ...foxsdk
 ]
 
 module.exports = apis

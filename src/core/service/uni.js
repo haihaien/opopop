@@ -13,8 +13,10 @@ export const uni = Object.create(null)
 
 apis.forEach(name => {
   if (api[name]) {
+    // 已封装API
     uni[name] = promisify(name, wrapper(name, api[name]))
   } else {
+    // 未实现API
     uni[name] = wrapperUnimplemented(name)
   }
 })

@@ -170,26 +170,45 @@ function createApiCallback (apiName, params = {}, extras = {}) {
 
     const errMsg = res.errMsg
 
+    // 新增app-fox平台判断,兼容foxsdk API都为异步条件下的处理
+    // TODO: 暂时不支持complete回调
+    let isPromise = false
+    if (__PLATFORM__ === 'app-fox' && Object.prototype.toString.apply(res) === '[object Promise]') {
+      isPromise = true
+    }
+
     if (errMsg.indexOf(apiName + ':ok') === 0) {
       isFn(beforeSuccess) && beforeSuccess(res)
 
-      hasSuccess && success(res)
+      // hasSuccess && success(res)
+
+      !isPromise && hasSuccess && success(res)
+      isPromise && res.then(ret => success(ret))
 
       isFn(afterSuccess) && afterSuccess(res)
     } else if (errMsg.indexOf(apiName + ':cancel') === 0) {
       res.errMsg = res.errMsg.replace(apiName + ':cancel', apiName + ':fail cancel')
 
-      hasFail && fail(res)
+      // hasFail && fail(res)
+
+      !isPromise && hasFail && fail(res)
+      isPromise && res.catch(ret => fail(ret))
 
       isFn(beforeCancel) && beforeCancel(res)
 
-      hasCancel && cancel(res)
+      // hasCancel && cancel(res)
+
+      !isPromise && hasCancel && cancel(res)
+      isPromise && res.catch(ret => cancel(ret))
 
       isFn(afterCancel) && afterCancel(res)
     } else if (errMsg.indexOf(apiName + ':fail') === 0) {
       isFn(beforeFail) && beforeFail(res)
 
-      hasFail && fail(res)
+      // hasFail && fail(res)
+
+      !isPromise && hasFail && fail(res)
+      isPromise && res.catch(ret => fail(ret))
 
       isFn(afterFail) && afterFail(res)
     }

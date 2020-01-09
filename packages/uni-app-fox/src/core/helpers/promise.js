@@ -32,7 +32,7 @@ export function isTaskApi (name) {
 }
 
 function handlePromise (promise) {
-  alert(__PLATFORM__)
+  // alert(__PLATFORM__)
 
   return promise.then(data => {
     return [null, data]
