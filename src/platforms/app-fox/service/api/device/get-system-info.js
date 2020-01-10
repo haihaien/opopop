@@ -27,7 +27,7 @@ const isIOS = /iphone|ipad|ipod/i.test(ua)
  * 重写系统信息-异步
  */
 export function getSystemInfo () {
-  //console.log('异步获取系统信息........')
+  // console.log('异步获取系统信息........')
   return new Promise((resolve, reject) => {
     foxsdk.device.getSystemInfo(ret => {
       console.log('app-fox device/getSystemInfo===status: ' + ret.status + ',message: ' + ret.message + ',payload: ' + JSON.stringify(ret.payload))
@@ -44,7 +44,7 @@ export function getSystemInfo () {
  * 获取系统信息-同步
  */
 export function getSystemInfoSync () {
-  //console.log('同步获取系统信息........')
+  // console.log('同步获取系统信息........')
   var windowWidth = window.innerWidth
   var windowHeight = window.innerHeight
   var screen = window.screen

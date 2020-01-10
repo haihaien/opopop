@@ -96,13 +96,14 @@ export default {
         UniServiceJSBridge.emit('onWebInvokeAppService', evt.data.data, evt.data.pageId)
       }
     })
-    document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'visible') {
-        UniServiceJSBridge.emit('onAppEnterForeground')
-      } else {
-        UniServiceJSBridge.emit('onAppEnterBackground')
-      }
-    })
+    // TODO app-fox端在App上会触发此事件监听
+    /* document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') {
+          UniServiceJSBridge.emit('onAppEnterForeground')
+        } else {
+          UniServiceJSBridge.emit('onAppEnterBackground')
+        }
+      }) */
   }
 }
 </script>

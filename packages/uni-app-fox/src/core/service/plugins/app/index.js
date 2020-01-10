@@ -4,6 +4,8 @@ import {
 
 import createApp from './create-app'
 
+import initFoxGlobalListeners from './fox-events'
+
 export {
   getApp,
   getCurrentPages
@@ -14,6 +16,14 @@ export function createAppMixin (routes, entryRoute) {
   return {
     created: function AppCreated () {
       createApp(this, routes)
+
+      // inject foxsdk global events to app-fox
+      if (__PLATFORM__ === 'app-fox') {
+        if (window.foxsdk && foxsdk.events) {
+          initFoxGlobalListeners()
+        }
+      }
+
       // TODO
       if (!entryRoute.meta.name) { // PageNotFound
         UniServiceJSBridge.emit('onPageNotFound', {
