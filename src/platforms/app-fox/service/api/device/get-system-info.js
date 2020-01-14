@@ -1,5 +1,6 @@
 import getWindowOffset from 'uni-platform/helpers/get-window-offset'
 import safeAreaInsets from 'safe-area-insets'
+import { PASS } from '../constants'
 // import {
 //   publish
 // } from '../../bridge'
@@ -31,7 +32,7 @@ export function getSystemInfo () {
   return new Promise((resolve, reject) => {
     foxsdk.device.getSystemInfo(ret => {
       console.log('app-fox device/getSystemInfo===status: ' + ret.status + ',message: ' + ret.message + ',payload: ' + JSON.stringify(ret.payload))
-      if (ret.status === '0') {
+      if (ret.status === PASS) {
         resolve(ret.payload)
       } else {
         reject(ret.message)
