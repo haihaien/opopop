@@ -33,7 +33,48 @@ export function getSystemInfo () {
     foxsdk.device.getSystemInfo(ret => {
       console.log('app-fox device/getSystemInfo===status: ' + ret.status + ',message: ' + ret.message + ',payload: ' + JSON.stringify(ret.payload))
       if (ret.status === PASS) {
-        resolve(ret.payload)
+        let data = ret.payload
+        var windowWidth = window.innerWidth
+        var windowHeight = window.innerHeight
+        const {
+          top: windowTop,
+          bottom: windowBottom
+        } = getWindowOffset()
+
+        windowHeight -= windowTop
+        windowHeight -= windowBottom
+
+        // let safeAreaInsets = data.name === 'iOS' ? data.safeAreaInsets : getSafeAreaInsets()
+        let systeminfo = {
+          brand: data.vendor,
+          model: data.model,
+          pixelRatio: data.scale,
+          screenWidth: data.resolutionWidth,
+          screenHeight: data.resolutionHeight,
+          windowWidth,
+          windowHeight,
+          windowTop: 0,
+          windowBottom: 0,
+          statusBarHeight: data.statusbarHeight,
+          // navigationBarHeight: ,
+          language: data.language,
+          system: data.version,
+          version: data.innerVersion,
+          fontSizeSetting: '',
+          platform: data.name,
+          SDKVersion: '',
+          safeArea: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            height: 0,
+            width: 0
+          },
+          safeAreaInsets: data.safeAreaInsets
+        }
+
+        resolve(systeminfo)
       } else {
         reject(ret.message)
       }

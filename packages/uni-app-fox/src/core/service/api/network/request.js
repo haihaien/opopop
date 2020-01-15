@@ -52,6 +52,7 @@ onMethod('onRequestTaskStateChange', function ({
   header,
   errMsg
 }) {
+  // alert('======' + (typeof statusCode))
   const {
     args,
     callbackId
