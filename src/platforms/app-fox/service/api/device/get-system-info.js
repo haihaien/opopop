@@ -24,6 +24,17 @@ const isIOS = /iphone|ipad|ipod/i.test(ua)
 //   alert('getsysteminfo')
 // })
 
+/* const {
+  invokeCallbackHandler: invoke
+} = UniServiceJSBridge */
+
+/* export function setClipboardData (options, callbackId) {
+  invoke(callbackId, {
+    errMsg: 'setClipboardData:ok',
+    data: {}
+  })
+} */
+
 /**
  * 重写系统信息-异步
  */

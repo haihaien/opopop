@@ -1,13 +1,12 @@
+import { PASS, NETWORK_TYPES } from '../constants'
+
 const {
   invokeCallbackHandler: invoke
 } = UniServiceJSBridge
 
 const callbackIds = []
 
-function changeHandler () {
-  const {
-    networkType
-  } = getNetworkType()
+function changeHandler (networkType) {
   callbackIds.forEach(callbackId => {
     invoke(callbackId, {
       errMsg: 'onNetworkStatusChange:ok',
@@ -18,31 +17,28 @@ function changeHandler () {
 }
 
 export function onNetworkStatusChange (callbackId) {
-  const connection = navigator.connection || navigator.webkitConnection
-  callbackIds.push(callbackId)
-  if (connection) {
-    connection.addEventListener('change', changeHandler)
-  } else {
-    window.addEventListener('offline', changeHandler)
-    window.addEventListener('online', changeHandler)
+  if (window.foxsdk && foxsdk.events) {
+    callbackIds.push(callbackId)
+    foxsdk.events.addEventListener('netchange', () => {
+      foxsdk.networkinfo.getCurrentType(ret => {
+        const networkType = NETWORK_TYPES[ret.payload.networkType]
+        changeHandler(networkType)
+      })
+    })
   }
 }
 
 export function getNetworkType () {
-  const connection = navigator.connection || navigator.webkitConnection
-  let networkType = 'unknown'
-  if (connection) {
-    networkType = connection.type
-    if (networkType === 'cellular') {
-      networkType = connection.effectiveType.replace('slow-', '')
-    } else if (!['none', 'wifi'].includes(networkType)) {
-      networkType = 'unknown'
-    }
-  } else if (navigator.onLine === false) {
-    networkType = 'none'
-  }
-  return {
-    errMsg: 'getNetworkType:ok',
-    networkType
-  }
+  // export const NETWORK_TYPES = ['unknown', 'none', 'ethernet', 'wifi', '2g', '3g', '4g']
+  return new Promise((resolve, reject) => {
+    foxsdk.networkinfo.getCurrentType(ret => {
+      if (ret.status === PASS) {
+        resolve({
+          networkType: NETWORK_TYPES[ret.payload.networkType]
+        })
+      } else {
+        reject(ret.message)
+      }
+    })
+  })
 }

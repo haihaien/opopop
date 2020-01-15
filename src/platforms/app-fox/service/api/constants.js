@@ -9,7 +9,8 @@ export const PASS = '0'
 export const REQUEST_OK = '200'
 
 export const DEVICE_FREQUENCY = 200
-export const NETWORK_TYPES = ['unknown', 'none', 'ethernet', 'wifi', '2g', '3g', '4g']
+// export const NETWORK_TYPES = ['unknown', 'none', 'ethernet', 'wifi', '2g', '3g', '4g']
+export const NETWORK_TYPES = ['unknown', 'none', 'wifi', 'gprs', 'ethernet', '2g', '3g', '4g']
 
 export const MAP_ID = '__YUAPP_MAP'
 
