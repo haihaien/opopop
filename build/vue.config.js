@@ -22,7 +22,8 @@ module.exports = {
   productionSourceMap: false, // 生产环境的 source map
   configureWebpack: webpackConfig,
   // 禁用关闭多线程编译，避免menifest编译失败
-  parallel: !~['h5', 'app-fox'].indexOf(process.env.UNI_PLATFORM) || process.env.UNI_WATCH !== 'false' || process.env.UNI_UI === 'true',
+  //!~['h5', 'app-fox'].indexOf(process.env.UNI_PLATFORM) || process.env.UNI_WATCH !== 'false' || process.env.UNI_UI === 'true',
+  parallel: false,
   chainWebpack: config => { // 内部的 webpack 配置进行更细粒度的修改
     config.devtool('source-map')
 
