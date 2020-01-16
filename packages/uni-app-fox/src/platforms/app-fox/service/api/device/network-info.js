@@ -28,17 +28,26 @@ export function onNetworkStatusChange (callbackId) {
   }
 }
 
-export function getNetworkType () {
+export function getNetworkType (options, callbackId) {
   // export const NETWORK_TYPES = ['unknown', 'none', 'ethernet', 'wifi', '2g', '3g', '4g']
-  return new Promise((resolve, reject) => {
-    foxsdk.networkinfo.getCurrentType(ret => {
-      if (ret.status === PASS) {
-        resolve({
-          networkType: NETWORK_TYPES[ret.payload.networkType]
-        })
-      } else {
-        reject(ret.message)
-      }
-    })
+  // return new Promise((resolve, reject) => {
+  foxsdk.networkinfo.getCurrentType(ret => {
+    if (ret.status === PASS) {
+      // resolve({
+      //   networkType: NETWORK_TYPES[ret.payload.networkType]
+      // })
+      invoke(callbackId, {
+        errMsg: 'getNetworkType:ok',
+        networkType: NETWORK_TYPES[ret.payload.networkType]
+      })
+    } else {
+      // reject(ret.message)
+      invoke(callbackId, {
+        errMsg: 'getNetworkType:fail',
+        code: ret.status,
+        message: ret.message
+      })
+    }
   })
+  // })
 }

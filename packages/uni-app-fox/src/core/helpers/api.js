@@ -183,7 +183,7 @@ function createApiCallback (apiName, params = {}, extras = {}) {
       // hasSuccess && success(res)
 
       !isPromise && hasSuccess && success(res)
-      isPromise && res.then(ret => success(ret))
+      isPromise && hasSuccess && res.then(ret => success(ret))
 
       isFn(afterSuccess) && afterSuccess(res)
     } else if (errMsg.indexOf(apiName + ':cancel') === 0) {
@@ -192,14 +192,14 @@ function createApiCallback (apiName, params = {}, extras = {}) {
       // hasFail && fail(res)
 
       !isPromise && hasFail && fail(res)
-      isPromise && res.catch(ret => fail(ret))
+      isPromise && hasFail && res.catch(ret => fail(ret))
 
       isFn(beforeCancel) && beforeCancel(res)
 
       // hasCancel && cancel(res)
 
       !isPromise && hasCancel && cancel(res)
-      isPromise && res.catch(ret => cancel(ret))
+      isPromise && hasCancel && res.catch(ret => cancel(ret))
 
       isFn(afterCancel) && afterCancel(res)
     } else if (errMsg.indexOf(apiName + ':fail') === 0) {
@@ -208,12 +208,12 @@ function createApiCallback (apiName, params = {}, extras = {}) {
       // hasFail && fail(res)
 
       !isPromise && hasFail && fail(res)
-      isPromise && res.catch(ret => fail(ret))
+      isPromise && hasFail && res.catch(ret => fail(ret))
 
       isFn(afterFail) && afterFail(res)
     }
-
-    hasComplete && complete(res)
+    !isPromise && hasComplete && complete(res)
+    isPromise && hasComplete && res.finally(() => complete({}))
 
     isFn(afterAll) && afterAll(res)
   }

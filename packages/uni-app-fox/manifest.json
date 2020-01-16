@@ -410,6 +410,30 @@
         "/platforms/app-fox/service/api/device/scan-code.js",
         []
     ],
+    "setClipboardData": [
+        "/platforms/app-fox/service/api/device/clipboard.js",
+        []
+    ],
+    "getClipboardData": [
+        "/platforms/app-fox/service/api/device/clipboard.js",
+        []
+    ],
+    "setScreenBrightness": [
+        "/platforms/app-fox/service/api/device/screen.js",
+        []
+    ],
+    "getScreenBrightness": [
+        "/platforms/app-fox/service/api/device/screen.js",
+        []
+    ],
+    "setKeepScreenOn": [
+        "/platforms/app-fox/service/api/device/screen.js",
+        []
+    ],
+    "onUserCaptureScreen": [
+        "/platforms/app-fox/service/api/device/screen.js",
+        []
+    ],
     "vibrateLong": [
         "/platforms/app-fox/service/api/device/vibrate.js",
         []
@@ -435,7 +459,7 @@
         []
     ],
     "hideKeyboard": [
-        "/platforms/app-fox/service/api/device/hide-keyboard.js",
+        "/platforms/app-fox/service/api/device/keyboard.js",
         []
     ],
     "onKeyboardHeightChange": [
