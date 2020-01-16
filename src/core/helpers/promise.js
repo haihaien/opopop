@@ -1,3 +1,10 @@
+/*
+ * @Author: helin3
+ * @Date: 2020-01-14 19:56:49
+ * @LastEditors: helin3
+ * @LastEditTime: 2020-01-16 15:30:20
+ * @Description:
+ */
 import {
   isFn
 } from 'uni-shared'
@@ -8,7 +15,7 @@ import {
 } from './interceptor'
 
 const SYNC_API_RE =
-  /^\$|getMenuButtonBoundingClientRect|^report|interceptors|Interceptor$|getSubNVueById|requireNativePlugin|upx2px|hideKeyboard|canIUse|^create|Sync$|Manager$|base64ToArrayBuffer|arrayBufferToBase64/
+  /^\$|getMenuButtonBoundingClientRect|^report|interceptors|Interceptor$|getSubNVueById|requireNativePlugin|upx2px|canIUse|^create|Sync$|Manager$|base64ToArrayBuffer|arrayBufferToBase64/
 
 const CONTEXT_API_RE = /^create|Manager$/
 

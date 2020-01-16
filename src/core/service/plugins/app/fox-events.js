@@ -1,11 +1,18 @@
 /*
  * @Author: chencm
  * @Date: 2020-01-10 14:26:31
- * @LastEditors  : chencm
- * @LastEditTime : 2020-01-10 17:30:38
+ * @LastEditors  : helin3
+ * @LastEditTime : 2020-01-16 18:05:54
  * @Description: 注册全局监听
  */
 
+const PASS = '0'
+/**
+ * 触发 service 层，与 onMethod 对应
+ */
+const publish = function (name, res) {
+  return UniServiceJSBridge.emit('api.' + name, res)
+}
 /* const NETWORK_TYPES = []
 
 ;(function () {
@@ -56,14 +63,19 @@ export default function initFoxGlobalListeners () {
     })
   }) */
 
-  /* foxsdk.events.addEventListener('KeyboardHeightChange', function (event) {
-    invoke('onKeyboardHeightChange', {
-      height: event.height
-    })
-    // publish('onKeyboardHeightChange', {
-    //     height: event.height
-    // })
-  }) */
+  foxsdk.key.onKeyboardHeightChange(function (ret) {
+    if (ret.status === PASS) {
+      publish('onKeyboardHeightChange', {
+        height: ret.payload.height
+      })
+    }
+  })
+
+  foxsdk.screen.onUserCaptureScreen(function (ret) {
+    if (ret.status === PASS) {
+      publish('onUserCaptureScreen', {})
+    }
+  })
 
   /* foxsdk.events.addEventListener('plusMessage', function (e) {
     if (process.env.NODE_ENV !== 'production') {

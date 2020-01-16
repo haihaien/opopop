@@ -2,7 +2,7 @@
  * @Author: helin3
  * @Date: 2020-01-15 15:43:22
  * @LastEditors  : helin3
- * @LastEditTime : 2020-01-15 17:44:41
+ * @LastEditTime : 2020-01-16 19:33:31
  * @Description: 剪贴板
  */
 import { PASS } from '../constants'
@@ -18,7 +18,6 @@ export function getClipboardData (options, callbackId) {
       })
     } else {
       invoke(callbackId, {
-        data: ret.result,
         errMsg: 'getClipboardData:fail'
       })
     }
