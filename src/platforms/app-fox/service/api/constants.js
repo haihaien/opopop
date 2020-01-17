@@ -15,4 +15,5 @@ export const NETWORK_TYPES = ['unknown', 'none', 'wifi', 'gprs', 'ethernet', '2g
 export const MAP_ID = '__YUAPP_MAP'
 
 export const TEMP_PATH_BASE = '_doc/yuapp_temp'
+
 export const TEMP_PATH = `${TEMP_PATH_BASE}_${Date.now()}`

@@ -1,5 +1,5 @@
 export default [
-  'saveImageToPhotosAlbum',
+  // 'saveImageToPhotosAlbum',
   'getRecorderManager',
   'getBackgroundAudioManager',
   'saveVideoToPhotosAlbum',
@@ -52,7 +52,7 @@ export default [
   'login',
   'checkSession',
   'getUserInfo',
-  'share',
+  // 'share',
   'onShareAppMessage',
   'showShareMenu',
   'hideShareMenu',
