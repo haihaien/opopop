@@ -745,6 +745,26 @@
             ]
         ]
     ],
+    "saveFile": [
+        "/platforms/app-fox/service/api/file/file.js",
+        []
+    ],
+    "getSavedFileList": [
+        "/platforms/app-fox/service/api/file/file.js",
+        []
+    ],
+    "getSavedFileInfo": [
+        "/platforms/app-fox/service/api/file/file.js",
+        []
+    ],
+    "removeSavedFile": [
+        "/platforms/app-fox/service/api/file/file.js",
+        []
+    ],
+    "getFileInfo": [
+        "/platforms/app-fox/service/api/file/file.js",
+        []
+    ],
     "openDocument": [
         "/platforms/app-fox/service/api/file/open-document.js",
         [
