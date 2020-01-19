@@ -36,7 +36,7 @@ export function saveFile ({ tempFilePath } = {}, callbackId) {
 
     foxsdk.io.resolveLocalFileSystemURL(tempFilePath, entry => { // 读取临时文件 FileEntry
       getSavedFileDir(dir => {
-        entry.copyTo(dir, fileName, () => { // 复制临时文件 FileEntry，为了避免把相册里的文件删除，使用 copy，微信中是要删除临时文件的
+        entry.copyTo(dir.fullPath, fileName, () => { // 复制临时文件 FileEntry，为了避免把相册里的文件删除，使用 copy，微信中是要删除临时文件的
           const savedFilePath = SAVE_PATH + '/' + fileName
           invoke(callbackId, {
             errMsg: 'saveFile:ok',
