@@ -30,7 +30,7 @@ const publishStateChange = res => {
 export function createRequestTaskById (requestTaskId, {
   url,
   data,
-  header,
+  header: reqHeader,
   method = 'GET',
   responseType,
   sslVerify = true
@@ -42,22 +42,22 @@ export function createRequestTaskById (requestTaskId, {
     }
   }
   // const stream = requireNativePlugin('stream')
-  const headers = {}
+  const header = {}
 
   let abortTimeout
   let aborted
   let hasContentType = false
-  for (const name in header) {
+  for (const name in reqHeader) {
     if (!hasContentType && name.toLowerCase() === 'content-type') {
       hasContentType = true
-      headers['Content-Type'] = header[name]
+      header['Content-Type'] = reqHeader[name]
     } else {
-      headers[name] = header[name]
+      header[name] = reqHeader[name]
     }
   }
 
   if (!hasContentType && method === 'POST') {
-    headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+    header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   }
 
   const timeout = __uniConfig.networkTimeout.request
@@ -75,8 +75,8 @@ export function createRequestTaskById (requestTaskId, {
   const options = {
     method,
     url: url.trim(),
-    // weex 官方文档有误，headers 类型实际 object，用 string 类型会无响应
-    headers,
+    // weex 官方文档有误，header 类型实际 object，用 string 类型会无响应
+    header,
     type: responseType === 'arraybuffer' ? 'base64' : 'text',
     // weex 官方文档未说明实际支持 timeout，单位：ms
     timeout: timeout || 6e5,
@@ -97,15 +97,15 @@ export function createRequestTaskById (requestTaskId, {
       }
       const statusCode = ret.payload.statusCode
       const ok = ret.status === PASS
-      const headers = ret.payload.header
-      const datas = ret.payload.data
       if (statusCode === REQUEST_OK) {
+        const header = ret.payload.header
+        const datas = ret.payload.data
         publishStateChange({
           requestTaskId,
           state: 'success',
           data: ok && responseType === 'arraybuffer' ? base64ToArrayBuffer(datas) : datas,
           statusCode,
-          header: headers
+          header
         })
       } else {
         publishStateChange({
@@ -120,7 +120,7 @@ export function createRequestTaskById (requestTaskId, {
       ok,
       status,
       data,
-      headers
+      header
     }) => {
 
     }) */
