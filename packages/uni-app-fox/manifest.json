@@ -62,8 +62,16 @@
         ]
     ],
     "downloadFile": [
-        "/platforms/app-fox/service/api/network/download-file.js",
+        "/core/service/api/network/download-file.js",
         [
+            [
+                "/platforms/app-fox/service/api/network/request.js",
+                "operateRequestTask"
+            ],
+            [
+                "/platforms/app-fox/service/api/network/download-file.js",
+                "createDownloadTask"
+            ],
             [
                 "/core/helpers/protocol/network/download-file.js",
                 "downloadFile"

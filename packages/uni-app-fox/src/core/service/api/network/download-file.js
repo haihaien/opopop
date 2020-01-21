@@ -83,9 +83,7 @@ onMethod('onDownloadTaskStateChange', ({
   }
 })
 export function downloadFile (args, callbackId) {
-  const {
-    downloadTaskId
-  } = invokeMethod('createDownloadTask', args)
+  const { downloadTaskId } = invokeMethod('createDownloadTask', args)
   const task = new DownloadTask(downloadTaskId, callbackId)
   downloadTasks[downloadTaskId] = task
   return task
