@@ -87,7 +87,7 @@ export function getSavedFileList (options, callbackId) {
 
 export function getFileInfo ({ filePath, digestAlgorithm = 'md5' } = {}, callbackId) {
   foxsdk.io.resolveLocalFileSystemURL(filePath, entry => {
-    entry.getMetadata(digestAlgorithm, meta => {
+    entry.getFileDigestInfo(digestAlgorithm, meta => {
       invoke(callbackId, {
         errMsg: 'getFileInfo:ok',
         size: meta.size,
