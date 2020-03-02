@@ -3,7 +3,11 @@ import getRealPath from 'uni-platform/helpers/get-real-path'
 function _getServiceAddress () {
   return window.location.protocol + '//' + window.location.host
 }
-
+/**
+ * 获取图片信息,app-fox未实现,暂用h5实现
+ * @param {*} param0
+ * @param {*} callbackId
+ */
 export function getImageInfo ({
   src
 }, callbackId) {

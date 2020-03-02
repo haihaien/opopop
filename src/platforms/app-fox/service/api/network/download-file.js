@@ -1,102 +1,77 @@
-import { fileToUrl } from 'uni-platform/helpers/file'
-/**
- * 下载任务
- */
-class DownloadTask {
-  _xhr
-  _callbacks = []
-  constructor (xhr) {
-    this._xhr = xhr
-  }
-  /**
-   * 监听下载进度
-   * @param {Function} callback 回调
-   */
-  onProgressUpdate (callback) {
-    if (typeof callback !== 'function') {
-      return
+import { TEMP_PATH } from '../constants'
+import { publish } from '../../bridge'
+
+let downloadTaskId = 0
+const downloadTasks = {}
+
+const publishStateChange = (res) => {
+  publish('onDownloadTaskStateChange', res)
+}
+
+const createDownloadTaskById = function (downloadTaskId, { url, header } = {}) {
+  const downloader = foxsdk.downloader.createDownload(url, {
+    timeout: __uniConfig.networkTimeout.downloadFile ? __uniConfig.networkTimeout.downloadFile / 1000 : 120,
+    filename: TEMP_PATH + '/download/',
+    header,
+    // 需要与其它平台上的表现保持一致，不走重试的逻辑。
+    retry: 0,
+    retryInterval: 0
+  }, task => {
+    if (task.state === foxsdk.downloader.DownloadState.Finished) {
+      publishStateChange({
+        downloadTaskId,
+        state: 'success',
+        tempFilePath: task.filename,
+        statusCode: '200'
+      })
+    } else {
+      publishStateChange({
+        downloadTaskId,
+        state: 'fail',
+        statusCode: '200'
+      })
     }
-    this._callbacks.push(callback)
-  }
-  offProgressUpdate (callback) {
-    const index = this._callbacks.indexOf(callback)
-    if (index >= 0) {
-      this._callbacks.splice(index, 1)
+  })
+  downloader.stateChanged(download => {
+    if (download.downloadedSize && download.totalSize) {
+      publishStateChange({
+        downloadTaskId,
+        state: 'progressUpdate',
+        progress: parseInt(download.downloadedSize / download.totalSize * 100),
+        totalBytesWritten: download.downloadedSize,
+        totalBytesExpectedToWrite: download.totalSize
+      })
     }
-  }
-  /**
-   * 停止任务
-   */
-  abort () {
-    if (this._xhr) {
-      this._xhr.abort()
-      delete this._xhr
-    }
+  })
+  downloadTasks[downloadTaskId] = downloader
+  setTimeout(() => {
+    downloader.start()
+  }, 10)
+  return {
+    downloadTaskId,
+    errMsg: 'createDownloadTask:ok'
   }
 }
-/**
- * 下载文件
- * @param {*} param0
- * @param {string} callbackId
- * @return {DownloadTask}
- */
-export function downloadFile ({
-  url,
-  header
-}, callbackId) {
-  var timeout = (__uniConfig.networkTimeout && __uniConfig.networkTimeout.downloadFile) || 60 * 1000
-  const {
-    invokeCallbackHandler: invoke
-  } = UniServiceJSBridge
-  var timer
-  var xhr = new XMLHttpRequest()
-  var downloadTask = new DownloadTask(xhr)
-  xhr.open('GET', url, true)
-  Object.keys(header).forEach(key => {
-    xhr.setRequestHeader(key, header[key])
-  })
-  xhr.responseType = 'blob'
-  xhr.onload = function () {
-    clearTimeout(timer)
-    let statusCode = xhr.status
-    let blob = this.response
-    invoke(callbackId, {
-      errMsg: 'downloadFile:ok',
-      statusCode,
-      tempFilePath: fileToUrl(blob)
-    })
-  }
-  xhr.onabort = function () {
-    clearTimeout(timer)
-    invoke(callbackId, {
-      errMsg: 'downloadFile:fail abort'
-    })
-  }
-  xhr.onerror = function () {
-    clearTimeout(timer)
-    invoke(callbackId, {
-      errMsg: 'downloadFile:fail'
-    })
-  }
-  xhr.onprogress = function (event) {
-    downloadTask._callbacks.forEach(callback => {
-      var totalBytesWritten = event.loaded
-      var totalBytesExpectedToWrite = event.total
-      var progress = Math.round(totalBytesWritten / totalBytesExpectedToWrite * 100)
-      callback({
-        progress,
-        totalBytesWritten,
-        totalBytesExpectedToWrite
-      })
-    })
-  }
-  xhr.send()
-  timer = setTimeout(function () {
-    xhr.onprogress = xhr.onload = xhr.onabort = xhr.onerror = null
+
+export function operateDownloadTask ({ downloadTaskId, operationType } = {}) {
+  const downloadTask = downloadTasks[downloadTaskId]
+  if (downloadTask && operationType === 'abort') {
+    delete downloadTasks[downloadTaskId]
     downloadTask.abort()
-    invoke(callbackId, {
-      errMsg: 'downloadFile:fail timeout'
+    publishStateChange({
+      downloadTaskId,
+      state: 'fail',
+      errMsg: 'abort'
     })
-  }, timeout)
-  return downloadTask
+    return {
+      errMsg: 'operateDownloadTask:ok'
+    }
+  }
+  return {
+    errMsg: 'operateDownloadTask:fail'
+  }
+}
+
+export function createDownloadTask (args) {
+  return createDownloadTaskById(++downloadTaskId, args)
 }

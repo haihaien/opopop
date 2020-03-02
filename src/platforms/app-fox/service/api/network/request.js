@@ -1,148 +1,171 @@
-/**
- * 请求任务类
- */
-class RequestTask {
-  _xhr
-  constructor (xhr) {
-    this._xhr = xhr
-  }
-  abort () {
-    if (this._xhr) {
-      this._xhr.abort()
-      delete this._xhr
-    }
-  }
+import { publish } from '../../bridge'
+
+import { decode } from 'base64-arraybuffer'
+
+import { PASS, REQUEST_OK } from '../constants'
+
+function base64ToArrayBuffer (data) {
+  return decode(data)
+}
+
+/* function arrayBufferToBase64 (data) {
+  return encode(data)
+} */
+
+// 基于app-plus进行改造
+
+let requestTaskId = 0
+const requestTasks = {}
+
+const publishStateChange = res => {
+  publish('onRequestTaskStateChange', res)
+  delete requestTasks[requestTaskId]
 }
 
 /**
- * 解析响应头
- * @param {string} headers
- * @return {object}
+ * 创建网络请求任务
+ * @param {String} requestTaskId
+ * @param {string} options
  */
-function parseHeaders (headers) {
-  var headersObject = {}
-  var headersArray = headers.split('\n')
-  headersArray.forEach(header => {
-    var find = header.match(/(\S+\s*):\s*(.*)/)
-    if (!find || find.length !== 3) {
-      return
-    }
-    var key = find[1]
-    var val = find[2]
-    headersObject[key] = val
-  })
-  return headersObject
-}
-/**
- * 发起网络请求
- * @param {object} param0
- * @param {string} callbackId
- * @return {RequestTask}
- */
-export function request ({
+export function createRequestTaskById (requestTaskId, {
   url,
   data,
-  header,
-  method,
-  dataType,
-  responseType
-}, callbackId) {
-  const {
-    invokeCallbackHandler: invoke
-  } = UniServiceJSBridge
-  var body = null
-  var timeout = (__uniConfig.networkTimeout && __uniConfig.networkTimeout.request) || 60 * 1000
-  // 根据请求类型处理数据
-  var contentType
-  for (const key in header) {
-    if (header.hasOwnProperty(key)) {
-      if (key.toLowerCase() === 'content-type') {
-        contentType = header[key]
-        if (contentType.indexOf('application/json') === 0) {
-          contentType = 'json'
-        } else if (contentType.indexOf('application/x-www-form-urlencoded') === 0) {
-          contentType = 'urlencoded'
-        } else {
-          contentType = 'string'
-        }
-        break
-      }
+  header: reqHeader,
+  method = 'GET',
+  responseType,
+  sslVerify = true
+} = {}) {
+  if (!window.foxsdk || !foxsdk.http) {
+    return {
+      requestTaskId,
+      errMsg: 'createRequestTask:fail'
     }
   }
-  if (method !== 'GET') {
-    if (typeof data === 'string' || data instanceof ArrayBuffer) {
-      body = data
+  // const stream = requireNativePlugin('stream')
+  const header = {}
+
+  let abortTimeout
+  let aborted
+  let hasContentType = false
+  for (const name in reqHeader) {
+    if (!hasContentType && name.toLowerCase() === 'content-type') {
+      hasContentType = true
+      header['Content-Type'] = reqHeader[name]
     } else {
-      if (contentType === 'json') {
-        try {
-          body = JSON.stringify(data)
-        } catch (error) {
-          body = data.toString()
-        }
-      } else if (contentType === 'urlencoded') {
-        let bodyArray = []
-        for (let key in data) {
-          if (data.hasOwnProperty(key)) {
-            bodyArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-          }
-        }
-        body = bodyArray.join('&')
-      } else {
-        body = data.toString()
-      }
-    }
-  }
-  var xhr = new XMLHttpRequest()
-  var requestTask = new RequestTask(xhr)
-  xhr.open(method, url)
-  for (var key in header) {
-    if (header.hasOwnProperty(key)) {
-      xhr.setRequestHeader(key, header[key])
+      header[name] = reqHeader[name]
     }
   }
 
-  var timer = setTimeout(function () {
-    xhr.onload = xhr.onabort = xhr.onerror = null
-    requestTask.abort()
-    invoke(callbackId, {
-      errMsg: 'request:fail timeout'
+  if (!hasContentType && method === 'POST') {
+    header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  }
+
+  const timeout = __uniConfig.networkTimeout.request
+  if (timeout) {
+    abortTimeout = setTimeout(() => {
+      aborted = true
+      publishStateChange({
+        requestTaskId,
+        state: 'fail',
+        statusCode: 0,
+        errMsg: 'timeout'
+      })
+    }, timeout)
+  }
+  const options = {
+    method,
+    url: url.trim(),
+    // weex 官方文档有误，header 类型实际 object，用 string 类型会无响应
+    header,
+    type: responseType === 'arraybuffer' ? 'base64' : 'text',
+    // weex 官方文档未说明实际支持 timeout，单位：ms
+    timeout: timeout || 6e5,
+    // 配置和weex模块内相反
+    sslVerify: !sslVerify
+  }
+  if (method !== 'GET') {
+    // options.body = data
+    options.parameter = data
+  }
+  try {
+    foxsdk.http.request(options, ret => {
+      if (aborted) {
+        return
+      }
+      if (abortTimeout) {
+        clearTimeout(abortTimeout)
+      }
+      const statusCode = ret.payload.statusCode
+      const ok = ret.status === PASS
+      if (statusCode === REQUEST_OK) {
+        const header = ret.payload.header
+        const datas = ret.payload.data
+        publishStateChange({
+          requestTaskId,
+          state: 'success',
+          data: ok && responseType === 'arraybuffer' ? base64ToArrayBuffer(datas) : datas,
+          statusCode,
+          header
+        })
+      } else {
+        publishStateChange({
+          requestTaskId,
+          state: 'fail',
+          statusCode,
+          errMsg: 'abort'
+        })
+      }
     })
-  }, timeout)
-  xhr.responseType = responseType
-  xhr.onload = function () {
-    clearTimeout(timer)
-    let statusCode = xhr.status
-    let res = responseType === 'text' ? xhr.responseText : xhr.response
-    if (responseType === 'text' && dataType === 'json') {
-      try {
-        res = JSON.parse(res)
-      } catch (error) {
-        // 和微信一致解析失败不抛出错误
-        // invoke(callbackId, {
-        //   errMsg: 'request:fail json parse error'
-        // })
-        // return
+    /* stream.fetch(options, ({
+      ok,
+      status,
+      data,
+      header
+    }) => {
+
+    }) */
+    requestTasks[requestTaskId] = {
+      abort () {
+        aborted = true
+        if (abortTimeout) {
+          clearTimeout(abortTimeout)
+        }
+        publishStateChange({
+          requestTaskId,
+          state: 'fail',
+          statusCode: 0,
+          errMsg: 'abort'
+        })
       }
     }
-    invoke(callbackId, {
-      data: res,
-      statusCode,
-      header: parseHeaders(xhr.getAllResponseHeaders()),
-      errMsg: 'request:ok'
-    })
+  } catch (e) {
+    return {
+      requestTaskId,
+      errMsg: 'createRequestTask:fail'
+    }
   }
-  xhr.onabort = function () {
-    clearTimeout(timer)
-    invoke(callbackId, {
-      errMsg: 'request:fail abort'
-    })
+  return {
+    requestTaskId,
+    errMsg: 'createRequestTask:ok'
   }
-  xhr.onerror = function () {
-    clearTimeout(timer)
-    invoke(callbackId, {
-      errMsg: 'request:fail'
-    })
+}
+
+export function createRequestTask (args) {
+  return createRequestTaskById(++requestTaskId, args)
+}
+
+export function operateRequestTask ({
+  requestTaskId,
+  operationType
+} = {}) {
+  const requestTask = requestTasks[requestTaskId]
+  if (requestTask && operationType === 'abort') {
+    requestTask.abort()
+    return {
+      errMsg: 'operateRequestTask:ok'
+    }
   }
-  xhr.send(body)
-  return requestTask
+  return {
+    errMsg: 'operateRequestTask:fail'
+  }
 }
