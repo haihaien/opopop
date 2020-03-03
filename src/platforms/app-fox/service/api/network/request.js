@@ -70,7 +70,7 @@ export function createRequestTaskById (requestTaskId, {
       publishStateChange({
         requestTaskId,
         state: 'fail',
-        statusCode: 0,   
+        statusCode: 0,
         errMsg: 'timeout'
       })
     }, timeout)
