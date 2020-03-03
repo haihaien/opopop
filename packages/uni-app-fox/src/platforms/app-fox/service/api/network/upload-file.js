@@ -1,130 +1,138 @@
-import { urlToFile } from 'uni-platform/helpers/file'
-/**
- * 上传任务
- */
-class UploadTask {
-  _xhr
-  _isAbort
-  _callbacks = []
-  constructor (xhr, callbackId) {
-    this._xhr = xhr
-    this._callbackId = callbackId
-  }
-  /**
-   * 监听上传进度
-   * @param callback 回调
-   */
-  onProgressUpdate (callback) {
-    if (typeof callback !== 'function') {
-      return
-    }
-    this._callbacks.push(callback)
-  }
-  offProgressUpdate (callback) {
-    const index = this._callbacks.indexOf(callback)
-    if (index >= 0) {
-      this._callbacks.splice(index, 1)
-    }
-  }
-  /**
-   * 中断上传任务
-   */
-  abort () {
-    this._isAbort = true
-    if (this._xhr) {
-      this._xhr.abort()
-      delete this._xhr
-    }
-  }
+// import { urlToFile } from 'uni-platform/helpers/file'
+import { TEMP_PATH } from '../constants'
+import { publish } from '../../bridge'
+let uploadTaskId = 0
+const uploadTasks = {}
+
+const publishStateChange = (res) => {
+  publish('onUploadTaskStateChange', res)
 }
-/**
- * 上传文件
- * @param {*} param0
- * @param {*} callbackId
- * @return {UploadTask}
- */
-export function uploadFile ({
-  url,
-  filePath,
-  name,
-  header,
-  formData
-}, callbackId) {
-  var timeout = (__uniConfig.networkTimeout && __uniConfig.networkTimeout.uploadFile) || 60 * 1000
-  const {
-    invokeCallbackHandler: invoke
-  } = UniServiceJSBridge
-  var uploadTask = new UploadTask(null, callbackId)
 
-  function upload (file) {
-    var xhr = new XMLHttpRequest()
-    var form = new FormData()
-    var timer
-    Object.keys(formData).forEach(key => {
-      form.append(key, formData[key])
-    })
-    form.append(name, file, file.name || `file-${Date.now()}`)
-    xhr.open('POST', url)
-    Object.keys(header).forEach(key => {
-      xhr.setRequestHeader(key, header[key])
-    })
-    xhr.upload.onprogress = function (event) {
-      uploadTask._callbacks.forEach(callback => {
-        var totalBytesSent = event.loaded
-        var totalBytesExpectedToSend = event.total
-        var progress = Math.round(totalBytesSent / totalBytesExpectedToSend * 100)
-        callback({
-          progress,
-          totalBytesSent,
-          totalBytesExpectedToSend
-        })
+// 创建人物ID
+const createUploadTaskById = function (upoadTaskId, {
+  url = '',
+  header = {},
+  files = [],
+  filePath = '',
+  name = '',
+  formData = {}
+} = {}) {
+  foxsdk.logger.info('start upload=====')
+  // 创建任务
+  // const createUpload = function () {
+  const uploader = foxsdk.uploader.createUpload(url, {
+    timeout: __uniConfig.networkTimeout.uploadFile ? __uniConfig.networkTimeout.uploadFile / 1000 : 120,
+    filename: TEMP_PATH + '/upload/',
+    header,
+    // 需要与其它平台上的表现保持一致，不走重试的逻辑。
+    retry: 0,
+    retryInterval: 0
+  }, task => {
+    if (task.state === foxsdk.uploader.UploadState.Finished) {
+      publishStateChange({
+        upoadTaskId,
+        state: 'success',
+        tempFilePath: task.filename,
+        statusCode: '200'
       })
-    }
-    xhr.onerror = function () {
-      clearTimeout(timer)
-      invoke(callbackId, {
-        errMsg: 'uploadFile:fail'
-      })
-    }
-    xhr.onabort = function () {
-      clearTimeout(timer)
-      invoke(callbackId, {
-        errMsg: 'uploadFile:fail abort'
-      })
-    }
-    xhr.onload = function () {
-      clearTimeout(timer)
-      let statusCode = xhr.status
-      invoke(callbackId, {
-        errMsg: 'uploadFile:ok',
-        statusCode,
-        data: xhr.responseText || xhr.response
-      })
-    }
-    if (!uploadTask._isAbort) {
-      timer = setTimeout(function () {
-        xhr.upload.onprogress = xhr.onload = xhr.onabort = xhr.onerror = null
-        uploadTask.abort()
-        invoke(callbackId, {
-          errMsg: 'uploadFile:fail timeout'
-        })
-      }, timeout)
-      xhr.send(form)
-      uploadTask._xhr = xhr
     } else {
-      invoke(callbackId, {
-        errMsg: 'uploadFile:fail abort'
+      uploader.abort()
+      publishStateChange({
+        upoadTaskId,
+        state: 'fail',
+        statusCode: '200'
       })
     }
-  }
-
-  urlToFile(filePath).then(upload).catch(() => {
-    setTimeout(() => {
-      invoke(callbackId, {
-        errMsg: 'uploadFile:fail file error'
-      })
-    }, 0)
   })
 
-  return uploadTask
+  // 添加文件
+  if (files.length > 0) {
+    files.forEach((v, i) => {
+      uploader.addFile(v, {
+        key: 'key' + uploadTaskId + 'index' + i,
+        name: name
+      }, retObj => {
+        if (retObj.status === 0) {
+          publishStateChange({
+            uploadTaskId,
+            state: 'success',
+            statusCode: '200'
+          })
+        } else {
+          uploader.abort()
+          publishStateChange({
+            uploadTaskId,
+            state: 'fail',
+            statusCode: '200'
+          })
+        }
+      })
+    })
+  } else {
+    uploader.addFile(filePath, {
+      key: 'key' + uploadTaskId + 'index' + 0,
+      name: name
+    }, retObj => {
+      if (retObj.status === 0) {
+        publishStateChange({
+          uploadTaskId,
+          state: 'success',
+          statusCode: '200'
+        })
+      } else {
+        uploader.abort()
+        publishStateChange({
+          uploadTaskId,
+          state: 'fail',
+          statusCode: '200'
+        })
+      }
+    })
+  }
+
+  // 状态监听
+  uploader.stateChanged(upload => {
+    if (upload.downloadedSize && upload.totalSize) {
+      publishStateChange({
+        uploadTaskId,
+        state: 'progressUpdate',
+        progress: parseInt(upload.downloadedSize / upload.totalSize * 100),
+        totalBytesWritten: upload.downloadedSize,
+        totalBytesExpectedToWrite: upload.totalSize
+      })
+    }
+  })
+  uploadTasks[uploadTaskId] = uploader
+  setTimeout(() => {
+    uploader.startAll()
+  }, 10)
+  // }
+  return {
+    uploadTaskId,
+    errMsg: 'createUploadTask:ok'
+  }
+}
+
+// 操作请求任务
+export function operateRequestTask ({ uploadTaskId, operationType } = {}) {
+  const uploadTask = uploadTasks[uploadTaskId]
+  if (uploadTask && operationType === 'abort') {
+    delete uploadTasks[uploadTaskId]
+    uploadTask.abort()
+    publishStateChange({
+      uploadTaskId,
+      state: 'fail',
+      errMsg: 'abort'
+    })
+    return {
+      errMsg: 'operateUploadTask:ok'
+    }
+  }
+  return {
+    errMsg: 'operateUploadTask:fail'
+  }
+}
+
+export function createUploadTask (args) {
+  return createUploadTaskById(++uploadTaskId, args)
 }

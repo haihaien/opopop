@@ -1,3 +1,4 @@
+import { invoke } from 'uni-core/service/bridge'
 /**
  * 打开文档
  * @param {String} filePath 打开文件路径
@@ -8,7 +9,7 @@ export function openDocument ({
   filePath,
   fileType
 }, callbackId) {
-  if ('doc/xls/ppt/pdf/docx/xlsx/pptx'.indexOf(fileType) != -1 && filePath) {
+  if ('doc/xls/ppt/pdf/docx/xlsx/pptx'.indexOf(fileType) !== -1 && filePath) {
     const {
       invokeCallbackHandler: invoke
     } = UniServiceJSBridge
@@ -20,7 +21,7 @@ export function openDocument ({
   } else {
     invoke(callbackId, {
       errMsg: 'openDocument:fail' +
-          ('doc/xls/ppt/pdf/docx/xlsx/pptx'.indexOf(fileType) != -1
+          ('doc/xls/ppt/pdf/docx/xlsx/pptx'.indexOf(fileType) !== -1
             ? 'fileType arguments must be "doc, xls, ppt, pdf, docx, xlsx, pptx".'
             : !filePath ? 'filePath arguments must be passed.' : '')
     })
