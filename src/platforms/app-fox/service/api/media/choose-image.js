@@ -33,11 +33,17 @@ const _createInput = function (options) {
   return inputEl
 } */
 
-function invokeChooseImage (callbackId, ret, tempFilePaths = [], tempFiles = []) {
+function invokeChooseImage (callbackId, ret, tempFiles = []) {
   if (ret.status === PASS) {
+    // 获取路径数组
+    let filePaths = []
+    tempFiles.forEach((v, i) => {
+      filePaths.push(v.filePath)
+    })
+
     invoke(callbackId, {
       errMsg: 'chooseImage:ok',
-      tempFilePaths,
+      filePaths,
       tempFiles
     })
   } else {
@@ -64,7 +70,7 @@ function chooseBysourceType (options, callbackId) {
       }
     }
     foxsdk.gallery.pick(data, ret => {
-      invokeChooseImage(callbackId, ret, ret.payload.event, ret.payload.tempFiles)
+      invokeChooseImage(callbackId, ret, ret.payload.tempFiles)
     })
   }
   if (options.sourceType === 'camera') {
@@ -79,7 +85,7 @@ function chooseBysourceType (options, callbackId) {
       sizeType: options.sizeType
     }
     foxsdk.camera.captureImage(params, ret => {
-      invokeChooseImage(callbackId, ret, [ret.payload.capturedFile], [ret.payload.tempFiles])
+      invokeChooseImage(callbackId, ret, [ret.payload.capturedFile])
     })
   }
 }
