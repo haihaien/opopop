@@ -1,5 +1,5 @@
-import babel from 'rollup-plugin-babel';
-import buble from 'rollup-plugin-buble';
+import babel from 'rollup-plugin-babel'
+import buble from 'rollup-plugin-buble'
 
 module.exports = {
   input: 'packages/uni-stat/src/index.js',

@@ -35,10 +35,10 @@ const _createInput = function (options) {
 
 function invokeChooseImage (callbackId, ret, tempFiles = []) {
   if (ret.status === PASS) {
-    //获取路径数组
-    let filePaths = [];
-    tempFiles.forEach((v,i)=>{
-      filePaths.push(v.filePath);
+    // 获取路径数组
+    let filePaths = []
+    tempFiles.forEach((v, i) => {
+      filePaths.push(v.filePath)
     })
 
     invoke(callbackId, {

@@ -83,7 +83,7 @@ function chooseBysourceType (options, callbackId) {
     }
     foxsdk.camera.startVideoCapture(params, ret => {
       invokeChooseVideo(callbackId, ret || {})
-    });
+    })
   }
 }
 

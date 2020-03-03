@@ -8,90 +8,89 @@ const publishStateChange = (res) => {
   publish('onUploadTaskStateChange', res)
 }
 
-//创建人物ID
-const createUploadTaskById = function(upoadTaskId, {
-  url = '', 
+// 创建人物ID
+const createUploadTaskById = function (upoadTaskId, {
+  url = '',
   header = {},
-  files=[],
+  files = [],
   filePath = '',
   name = '',
-  formData={}
-  } = {}){
-    foxsdk.logger.info('start upload=====');
-    //创建任务
-    const createUpload = function(){
-      const uploader = foxsdk.uploader.createUpload(url,{
-        timeout: __uniConfig.networkTimeout.uploadFile ? __uniConfig.networkTimeout.uploadFile / 1000 : 120,
-        filename: TEMP_PATH + '/upload/',
-        header,
-        // 需要与其它平台上的表现保持一致，不走重试的逻辑。
-        retry: 0,
-        retryInterval: 0
-      }, task => {
-        if(task.state === foxsdk.uploader.UploadState.Finished){
-          publishStateChange({
-            upoadTaskId,
-            state: 'success',
-            tempFilePath: task.filename,
-            statusCode: '200'
-          })
-        }else{
-          uploader.abort()
-          publishStateChange({
-            upoadTaskId,
-            state: 'fail',
-            statusCode: '200'
-          })
-        }
-      })
-
-      
-    //添加文件
-    if(files.length> 0){
-      files.forEach((v,i) => {
-        createUpload.addFile(v, {
-          key: 'key'+uploadTaskId+'index'+i,
-          name: name,
-        }, retObj => {
-          if(retObj.status == 0){
-          publishStateChange({
-            uploadTaskId,
-            state: 'success',
-            statusCode: '200'
-          })
-        }else{
-          uploader.abort()
-          publishStateChange({
-            uploadTaskId,
-            state: 'fail',
-            statusCode: '200'
-          })
-        }
-        });
-      })
-    }else{
-      createUpload.addFile(filePath, {
-        key: 'key'+uploadTaskId+'index'+i,
-        name: name,
-      }, retObj => {
-        if(retObj.status == 0){
+  formData = {}
+} = {}) {
+  foxsdk.logger.info('start upload=====')
+  // 创建任务
+  const createUpload = function () {
+    const uploader = foxsdk.uploader.createUpload(url, {
+      timeout: __uniConfig.networkTimeout.uploadFile ? __uniConfig.networkTimeout.uploadFile / 1000 : 120,
+      filename: TEMP_PATH + '/upload/',
+      header,
+      // 需要与其它平台上的表现保持一致，不走重试的逻辑。
+      retry: 0,
+      retryInterval: 0
+    }, task => {
+      if (task.state === foxsdk.uploader.UploadState.Finished) {
         publishStateChange({
-          uploadTaskId,
+          upoadTaskId,
           state: 'success',
+          tempFilePath: task.filename,
           statusCode: '200'
         })
-      }else{
+      } else {
         uploader.abort()
         publishStateChange({
-          uploadTaskId,
+          upoadTaskId,
           state: 'fail',
           statusCode: '200'
         })
       }
-      });
+    })
+
+    // 添加文件
+    if (files.length > 0) {
+      files.forEach((v, i) => {
+        createUpload.addFile(v, {
+          key: 'key' + uploadTaskId + 'index' + i,
+          name: name
+        }, retObj => {
+          if (retObj.status == 0) {
+            publishStateChange({
+              uploadTaskId,
+              state: 'success',
+              statusCode: '200'
+            })
+          } else {
+            uploader.abort()
+            publishStateChange({
+              uploadTaskId,
+              state: 'fail',
+              statusCode: '200'
+            })
+          }
+        })
+      })
+    } else {
+      createUpload.addFile(filePath, {
+        key: 'key' + uploadTaskId + 'index' + i,
+        name: name
+      }, retObj => {
+        if (retObj.status == 0) {
+          publishStateChange({
+            uploadTaskId,
+            state: 'success',
+            statusCode: '200'
+          })
+        } else {
+          uploader.abort()
+          publishStateChange({
+            uploadTaskId,
+            state: 'fail',
+            statusCode: '200'
+          })
+        }
+      })
     }
 
-    //状态监听
+    // 状态监听
     uploader.stateChanged(upload => {
       if (upload.downloadedSize && upload.totalSize) {
         publishStateChange({
@@ -103,9 +102,9 @@ const createUploadTaskById = function(upoadTaskId, {
         })
       }
     })
-    uploadTasks[uploadTaskId] = uploader;
+    uploadTasks[uploadTaskId] = uploader
     setTimeout(() => {
-      uploader.startAll();
+      uploader.startAll()
     }, 10)
   }
   return {
@@ -114,7 +113,7 @@ const createUploadTaskById = function(upoadTaskId, {
   }
 }
 
-//操作请求任务
+// 操作请求任务
 export function operateRequestTask ({ uploadTaskId, operationType } = {}) {
   const uploadTask = uploadTasks[uploadTaskId]
   if (uploadTask && operationType === 'abort') {
