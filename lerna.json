@@ -2,7 +2,7 @@
   "npmClient": "npm",
   "useWorkspaces": false,
   "packages": [
-    "packages/uni-stat/"
+    "packages/vue-cli-plugin-uni/"
   ],
   "publishConfig": {
     "access": "public"
