@@ -2,7 +2,8 @@
   "npmClient": "npm",
   "useWorkspaces": false,
   "packages": [
-    "packages/*"
+    "packages/uni-stat"
+    // "packages/*"
   ],
   "publishConfig": {
     "access": "public"
@@ -13,5 +14,6 @@
       "message": "chore(release): publish %s"
     }
   },
-  "version": "1.0.21-alpha.0"
+  // "version": "1.0.21-alpha.0"
+  "version": "0.1.16"
 }
