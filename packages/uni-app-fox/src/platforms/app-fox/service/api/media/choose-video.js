@@ -37,11 +37,11 @@ function invokeChooseVideo (callbackId, ret) {
   if (ret.status === PASS) {
     invoke(callbackId, {
       errMsg: 'chooseVideo:ok',
-      tempFilePath: ret.payload.captureFile, // 视频临时路径
-      duration: ret.payload.duration, // 视频时长
-      size: ret.payload.size, // 视频数据量大小
-      height: ret.payload.height, // 视频高度
-      width: ret.payload.width // 视频宽度
+      tempFilePath: ret.payload.tempFiles.path, // 视频临时路径
+      duration: ret.payload.tempFiles.duration, // 视频时长
+      size: ret.payload.tempFiles.size, // 视频数据量大小
+      height: ret.payload.tempFiles.height, // 视频高度
+      width: ret.payload.tempFiles.width // 视频宽度
     })
   } else {
     invoke(callbackId, {
@@ -67,7 +67,7 @@ function chooseBysourceType (options, callbackId) {
       }
     }
     foxsdk.gallery.pick(data, ret => {
-      invokeChooseVideo(callbackId, ret)
+      invokeChooseVideo(callbackId, ret || {})
     })
   }
   if (options.sourceType === 'camera') {
@@ -81,8 +81,8 @@ function chooseBysourceType (options, callbackId) {
       popover: true,
       sizeType: options.compressed ? 'compressed' : 'original'
     }
-    foxsdk.camera.captureImage(params, ret => {
-      invokeChooseVideo(callbackId, ret)
+    foxsdk.camera.startVideoCapture(params, ret => {
+      invokeChooseVideo(callbackId, ret || {})
     })
   }
 }

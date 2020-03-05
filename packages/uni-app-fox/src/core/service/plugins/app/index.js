@@ -20,6 +20,7 @@ export function createAppMixin (routes, entryRoute) {
       // inject foxsdk global events to app-fox
       if (__PLATFORM__ === 'app-fox') {
         if (window.foxsdk && foxsdk.events) {
+          foxsdk.logger.info('创建====')
           initFoxGlobalListeners()
         }
       }
@@ -48,6 +49,9 @@ export function createAppMixin (routes, entryRoute) {
       }
       callAppHook(this, 'onLaunch', args)
       callAppHook(this, 'onShow', args)
+    },
+    beforeDestroy: function appBeforeDestory () {
+      foxsdk.logger.info('全局监听移除====')
     }
   }
 }

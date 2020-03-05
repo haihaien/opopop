@@ -48,6 +48,9 @@ export function createRequestTaskById (requestTaskId, {
   let aborted
   let hasContentType = false
   for (const name in reqHeader) {
+    if (name === 'isEncrypt') {
+      continue
+    }
     if (!hasContentType && name.toLowerCase() === 'content-type') {
       hasContentType = true
       header['Content-Type'] = reqHeader[name]
@@ -59,7 +62,8 @@ export function createRequestTaskById (requestTaskId, {
   if (!hasContentType && method === 'POST') {
     header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   }
-
+  var a = '1111'
+  console.log(a)
   const timeout = __uniConfig.networkTimeout.request
   if (timeout) {
     abortTimeout = setTimeout(() => {
@@ -86,6 +90,7 @@ export function createRequestTaskById (requestTaskId, {
   if (method !== 'GET') {
     // options.body = data
     options.parameter = data
+    options.isEncrypt = reqHeader.isEncrypt || ''
   }
   try {
     foxsdk.http.request(options, ret => {

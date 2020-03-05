@@ -1,4 +1,4 @@
-import { TEMP_PATH } from '../constants'
+import { TEMP_PATH_DOWNLOAD } from '../constants'
 import { publish } from '../../bridge'
 
 let downloadTaskId = 0
@@ -9,9 +9,10 @@ const publishStateChange = (res) => {
 }
 
 const createDownloadTaskById = function (downloadTaskId, { url, header } = {}) {
+  let fileName = url.substr(url.lastIndexOf('/') + 1)// '/获取路径后文件名
   const downloader = foxsdk.downloader.createDownload(url, {
     timeout: __uniConfig.networkTimeout.downloadFile ? __uniConfig.networkTimeout.downloadFile / 1000 : 120,
-    filename: TEMP_PATH + '/download/',
+    filename: TEMP_PATH_DOWNLOAD + fileName,
     header,
     // 需要与其它平台上的表现保持一致，不走重试的逻辑。
     retry: 0,

@@ -39,7 +39,7 @@
         "/core/service/api/network/request.js",
         [
             [
-                "/platforms/app-fox/service/api/network/request.js",
+                "/platforms/app-fox/service/api/network/upload-file.js",
                 "operateRequestTask"
             ],
             [
@@ -53,8 +53,16 @@
         ]
     ],
     "uploadFile": [
-        "/platforms/app-fox/service/api/network/upload-file.js",
+        "/core/service/api/network/upload-file.js",
         [
+            [
+                "/platforms/app-fox/service/api/network/upload-file.js",
+                "operateRequestTask"
+            ],
+            [
+                "/platforms/app-fox/service/api/network/upload-file.js",
+                "createUploadTask"
+            ],
             [
                 "/core/helpers/protocol/network/upload-file.js",
                 "uploadFile"
@@ -65,7 +73,7 @@
         "/core/service/api/network/download-file.js",
         [
             [
-                "/platforms/app-fox/service/api/network/request.js",
+                "/platforms/app-fox/service/api/network/upload-file.js",
                 "operateRequestTask"
             ],
             [
@@ -315,6 +323,14 @@
                 "getImageInfo"
             ]
         ]
+    ],
+    "saveImageToPhotosAlbum": [
+        "/platforms/app-fox/service/api/media/save-image.js",
+        []
+    ],
+    "compressImage": [
+        "/platforms/app-fox/service/api/media/compress-image.js",
+        []
     ],
     "createInnerAudioContext": [
         "/platforms/app-fox/service/api/context/inner-audio.js",
@@ -829,6 +845,22 @@
     ],
     "share": [
         "/platforms/app-fox/service/api/plugin/share.js",
+        []
+    ],
+    "subscribePush": [
+        "/platforms/app-fox/service/api/plugin/push.js",
+        []
+    ],
+    "unsubscribePush": [
+        "/platforms/app-fox/service/api/plugin/push.js",
+        []
+    ],
+    "onPush": [
+        "/platforms/app-fox/service/api/plugin/push.js",
+        []
+    ],
+    "offPush": [
+        "/platforms/app-fox/service/api/plugin/push.js",
         []
     ],
     "upx2px": [

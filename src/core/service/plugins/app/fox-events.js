@@ -5,8 +5,9 @@
  * @LastEditTime : 2020-01-16 18:05:54
  * @Description: 注册全局监听
  */
-
 const PASS = '0'
+foxsdk.logger.info('全局监听添加====')
+window.eventsCbId = {}
 /**
  * 触发 service 层，与 onMethod 对应
  */
@@ -41,13 +42,13 @@ export default function initFoxGlobalListeners () {
     })
   }) */
 
-  foxsdk.events.addEventListener('background', () => {
+  foxsdk.events.addEventListener('background', (res) => {
     emit('onAppEnterBackground')
-  })
+  }, 0)
 
-  foxsdk.events.addEventListener('foreground', () => {
+  foxsdk.events.addEventListener('foreground', (res) => {
     emit('onAppEnterForeground')
-  })
+  }, 0)
 
   /* foxsdk.events.addEventListener('netchange', () => {
     foxsdk.networkinfo.getCurrentType(ret => {
@@ -64,18 +65,19 @@ export default function initFoxGlobalListeners () {
   }) */
 
   foxsdk.key.onKeyboardHeightChange(function (ret) {
+    foxsdk.logger.info('键盘====')
     if (ret.status === PASS) {
       publish('onKeyboardHeightChange', {
         height: ret.payload.height
       })
     }
-  })
+  }, 0)
 
   foxsdk.screen.onUserCaptureScreen(function (ret) {
     if (ret.status === PASS) {
       publish('onUserCaptureScreen', {})
     }
-  })
+  }, 0)
 
   /* foxsdk.events.addEventListener('plusMessage', function (e) {
     if (process.env.NODE_ENV !== 'production') {

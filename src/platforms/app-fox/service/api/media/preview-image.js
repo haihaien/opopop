@@ -5,22 +5,23 @@ export function previewImage ({
   background = '#000000', // TODO 一期不支持
   indicator = 'number',
   loop = false, // TODO 一期不支持
-  urls,
+  urls = [],
   longPressActions
 } = {}, callbackId) {
   const {
     invokeCallbackHandler: invoke
   } = UniServiceJSBridge
-
-  if (current > urls.length - 1) {
-    current = String(urls.length - 1)
-  } else if (current < 0) {
-    current = String(0)
-  } else {
-    current = String(current)
+  let urlLen = urls.length
+  current = current > urlLen - 1 && urlLen > 1 ? urls.length - 1
+    : current < 1 ? 1
+      : current
+  if (urlLen === 0) {
+    invoke(callbackId, {
+      errMsg: 'previewImage:fail: urls is must be an Array and not empty'
+    })
   }
-
-  foxsdk.gallery.previewImage({ 'current': current, 'urls': urls, 'indicator ': indicator }, ret => {
+  foxsdk.gallery.previewImage({ 'current': String(current), 'urls': urls, 'indicator ': indicator }, ret => {
+    foxsdk.logger.info('previewImage back==========', ret)
     if (ret.status === PASS) {
       if (~ret.payload.index) {
         // 长按

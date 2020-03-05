@@ -1,43 +1,21 @@
 import { PASS, TEMP_PATH } from '../constants'
 
-// import { fileToUrl } from 'uni-platform/helpers/file'
-// import { updateElementStyle } from 'uni-shared'
-
 const {
   invokeCallbackHandler: invoke
 } = UniServiceJSBridge
 
-/* let imageInput = null
-
-const _createInput = function (options) {
-  let inputEl = document.createElement('input')
-  inputEl.type = 'file'
-  updateElementStyle(inputEl, {
-    'position': 'absolute',
-    'visibility': 'hidden',
-    'z-index': -999,
-    'width': 0,
-    'height': 0,
-    'top': 0,
-    'left': 0
-  })
-  inputEl.accept = 'image/*'
-  if (options.count > 1) {
-    inputEl.multiple = 'multiple'
-  }
-  // 经过测试，仅能限制只通过相机拍摄，不能限制只允许从相册选择。
-  if (options.sourceType.length === 1 && options.sourceType[0] === 'camera') {
-    inputEl.capture = 'camera'
-  }
-
-  return inputEl
-} */
-
-function invokeChooseImage (callbackId, ret, tempFilePaths = [], tempFiles = []) {
+function invokeChooseImage (callbackId, ret, tempFiles = []) {
   if (ret.status === PASS) {
+    // 获取路径数组
+    let filePaths = []
+    tempFiles.forEach((v, i) => {
+      filePaths.push(v.path)
+    })
+
     invoke(callbackId, {
       errMsg: 'chooseImage:ok',
-      tempFilePaths,
+      code: ret.status,
+      tempFilePaths: filePaths,
       tempFiles
     })
   } else {
@@ -64,7 +42,7 @@ function chooseBysourceType (options, callbackId) {
       }
     }
     foxsdk.gallery.pick(data, ret => {
-      invokeChooseImage(callbackId, ret, ret.payload.event, ret.payload.tempFiles)
+      invokeChooseImage(callbackId, ret, ret.payload.tempFiles)
     })
   }
   if (options.sourceType === 'camera') {
@@ -78,8 +56,8 @@ function chooseBysourceType (options, callbackId) {
       popover: true,
       sizeType: options.sizeType
     }
-    foxsdk.camera.captureImage(params, ret => {
-      invokeChooseImage(callbackId, ret, [ret.payload.capturedFile], [ret.payload.tempFiles])
+    foxsdk.camera.captureImage({ options: params }, ret => {
+      invokeChooseImage(callbackId, ret, [ret.payload.capturedFile])
     })
   }
 }
@@ -96,6 +74,9 @@ export function chooseImage ({
   sizeType = ['original', 'compressed'],
   sourceType = ['album', 'camera']
 } = {}, callbackId) {
+  // sizeType参数转换
+  var foxSizeType = (sizeType.indexOf('original') !== -1 && sizeType.indexOf('compressed') !== -1)
+    ? 2 : sizeType.indexOf('compressed') !== -1 ? 1 : 0
   if (sourceType.length > 1) { // 多选框
     foxsdk.nativeUI.actionsheet({ 'title': '选择照片', 'cancel': '取消', 'buttons': ['拍摄', '从手机相册选择'] }, ret => {
       if (ret.status === PASS) {
@@ -103,13 +84,13 @@ export function chooseImage ({
           // 拍摄选择
           chooseBysourceType({
             sourceType: 'camera',
-            sizeType
+            sizeType: foxSizeType
           }, callbackId)
         } else {
           chooseBysourceType({
             sourceType: 'album',
             count,
-            sizeType
+            sizeType: foxSizeType
           }, callbackId)
         }
       } else {
@@ -123,12 +104,12 @@ export function chooseImage ({
       chooseBysourceType({
         sourceType: 'album',
         count,
-        sizeType
+        sizeType: foxSizeType
       }, callbackId)
     } else if (sourceType[0] === 'camera') { // 相机
       chooseBysourceType({
         sourceType: 'camera',
-        sizeType
+        sizeType: foxSizeType
       }, callbackId)
     } else {
       // 参数错误
@@ -137,16 +118,4 @@ export function chooseImage ({
       })
     }
   }
-
-  // invoke(callbackId, {
-  //   errMsg: 'chooseImage:ok',
-  //   tempFilePaths,//Array<String>图片的本地文件路径列表
-  //   tempFiles//Array<object>图片的本地文件列表，每一项是一个 File 对象 {path:xxx,size:xxx}
-  // })
-
-  // invoke(callbackId, {
-  //   errMsg: 'chooseImage:fail',
-  //   code: ret.status,
-  //   message: ret.message
-  // })
 }
