@@ -2,7 +2,7 @@
   "npmClient": "npm",
   "useWorkspaces": false,
   "packages": [
-    "packages/*"
+    "packages/vue-cli-plugin-uni/"
   ],
   "publishConfig": {
     "access": "public"
@@ -13,5 +13,5 @@
       "message": "chore(release): publish %s"
     }
   },
-  "version": "1.0.20-alpha.3"
+  "version": "1.0.9-alpha.1"
 }

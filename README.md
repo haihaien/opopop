@@ -15,6 +15,9 @@
 ## 2-执行lerna publish
 lerna publish
 
+### 3-选择版本
+选择repatch (1.0.21-alpha.0)
+
 
 #资源版本管理
 ## 更新资源版本
