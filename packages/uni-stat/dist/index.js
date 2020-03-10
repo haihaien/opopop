@@ -430,6 +430,7 @@ Util.prototype.request = function request (data, type) {
 Util.prototype._sendRequest = function _sendRequest (optionsData) {
     var this$1 = this;
 
+  console.log('上送数据：', optionsData);
   uni.request({
     url: STAT_URL,
     header: {
