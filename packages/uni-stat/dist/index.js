@@ -1,7 +1,7 @@
 import '../package.json';
 
-var STAT_URL = 'http://192.168.251.163:18080/yump-mgw/log/log-collector/t0001';
-var STAT_H5_URL = 'http://192.168.251.163:18080/yump-mgw/log/log-collector/t0001';
+var STAT_URL = 'http://219.143.38.252:19080/yump-mgw/log/log-collector/t0001';
+var STAT_H5_URL = 'http://219.143.38.252:19080/yump-mgw/log/log-collector/t0001';
 var PAGE_PVER_TIME = 100;
 
 var UUID_VALUE = 'aaaa'; // 设备好
@@ -430,7 +430,6 @@ Util.prototype.request = function request (data, type) {
 Util.prototype._sendRequest = function _sendRequest (optionsData) {
     var this$1 = this;
 
-  foxsdk.logger.info('请求数据：' + JSON.stringify(optionsData));
   uni.request({
     url: STAT_URL,
     header: {

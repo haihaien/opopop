@@ -247,7 +247,6 @@ class Util {
     this._sendRequest(optionsData)
   }
   _sendRequest (optionsData) {
-    foxsdk.logger.info('请求数据：' + JSON.stringify(optionsData))
     uni.request({
       url: STAT_URL,
       header: {
