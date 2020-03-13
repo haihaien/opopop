@@ -30,7 +30,7 @@ function convertLocalFileSystemURL (dst, path, quality, callbackId) {
   }
   if (regex.test(path)) {
     foxsdk.io.convertLocalFileSystemURL(path, res => {
-      params.src = res.payload.path
+      params.src = res
       foxCompressImage(params, callbackId)
     }, ret => {
       invoke(callbackId, {

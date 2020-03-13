@@ -23,19 +23,19 @@ export function previewImage ({
   foxsdk.gallery.previewImage({ 'current': String(current), 'urls': urls, 'indicator ': indicator }, ret => {
     foxsdk.logger.info('previewImage back==========', ret)
     if (ret.status === PASS) {
-      if (~ret.payload.index) {
+      if (typeof (ret.payload.index) !== 'undefined') {
         // 长按
-        var itemList = longPressActions && longPressActions.itemList
+        var itemList = longPressActions && longPressActions.itemList.length > 0 ? longPressActions.itemList : ['保存相册']
         // var itemColor = longPressActions && longPressActions.itemColor;
         foxsdk.nativeUI.actionsheet({ 'title': '', 'cancel': '取消', 'buttons': itemList }, respone => {
           if (respone.status === PASS) {
-            invoke(callbackId, {
+            longPressActions.success({
               errMsg: 'previewImage:actionsheet:ok',
               index: ret.payload.index, // 长按图片索引值
               tapIndex: respone.payload.index // actionsheet索引值
             })
           } else {
-            invoke(callbackId, {
+            longPressActions.fail({
               errMsg: 'previewImage:actionsheet:fail:' + respone.message,
               code: respone.status,
               message: respone.message
