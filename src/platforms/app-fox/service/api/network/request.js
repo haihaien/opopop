@@ -173,4 +173,3 @@ export function operateRequestTask ({
     errMsg: 'operateRequestTask:fail'
   }
 }
-

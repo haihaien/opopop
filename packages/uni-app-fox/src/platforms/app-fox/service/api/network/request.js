@@ -62,8 +62,7 @@ export function createRequestTaskById (requestTaskId, {
   if (!hasContentType && method === 'POST') {
     header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
   }
-  var a = '1111'
-  console.log(a)
+
   const timeout = __uniConfig.networkTimeout.request
   if (timeout) {
     abortTimeout = setTimeout(() => {

@@ -20,7 +20,6 @@ export function createAppMixin (routes, entryRoute) {
       // inject foxsdk global events to app-fox
       if (__PLATFORM__ === 'app-fox') {
         if (window.foxsdk && foxsdk.events) {
-          foxsdk.logger.info('创建====')
           initFoxGlobalListeners()
         }
       }

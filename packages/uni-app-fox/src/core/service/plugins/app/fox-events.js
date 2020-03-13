@@ -65,7 +65,6 @@ export default function initFoxGlobalListeners () {
   }) */
 
   foxsdk.key.onKeyboardHeightChange(function (ret) {
-    foxsdk.logger.info('键盘====')
     if (ret.status === PASS) {
       publish('onKeyboardHeightChange', {
         height: ret.payload.height
