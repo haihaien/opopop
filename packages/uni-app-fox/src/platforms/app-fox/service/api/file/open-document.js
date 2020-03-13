@@ -21,9 +21,9 @@ export function openDocument ({
   } else {
     invoke(callbackId, {
       errMsg: 'openDocument:fail' +
-          ('doc/xls/ppt/pdf/docx/xlsx/pptx'.indexOf(fileType) !== -1
-            ? 'fileType arguments must be "doc, xls, ppt, pdf, docx, xlsx, pptx".'
-            : !filePath ? 'filePath arguments must be passed.' : '')
+        ('doc/xls/ppt/pdf/docx/xlsx/pptx'.indexOf(fileType) !== -1
+          ? 'fileType arguments must be "doc, xls, ppt, pdf, docx, xlsx, pptx".'
+          : !filePath ? 'filePath arguments must be passed.' : '')
     })
   }
 }
