@@ -48,6 +48,9 @@ export function createAppMixin (routes, entryRoute) {
       }
       callAppHook(this, 'onLaunch', args)
       callAppHook(this, 'onShow', args)
+    },
+    beforeDestroy: function appBeforeDestory () {
+      foxsdk.logger.info('全局监听移除====')
     }
   }
 }

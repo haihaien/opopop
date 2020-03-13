@@ -5,16 +5,10 @@ const {
 } = UniServiceJSBridge
 
 // 图片存储回调处理
-function invokeCompressImage (callbackId, ret) {
+function invokeCompressImage (ret, callbackId) {
   if (ret.status === PASS) {
-    foxsdk.io.convertLocalFileSystemURL(ret.target, res => {
-      invoke(callbackId, {
-        tempFilePath: res.payload.path
-      })
-    }, ret => {
-      invoke(callbackId, {
-        errMsg: 'compressImage:fail:' + ret.message
-      })
+    invoke(callbackId, {
+      tempFilePath: ret.payload.target
     })
   } else {
     invoke(callbackId, {
@@ -26,13 +20,13 @@ function invokeCompressImage (callbackId, ret) {
 }
 
 // 相对路径转换为绝对路径
-function convertLocalFileSystemURL (path, quality, callbackId) {
-  let regex = /^\\_[www | documents | downloads | doc].*;$/
+function convertLocalFileSystemURL (dst, path, quality, callbackId) {
+  let regex = /^_[www | documents | downloads | doc].*$/
   let params = {
     src: path,
-    dst: TEMP_PATH + '/compress/',
+    dst: dst,
     overwrite: true,
-    quality: quality
+    quality: String(quality)
   }
   if (regex.test(path)) {
     foxsdk.io.convertLocalFileSystemURL(path, res => {
@@ -48,6 +42,18 @@ function convertLocalFileSystemURL (path, quality, callbackId) {
   }
 }
 
+// 转换为绝对路径
+function getDSTURL (path, quality, callbackId) {
+  let dst = TEMP_PATH + '/compress/' + (path.substring(path.lastIndexOf('/') + 1) || 'test.jpg')
+  foxsdk.io.convertLocalFileSystemURL(dst, res => {
+    dst = res
+    convertLocalFileSystemURL(dst, path, quality, callbackId)
+  }, ret => {
+    invoke(callbackId, {
+      errMsg: 'compressImage:fail:' + ret.message
+    })
+  })
+}
 // 压缩图片
 function foxCompressImage (params, callbackId) {
   foxsdk.zip.compressImage(params, res => {
@@ -66,7 +72,7 @@ export function compressImage ({
   quality = 80
 } = {}, callbackId) {
   if (src) {
-    convertLocalFileSystemURL(src, quality, callbackId)
+    getDSTURL(src, quality, callbackId)
   } else {
     // 参数错误
     invoke(callbackId, {

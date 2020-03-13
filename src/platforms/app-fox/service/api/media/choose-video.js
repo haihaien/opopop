@@ -37,11 +37,11 @@ function invokeChooseVideo (callbackId, ret) {
   if (ret.status === PASS) {
     invoke(callbackId, {
       errMsg: 'chooseVideo:ok',
-      tempFilePath: ret.payload.tempFiles.path, // 视频临时路径
-      duration: ret.payload.tempFiles.duration, // 视频时长
-      size: ret.payload.tempFiles.size, // 视频数据量大小
-      height: ret.payload.tempFiles.height, // 视频高度
-      width: ret.payload.tempFiles.width // 视频宽度
+      tempFilePath: ret.payload.tempFiles[0].path, // 视频临时路径
+      duration: ret.payload.tempFiles[0].duration, // 视频时长
+      size: ret.payload.tempFiles[0].size, // 视频数据量大小
+      height: ret.payload.tempFiles[0].height, // 视频高度
+      width: ret.payload.tempFiles[0].width // 视频宽度
     })
   } else {
     invoke(callbackId, {
@@ -56,13 +56,15 @@ function chooseBysourceType (options, callbackId) {
   if (!options) {
     return
   }
+  var foxSizeType = (options.sizeType.indexOf('original') !== -1 && options.sizeType.indexOf('compressed') !== -1)
+    ? 2 : options.sizeType.indexOf('compressed') !== -1 ? 1 : 0
   if (options.sourceType === 'album') {
     var data = {
       pickType: '1', // 视频只支持单选
       options: {
         filter: 'video',
         maximum: '1',
-        sizeType: options.compressed ? 'compressed' : 'original',
+        sizeType: foxSizeType,
         filename: TEMP_PATH + '/gallery/'
       }
     }
@@ -72,17 +74,19 @@ function chooseBysourceType (options, callbackId) {
   }
   if (options.sourceType === 'camera') {
     var params = {
-      filename: TEMP_PATH + '/camera/',
+      filename: TEMP_PATH + '/camera/' + 'yusys_' + Date.now() + '.mp4',
       format: 'mp4',
       index: options.camera === 'back' ? '1' : '0',
-      videoMaximumDuration: options.maxDuration + '',
-      optimize: true,
-      resolution: true,
-      popover: true,
-      sizeType: options.compressed ? 'compressed' : 'original'
+      videoMaximumDuration: options.maxDuration + ''
+      // optimize: true,
+      // resolution: true,
+      // popover: true,
+      // sizeType: foxSizeType
     }
-    foxsdk.camera.startVideoCapture(params, ret => {
-      invokeChooseVideo(callbackId, ret || {})
+    foxsdk.camera.startVideoCapture({ options: params }, ret => {
+      let res = ret
+      res.payload.tempFiles = [ret.payload.capturedFile]
+      invokeChooseVideo(callbackId, res)
     })
   }
 }
@@ -90,6 +94,7 @@ function chooseBysourceType (options, callbackId) {
 /**
  *
  * @param {*} count     最多可以选择的图片张数,默认9
+ * @param {*} camera     'front' or 'back'前置或后置摄像头 默认后置
  * @param {*} sizeType  original 原图，compressed 压缩图，默认二者都有
  * @param {*} sourceType album 从相册选图，camera 使用相机，默认二者都有
  * @param {*} callbackId
@@ -97,7 +102,7 @@ function chooseBysourceType (options, callbackId) {
 export function chooseVideo ({
   maxDuration = 20,
   camera = 'back', // 'front' or 'back'
-  compressed = true,
+  sizeType = ['original', 'compressed'],
   sourceType = ['album', 'camera']
 } = {}, callbackId) {
   if (sourceType.length > 1) { // 多选框
@@ -109,14 +114,14 @@ export function chooseVideo ({
             sourceType: 'camera',
             maxDuration,
             camera,
-            compressed
+            sizeType
           }, callbackId)
         } else {
           chooseBysourceType({
             sourceType: 'album',
             maxDuration,
             camera,
-            compressed
+            sizeType
           }, callbackId)
         }
       } else {
@@ -131,14 +136,14 @@ export function chooseVideo ({
         sourceType: 'album',
         maxDuration,
         camera,
-        compressed
+        sizeType
       }, callbackId)
     } else if (sourceType[0] === 'camera') { // 相机
       chooseBysourceType({
         sourceType: 'camera',
         maxDuration,
         camera,
-        compressed
+        sizeType
       }, callbackId)
     } else {
       // 参数错误

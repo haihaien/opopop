@@ -21,7 +21,7 @@ function invokeSaveImage (callbackId, ret) {
 
 // 如果是绝对路径  进行相对路径转换后再进行存储
 function convertAbsoluteFileSystem (callbackId, path) {
-  var regex = /^\\_[www | documents | downloads | doc].*;$/
+  var regex = /^_[www | documents | downloads | doc].*$/
   if (!regex.test(path)) {
     foxsdk.io.convertAbsoluteFileSystem(path, res => {
       foxSaveImage(callbackId, res.payload.path)
@@ -48,9 +48,17 @@ function foxSaveImage (callbackId, path) {
  * @param {*} callbackId
  */
 export function saveImageToPhotosAlbum (
-  filePath,
+  { filePath = '' } = {},
   callbackId
 ) {
+  let httpReg = /^_[http | https].*$/
+  if (httpReg.test(filePath)) {
+    // 参数错误
+    invoke(callbackId, {
+      errMsg: 'saveImageToPhotosAlbum:fail:filePath arguments must be the local file'
+    })
+  }
+
   if (filePath) {
     convertAbsoluteFileSystem(callbackId, filePath)
   } else {
