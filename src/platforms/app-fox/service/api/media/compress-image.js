@@ -44,7 +44,8 @@ function convertLocalFileSystemURL (dst, path, quality, callbackId) {
 
 // 转换为绝对路径
 function getDSTURL (path, quality, callbackId) {
-  let dst = TEMP_PATH + '/compress/' + (path.substring(path.lastIndexOf('/') + 1) || 'test.jpg')
+  // let dst = TEMP_PATH + '/compress/' + (path.substring(path.lastIndexOf('/') + 1) || 'test.jpg')  // ios端目前不能自动创建目录，如需新建目录需先调api创建
+  let dst = TEMP_PATH + (path.substring(path.lastIndexOf('/') + 1) || 'test.jpg')
   foxsdk.io.convertLocalFileSystemURL(dst, res => {
     dst = res
     convertLocalFileSystemURL(dst, path, quality, callbackId)

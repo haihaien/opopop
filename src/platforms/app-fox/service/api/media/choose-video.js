@@ -35,14 +35,25 @@ const _createInput = function (options) {
 
 function invokeChooseVideo (callbackId, ret) {
   if (ret.status === PASS) {
-    invoke(callbackId, {
-      errMsg: 'chooseVideo:ok',
-      tempFilePath: ret.payload.tempFiles.path, // 视频临时路径
-      duration: ret.payload.tempFiles.duration, // 视频时长
-      size: ret.payload.tempFiles.size, // 视频数据量大小
-      height: ret.payload.tempFiles.height, // 视频高度
-      width: ret.payload.tempFiles.width // 视频宽度
-    })
+    if (ret.sourceType === 'album') {
+      invoke(callbackId, {
+        errMsg: 'chooseVideo:ok',
+        tempFilePath: ret.payload.tempFiles[0].path, // 视频临时路径
+        duration: ret.payload.tempFiles[0].duration, // 视频时长
+        size: ret.payload.tempFiles[0].size, // 视频数据量大小
+        height: ret.payload.tempFiles[0].height, // 视频高度
+        width: ret.payload.tempFiles[0].width // 视频宽度
+      })
+    } else {
+      invoke(callbackId, {
+        errMsg: 'chooseVideo:ok',
+        tempFilePath: ret.payload.capturedFile.path, // 视频临时路径
+        duration: ret.payload.capturedFile.duration, // 视频时长
+        size: ret.payload.capturedFile.size, // 视频数据量大小
+        height: ret.payload.capturedFile.height, // 视频高度
+        width: ret.payload.capturedFile.width // 视频宽度
+      })
+    }
   } else {
     invoke(callbackId, {
       errMsg: 'chooseVideo:fail:' + ret.message,
@@ -62,26 +73,29 @@ function chooseBysourceType (options, callbackId) {
       options: {
         filter: 'video',
         maximum: '1',
-        sizeType: options.compressed ? 'compressed' : 'original',
-        filename: TEMP_PATH + '/gallery/'
+        sizeType: options.compressed ? '1' : '0'
       }
     }
     foxsdk.gallery.pick(data, ret => {
+      ret.sourceType = 'album'
       invokeChooseVideo(callbackId, ret || {})
     })
   }
   if (options.sourceType === 'camera') {
     var params = {
-      filename: TEMP_PATH + '/camera/',
-      format: 'mp4',
-      index: options.camera === 'back' ? '1' : '0',
-      videoMaximumDuration: options.maxDuration + '',
-      optimize: true,
-      resolution: true,
-      popover: true,
-      sizeType: options.compressed ? 'compressed' : 'original'
+      options: {
+        filename: TEMP_PATH + '.mp4',
+        format: 'mp4',
+        index: options.camera === 'back' ? '1' : '2',
+        videoMaximumDuration: options.maxDuration + ''
+        // optimize: true,
+        // resolution: true,
+        // popover: true,
+        // sizeType: options.compressed ? 'compressed' : 'original'
+      }
     }
     foxsdk.camera.startVideoCapture(params, ret => {
+      ret.sourceType = 'camera'
       invokeChooseVideo(callbackId, ret || {})
     })
   }
