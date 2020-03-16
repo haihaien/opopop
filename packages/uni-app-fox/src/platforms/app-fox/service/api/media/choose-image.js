@@ -38,7 +38,7 @@ function chooseBysourceType (options, callbackId) {
       options: {
         filter: 'image',
         maximum: options.count + '',
-        sizeType: options.sizeType,
+        sizeType: options.sizeType + '',
         filename: TEMP_PATH + '/gallery/'
       }
     }
