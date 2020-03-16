@@ -18,12 +18,11 @@ const createUploadTaskById = function (upoadTaskId, {
   name = '',
   formData = {}
 } = {}) {
-  foxsdk.logger.info('start upload=====')
-
+  if (files.length === 0) files.push(filePath)
   if (files.length > 0) {
     files.forEach((v, i) => {
+      let curName = v.substring(v.lastIndexOf('/') + 1)
       // 创建任务
-      // const createUpload = function () {
       uploader[i] = foxsdk.uploader.createUpload(url, {
         timeout: __uniConfig.networkTimeout.uploadFile ? __uniConfig.networkTimeout.uploadFile / 1000 : 120,
         filename: TEMP_PATH + '/upload/',
@@ -40,7 +39,6 @@ const createUploadTaskById = function (upoadTaskId, {
             statusCode: '200'
           })
         } else {
-          uploader[i].abort()
           publishStateChange({
             upoadTaskId,
             state: 'fail',
@@ -48,51 +46,46 @@ const createUploadTaskById = function (upoadTaskId, {
           })
         }
       })
+      uploader[i].addFile(v, {
+        key: 'key' + uploadTaskId + 'index' + i,
+        name: files.length === 1 ? name : curName
+      }, retObj => {
+        if (retObj.status === '0') {
+          foxsdk.logger.info('addfile res success====')
+          publishStateChange({
+            uploadTaskId,
+            state: 'success',
+            statusCode: '200'
+          })
+        } else {
+          publishStateChange({
+            uploadTaskId,
+            state: 'fail',
+            statusCode: '200'
+          })
+        }
+      })
       // 状态监听
       uploader[i].stateChanged(upload => {
-        if (upload.downloadedSize && upload.totalSize) {
+        if (upload.uploadedSize && upload.totalSize) {
           publishStateChange({
             uploadTaskId,
             state: 'progressUpdate',
-            progress: parseInt(upload.downloadedSize / upload.totalSize * 100),
-            totalBytesWritten: upload.downloadedSize,
+            progress: parseInt(upload.uploadedSize / upload.totalSize * 100),
+            totalBytesWritten: upload.uploadedSize,
             totalBytesExpectedToWrite: upload.totalSize
           })
         }
       })
+      setTimeout(() => {
+        uploader[i].start()
+      }, 10)
     })
-    uploadTasks[uploadTaskId] = uploader
-    setTimeout(() => {
-      uploader.start()
-    }, 10)
-    return {
-      uploadTaskId,
-      errMsg: 'createUploadTask:ok'
-    }
-  } else {
-    uploader[0].addFile(filePath, {
-      key: 'key' + uploadTaskId + 'index' + 0,
-      name: name
-    }, retObj => {
-      if (retObj.status === 0) {
-        publishStateChange({
-          uploadTaskId,
-          state: 'success',
-          statusCode: '200'
-        })
-      } else {
-        uploader[0].abort()
-        publishStateChange({
-          uploadTaskId,
-          state: 'fail',
-          statusCode: '200'
-        })
-      }
-    })
-    return {
-      uploadTaskId,
-      errMsg: 'createUploadTask:ok'
-    }
+  }
+  uploadTasks[uploadTaskId] = uploader
+  return {
+    uploadTaskId,
+    errMsg: 'createUploadTask:ok'
   }
 }
 
@@ -101,7 +94,11 @@ export function operateRequestTask ({ uploadTaskId, operationType } = {}) {
   const uploadTask = uploadTasks[uploadTaskId]
   if (uploadTask && operationType === 'abort') {
     delete uploadTasks[uploadTaskId]
-    uploadTask.abort()
+    for (let i = 0, len = uploadTask.length; i < len; i++) {
+      setTimeout(function () {
+        uploadTask[i].abort()
+      }, 10)
+    }
     publishStateChange({
       uploadTaskId,
       state: 'fail',
@@ -116,24 +113,24 @@ export function operateRequestTask ({ uploadTaskId, operationType } = {}) {
   }
 }
 
-// 中断上传任务
-export function abort () {
-  if (uploader.length > 0) {
-    for (let i = 0, len = uploader.length; i < len; ++i) {
-      uploader[i].abort()
-    }
-  }
-}
-// 监听上传进度变化
-export function onProgressUpdate () {
-  if (uploader.length > 0) {
-    for (let i = 0, len = uploader.length; i < len; ++i) {
-      uploader[i].stateChanged(ret => {
+// // 中断上传任务
+// export function abort () {
+//   if (uploader.length > 0) {
+//     for (let i = 0, len = uploader.length; i < len; ++i) {
+//       uploader[i].abort()
+//     }
+//   }
+// }
+// // 监听上传进度变化
+// export function onProgressUpdate () {
+//   if (uploader.length > 0) {
+//     for (let i = 0, len = uploader.length; i < len; ++i) {
+//       uploader[i].stateChanged(ret => {
 
-      })
-    }
-  }
-}
+//       })
+//     }
+//   }
+// }
 // 原生暂未开发
 // 监听 HTTP Response Header 事件。会比请求完成事件更早,仅微信小程序平台支持
 // export function onHeadersReceived(){

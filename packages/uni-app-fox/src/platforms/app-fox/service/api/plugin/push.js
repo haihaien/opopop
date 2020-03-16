@@ -18,6 +18,13 @@ export function subscribePush ({
   subtitle,
   notificationId = 'noti0'
 } = {}, callbackId) {
+  // 默认设置应用名称
+  if (!title) {
+    foxsdk.device.getSystemInfo(ret => {
+      title = ret.payload.appName || ''
+    })
+  }
+  subtitle = subtitle || title
   if (title && content && notificationId) {
     foxsdk.push.createMessage({
       content: content,
@@ -34,7 +41,7 @@ export function subscribePush ({
         invoke(callbackId, {
           errMsg: 'subscribePush:ok',
           code: ret.status,
-          notificationId: ret.payload.notificationId
+          notificationId: ret.payload.notificationId || notificationId
         })
       } else {
         invoke(callbackId, {
@@ -47,7 +54,7 @@ export function subscribePush ({
   } else {
     // 参数错误
     invoke(callbackId, {
-      errMsg: 'subscribePush:fail:title/content/notificationId arguments must be passed'
+      errMsg: 'subscribePush:fail: content/notificationId arguments must be passed'
     })
   }
 }
@@ -56,7 +63,7 @@ export function subscribePush ({
  * @desc 关闭推送
  * @param {String} notificationId 消息ID
  */
-export function unsubscribePush (notificationId, callbackId) {
+export function unsubscribePush ({ notificationId } = {}, callbackId) {
   foxsdk.push.remove(notificationId, ret => {
     if (ret.status === PASS && ret.payload.result) {
       invoke(callbackId, {
@@ -73,23 +80,30 @@ export function unsubscribePush (notificationId, callbackId) {
   })
 }
 
+// 处理监听回调
+function invokeListener (ret, callbackId) {
+  foxsdk.logger.info('ret=========', ret)
+  if (ret.status === PASS) {
+    foxsdk.logger.info('PASS=========', ret)
+    invoke(callbackId, {
+      errMsg: 'pushListener:ok'
+    })
+  } else {
+    foxsdk.logger.info('Fail=========', ret)
+    invoke(callbackId, {
+      errMsg: 'pushListener:fail:' + ret.message,
+      code: ret.status,
+      message: ret.message
+    })
+  }
+}
 /**
  * @desc 开启监听
  *
  */
 export function onPush (callbackId) {
   foxsdk.events.addEventListener('pushMessage', ret => {
-    if (ret.status === PASS) {
-      invoke(callbackId, {
-        errMsg: 'onPush:ok'
-      })
-    } else {
-      invoke(callbackId, {
-        errMsg: 'onPush:fail:' + ret.message,
-        code: ret.status,
-        message: ret.message
-      })
-    }
+    invokeListener(ret, callbackId)
   })
 }
 
@@ -99,16 +113,6 @@ export function onPush (callbackId) {
  */
 export function offPush (callbackId) {
   foxsdk.events.removeEventListener('pushMessage', ret => {
-    if (ret.status === PASS) {
-      invoke(callbackId, {
-        errMsg: 'offPush:ok'
-      })
-    } else {
-      invoke(callbackId, {
-        errMsg: 'offPush:fail:' + ret.message,
-        code: ret.status,
-        message: ret.message
-      })
-    }
+    invokeListener(ret, callbackId)
   })
 }

@@ -76,8 +76,8 @@ export function chooseImage ({
   sourceType = ['album', 'camera']
 } = {}, callbackId) {
   // sizeType参数转换
-  var foxSizeType = (sizeType.indexOf('original') !== -1 && sizeType.indexOf('compressed') !== -1)
-    ? 2 : sizeType.indexOf('compressed') !== -1 ? 1 : 0
+  var foxSizeType = String((sizeType.indexOf('original') !== -1 && sizeType.indexOf('compressed') !== -1)
+    ? 2 : sizeType.indexOf('compressed') !== -1 ? 1 : 0)
   if (sourceType.length > 1) { // 多选框
     foxsdk.nativeUI.actionsheet({ 'title': '选择照片', 'cancel': '取消', 'buttons': ['拍摄', '从手机相册选择'] }, ret => {
       if (ret.status === PASS) {

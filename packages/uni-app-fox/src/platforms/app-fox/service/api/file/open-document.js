@@ -8,8 +8,8 @@ import { invoke } from 'uni-core/service/bridge'
 export function openDocument ({
   filePath,
   fileType
-}, callbackId) {
-  if ('doc/xls/ppt/pdf/docx/xlsx/pptx'.indexOf(fileType) !== -1 && filePath) {
+} = {}, callbackId) {
+  if (filePath) {
     const {
       invokeCallbackHandler: invoke
     } = UniServiceJSBridge
@@ -20,10 +20,7 @@ export function openDocument ({
     })
   } else {
     invoke(callbackId, {
-      errMsg: 'openDocument:fail' +
-        ('doc/xls/ppt/pdf/docx/xlsx/pptx'.indexOf(fileType) !== -1
-          ? 'fileType arguments must be "doc, xls, ppt, pdf, docx, xlsx, pptx".'
-          : !filePath ? 'filePath arguments must be passed.' : '')
+      errMsg: 'openDocument:fail' + 'filePath arguments must be passed.'
     })
   }
 }

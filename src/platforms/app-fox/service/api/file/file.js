@@ -91,7 +91,7 @@ export function getFileInfo ({ filePath, digestAlgorithm = 'md5' } = {}, callbac
       invoke(callbackId, {
         errMsg: 'getFileInfo:ok',
         size: meta.size,
-        digestAlgorithm: meta.digest
+        digest: meta.digest
       })
     }, err => {
       invoke(callbackId, {
