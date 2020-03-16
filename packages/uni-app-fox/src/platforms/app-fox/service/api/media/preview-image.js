@@ -20,7 +20,7 @@ export function previewImage ({
       errMsg: 'previewImage:fail: urls is must be an Array and not empty'
     })
   }
-  foxsdk.gallery.previewImage({ 'current': String(current), 'urls': urls, 'indicator ': indicator }, ret => {
+  foxsdk.gallery.previewImage({ 'current': String(current), 'urls': urls, 'indicator': indicator }, ret => {
     foxsdk.logger.info('previewImage back==========', ret)
     if (ret.status === PASS) {
       if (typeof (ret.payload.index) !== 'undefined') {
