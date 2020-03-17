@@ -7,7 +7,7 @@
  */
 import { PASS } from '../constants'
 import { invoke } from 'uni-core/service/bridge'
-import { onMethod } from 'uni-core/service/platform'
+// import { onMethod } from 'uni-core/service/platform'
 
 export function getScreenBrightness (options, callbackId) {
   foxsdk.screen.getScreenBrightness(ret => {
@@ -52,14 +52,25 @@ export function setKeepScreenOn ({ keepScreenOn } = {}, callbackId) {
   })
 }
 
-const callbacks = []
+// const callbacks = []
 
-onMethod('onUserCaptureScreen', res => {
-  callbacks.forEach(callbackId => {
-    invoke(callbackId, res)
-  })
-})
+// onMethod('onUserCaptureScreen', res => {
+//   callbacks.forEach(callbackId => {
+//     invoke(callbackId, res)
+//   })
+// })
 
 export function onUserCaptureScreen (callbackId) {
-  callbacks.push(callbackId)
+  // callbacks.push(callbackId)
+  foxsdk.screen.onUserCaptureScreen(ret => {
+    if (ret.status === PASS) {
+      invoke(callbackId, {
+        errMsg: 'setKeepScreenOn:ok'
+      })
+    } else {
+      invoke(callbackId, {
+        errMsg: 'setKeepScreenOn:fail'
+      })
+    }
+  })
 }
