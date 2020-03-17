@@ -1,7 +1,7 @@
 import '../package.json';
 
-var STAT_URL = 'http://219.143.38.252:19080/yump-mgw/log/log-collector/t0001';
-var STAT_H5_URL = 'http://219.143.38.252:19080/yump-mgw/log/log-collector/t0001';
+var STAT_URL = 'http://192.168.251.163:18080/yump-mgw/log/log-collector/t0001';
+var STAT_H5_URL = 'http://192.168.251.163:18080/yump-mgw/log/log-collector/t0001';
 var PAGE_PVER_TIME = 100;
 
 var UUID_VALUE = 'aaaa'; // 设备好
@@ -12,7 +12,7 @@ var systemInfo = {
 
 };
 var getSystemInfo = function () {
-  if (!systemInfo.appId || !systemInfo.deviceId) {
+  if (!systemInfo.appId || !systemInfo.deviceId || !systemInfo.version) {
     InitSystemInfo();
   }
   return systemInfo
@@ -22,12 +22,18 @@ var InitSystemInfo = function () {
     foxsdk.device.getSystemInfo(function (ret) {
       systemInfo.appId = ret.payload.appid;
       systemInfo.ostype = ret.payload.name;
-      systemInfo.version = ret.payload.versionCode;
     });
   } catch (error) {
     systemInfo.appId = APP_ID;
-    systemInfo.version = APP_VER;
     systemInfo.ostype = OST;
+    console.log('非原生平台');
+  }
+  try {
+    foxsdk.device.getAppversion(function (ret) {
+      systemInfo.version = ret.payload.versionName;
+    });
+  } catch (error) {
+    systemInfo.version = APP_VER;
     console.log('非原生平台');
   }
   try {

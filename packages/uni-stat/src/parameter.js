@@ -11,7 +11,7 @@ let systemInfo = {
 
 }
 export const getSystemInfo = () => {
-  if (!systemInfo.appId || !systemInfo.deviceId) {
+  if (!systemInfo.appId || !systemInfo.deviceId || !systemInfo.version) {
     InitSystemInfo()
   }
   return systemInfo
@@ -21,12 +21,18 @@ export const InitSystemInfo = () => {
     foxsdk.device.getSystemInfo(ret => {
       systemInfo.appId = ret.payload.appid
       systemInfo.ostype = ret.payload.name
-      systemInfo.version = ret.payload.versionCode
     })
   } catch (error) {
     systemInfo.appId = APP_ID
-    systemInfo.version = APP_VER
     systemInfo.ostype = OST
+    console.log('非原生平台')
+  }
+  try {
+    foxsdk.device.getAppversion(ret => {
+      systemInfo.version = ret.payload.versionName
+    })
+  } catch (error) {
+    systemInfo.version = APP_VER
     console.log('非原生平台')
   }
   try {
