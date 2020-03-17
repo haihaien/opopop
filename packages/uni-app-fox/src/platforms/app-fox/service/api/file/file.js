@@ -5,7 +5,7 @@ const SAVE_PATH = `_doc/${SAVED_DIR}`
 const REGEX_FILENAME = /^.*[/]/
 
 function getSavedFileDir (success, fail) {
-  fail = fail || function () {}
+  fail = fail || function () { }
   foxsdk.io.requestFileSystem(foxsdk.io.PRIVATE_DOC, fs => { // 请求_doc fs
     fs.root.getDirectory(SAVED_DIR, { // 获取文件保存目录对象
       create: true
@@ -32,7 +32,7 @@ export function saveFile ({ tempFilePath } = {}, callbackId) {
       extName = '.' + fileName.split('.').pop()
     }
 
-    fileName = (+new Date()) + '' + extName
+    fileName += Date.now();//+ '' + extName
 
     foxsdk.io.resolveLocalFileSystemURL(tempFilePath, entry => { // 读取临时文件 FileEntry
       getSavedFileDir(dir => {
