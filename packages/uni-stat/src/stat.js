@@ -1,12 +1,9 @@
-const PagesJson = require('uni-pages?{"type":"style"}').default
-const statConfig = require('uni-stat-config').default || require('uni-stat-config');
 import {
-  getUuid,
+  getSystemInfo,
+  InitSystemInfo,
   getSgin,
   getSplicing,
   getPackName,
-  getPlatformName,
-  getVersion,
   getChannel,
   getScene,
   getTime,
@@ -23,359 +20,239 @@ import {
   getRoute,
   getPageTypes,
   calibration
-} from './parameter';
+} from './parameter'
 
 import {
   STAT_URL,
-  STAT_VERSION,
   STAT_H5_URL,
   OPERATING_TIME
-} from './config';
-
-const resultOptions = uni.getSystemInfoSync();
-
+} from './config'
+const PagesJson = require('uni-pages?{"type":"style"}').default
+const statConfig = require('uni-stat-config').default || require('uni-stat-config')
+InitSystemInfo()
 class Util {
-  constructor() {
-    this.self = '';
-    this._retry = 0;
-    this._platform = '';
-    this._query = {};
+  constructor () {
+    this.self = ''
+    this._retry = 0
+    this._platform = ''
+    this._query = {}
     this._navigationBarTitle = {
       config: '',
       page: '',
       report: '',
       lt: ''
     }
-    this._operatingTime = 0;
-    this._reportingRequestData = {
-      '1': [],
-      '11': []
-    };
     this.__prevent_triggering = false
 
-    this.__licationHide = false;
-    this.__licationShow = false;
-    this._lastPageRoute = '';
-    this.statData = {
-      uuid: getUuid(),//设备UUID
-      ut: getPlatformName(),
-      mpn: getPackName(),
-      ak: statConfig.appid,//uni-stat的APPID
-      usv: STAT_VERSION,//uni-stat版本
-      v: getVersion(),//plus.runtime.version
-      ch: getChannel(),//渠道
-      cn: '',//国家
-      pn: '',//省份
-      ct: '',//城市
-      t: getTime(),//当前时间
-      tt: '',
-      p: resultOptions.platform === 'android' ? 'a' : 'i',//平台类型
-      brand: resultOptions.brand || '',//品牌
-      md: resultOptions.model,//类型
-      sv: resultOptions.system.replace(/(Android|iOS)\s/, ''),
-      mpsdk: resultOptions.SDKVersion || '',
-      mpv: resultOptions.version || '',
-      lang: resultOptions.language,
-      pr: resultOptions.pixelRatio,
-      ww: resultOptions.windowWidth,
-      wh: resultOptions.windowHeight,
-      sw: resultOptions.screenWidth,
-      sh: resultOptions.screenHeight
-    }
-
+    this.__licationHide = false
+    this.__licationShow = false
+    this._lastPageRoute = ''
+    this.statData = getSystemInfo()
+  }
+  _applicationShow () {
+    // if (this.__licationHide) {
+    //   getLastTime()
+    //   const time = getResidenceTime('app')
+    //   if (time.overtime) {
+    //     let options = {
+    //       path: this._lastPageRoute,
+    //       scene: this.statData.sc
+    //     }
+    //     this._sendReportRequest(options)
+    //   }
+    //   this.__licationHide = false
+    // }
   }
 
-  _applicationShow() {
-    if (this.__licationHide) {
-      getLastTime();
-      const time = getResidenceTime('app');
-      if (time.overtime) {
-        let options = {
-          path: this._lastPageRoute,
-          scene: this.statData.sc
-        }
-        this._sendReportRequest(options);
-      }
-      this.__licationHide = false;
-    }
+  _applicationHide (self, type) {
+    // this.__licationHide = true
+    // getLastTime()
+    // const time = getResidenceTime()
+    // getFirstTime()
+    // const route = getPageRoute(this)
+    // this._sendHideRequest({
+    //   urlref: route,
+    //   urlrefTs: time.residenceTime
+    // }, type)
   }
 
-  _applicationHide(self, type) {
-
-    this.__licationHide = true;
-    getLastTime();
-    const time = getResidenceTime();
-    getFirstTime();
-    const route = getPageRoute(this);
-    this._sendHideRequest({
-      urlref: route,
-      urlref_ts: time.residenceTime
-    }, type)
-  }
-
-  _pageShow() {
-    const route = getPageRoute(this);
-    const routepath = getRoute(this);
+  _pageShow () {
+    const route = getPageRoute(this)
+    const routepath = getRoute(this)
     this._navigationBarTitle.config = PagesJson &&
       PagesJson.pages[routepath] &&
       PagesJson.pages[routepath].titleNView &&
       PagesJson.pages[routepath].titleNView.titleText ||
       PagesJson &&
       PagesJson.pages[routepath] &&
-      PagesJson.pages[routepath].navigationBarTitleText || '';
-
+      PagesJson.pages[routepath].navigationBarTitleText || ''
     if (this.__licationShow) {
-      getFirstTime();
-      this.__licationShow = false;
+      getFirstTime()
+      this.__licationShow = false
       // console.log('这是 onLauch 之后执行的第一次 pageShow ，为下次记录时间做准备');
-      this._lastPageRoute = route;
-      return;
+      this._lastPageRoute = route
+      return
     }
 
-    getLastTime();
+    getLastTime()
     this._lastPageRoute = route
-    const time = getResidenceTime('page');
+    const time = getResidenceTime('page')
     if (time.overtime) {
       let options = {
         path: this._lastPageRoute,
         scene: this.statData.sc
-      };
-      this._sendReportRequest(options);
+      }
+      this._sendReportRequest(options)
     }
-    getFirstTime();
   }
 
-  _pageHide() {
+  _pageHide () {
     if (!this.__licationHide) {
-      getLastTime();
-      const time = getResidenceTime('page');
+      let lastTime = getLastTime()
+      const time = getResidenceTime('page')
       this._sendPageRequest({
         url: this._lastPageRoute,
         urlref: this._lastPageRoute,
-        urlref_ts: time.residenceTime
-      });
-      this._navigationBarTitle = {
-        config: '',
-        page: '',
-        report: '',
-        lt: ''
-      };
-      return;
+        urlrefTs: time.residenceTime,
+        lastTime: lastTime
+      })
     }
   }
 
-  _login() {
+  _login () {
     this._sendEventRequest({
       key: 'login'
     }, 0)
   }
 
-  _share() {
+  _share () {
     this._sendEventRequest({
       key: 'share'
     }, 0)
   }
-  _payment(key) {
+  _payment (key) {
     this._sendEventRequest({
       key
     }, 0)
   }
-  _sendReportRequest(options) {
+  _sendReportRequest (options) {
 
-    this._navigationBarTitle.lt = '1';
-    let query = options.query && JSON.stringify(options.query) !== '{}' ? '?' + JSON.stringify(options.query) : '';
-    this.statData.lt = '1';
-    this.statData.url = (options.path + query) || '';
-    this.statData.t = getTime();
-    this.statData.sc = getScene(options.scene);
-    this.statData.fvts = getFirstVisitTime();
-    this.statData.lvts = getLastVisitTime();
-    this.statData.tvc = getTotalVisitCount();
-    if (getPlatformName() === 'n') {
-      this.getProperty();
-    } else {
-      this.getNetworkInfo();
-    }
   }
-
-  _sendPageRequest(opt) {
+  // 页面上送
+  _sendPageRequest (opt) {
     let {
       url,
-      urlref,
-      urlref_ts
-    } = opt;
-    this._navigationBarTitle.lt = '11';
+      urlrefTs, // 页面停留时间
+      lastTime
+    } = opt
     let options = {
-      ak: this.statData.ak,
-      uuid: this.statData.uuid,
-      lt: '11',
-      ut: this.statData.ut,
-      url,
-      tt: this.statData.tt,
-      urlref,
-      urlref_ts,
-      ch: this.statData.ch,
-      usv: this.statData.usv,
-      t: getTime(),
-      p: this.statData.p
+      channelId: 'app10001',
+      pageId: url,
+      pageName: this._navigationBarTitle.config,
+      pageEntryTime: getFirstTime(),
+      pageExitTime: lastTime,
+      pageTime: urlrefTs
     }
-    this.request(options);
+    Object.assign(options, getSystemInfo())
+    this.request(options, 'page')
   }
 
-  _sendHideRequest(opt, type) {
+  _sendHideRequest (opt, type) {
     let {
-      urlref,
-      urlref_ts
-    } = opt;
+      url,
+      urlrefTs,
+      lastTime
+    } = opt
+
     let options = {
-      ak: this.statData.ak,
-      uuid: this.statData.uuid,
-      lt: '3',
-      ut: this.statData.ut,
-      urlref,
-      urlref_ts,
-      ch: this.statData.ch,
-      usv: this.statData.usv,
-      t: getTime(),
-      p: this.statData.p
+      pageId: url,
+      pageName: this._navigationBarTitle.config,
+      pageEntryTime: getFirstTime(),
+      pageExitTime: lastTime,
+      pageTime: urlrefTs
     }
+    Object.assign(options, getSystemInfo())
     this.request(options, type)
   }
-  _sendEventRequest({
+  // 手动上送
+  _sendEventRequest ({
     key = '',
-    value = ""
+    value = ''
   } = {}) {
-    const route = this._lastPageRoute;
-    let options = {
-      ak: this.statData.ak,
-      uuid: this.statData.uuid,
-      lt: '21',
-      ut: this.statData.ut,
-      url: route,
-      ch: this.statData.ch,
-      e_n: key,
-      e_v: typeof(value) === 'object' ? JSON.stringify(value) : value.toString(),
-      usv: this.statData.usv,
-      t: getTime(),
-      p: this.statData.p
-    }
-    this.request(options);
+    // const route = this._lastPageRoute
+    let options = value
+    Object.assign(options, getSystemInfo())
+    this.request(options, key)
   }
 
-  getNetworkInfo() {
+  getNetworkInfo () {
     uni.getNetworkType({
       success: (result) => {
-        this.statData.net = result.networkType;
-        this.getLocation();
+        this.statData.net = result.networkType
+        this.getLocation()
       }
-    });
+    })
   }
 
-  getProperty() {
+  getProperty () {
     plus.runtime.getProperty(plus.runtime.appid, (wgtinfo) => {
-      this.statData.v = wgtinfo.version || '';
-      this.getNetworkInfo();
-    });
+      this.statData.v = wgtinfo.version || ''
+      this.getNetworkInfo()
+    })
   }
 
-  getLocation() {
+  getLocation () {
     if (statConfig.getLocation) {
       uni.getLocation({
         type: 'wgs84',
         geocode: true,
         success: (result) => {
           if (result.address) {
-            this.statData.cn = result.address.country;
-            this.statData.pn = result.address.province;
-            this.statData.ct = result.address.city;
+            this.statData.cn = result.address.country
+            this.statData.pn = result.address.province
+            this.statData.ct = result.address.city
           }
 
-          this.statData.lat = result.latitude;
-          this.statData.lng = result.longitude;
-          this.request(this.statData);
+          this.statData.lat = result.latitude
+          this.statData.lng = result.longitude
+          this.request(this.statData)
         }
-      });
+      })
     } else {
-      this.statData.lat = 0;
-      this.statData.lng = 0;
-      this.request(this.statData);
+      this.statData.lat = 0
+      this.statData.lng = 0
+      this.request(this.statData)
     }
   }
 
-  request(data, type) {
-    let time = getTime();
-    const title = this._navigationBarTitle;
-    data.ttn = title.page;
-    data.ttpj = title.config;
-    data.ttc = title.report;
-
-    let requestData = this._reportingRequestData;
-    if (getPlatformName() === 'n') {
-      requestData = uni.getStorageSync('__UNI__STAT__DATA') || {}
-    }
-    if (!requestData[data.lt]) {
-      requestData[data.lt] = [];
-    }
-    requestData[data.lt].push(data);
-
-    if (getPlatformName() === 'n') {
-      uni.setStorageSync('__UNI__STAT__DATA', requestData)
-    }
-    if (getPageResidenceTime() < OPERATING_TIME && !type) {
-      return
-    }
-    let uniStatData = this._reportingRequestData
-    if (getPlatformName() === 'n') {
-      uniStatData = uni.getStorageSync('__UNI__STAT__DATA')
-    }
-    // 时间超过，重新获取时间戳
-    setPageResidenceTime();
-    let firstArr = [];
-    let contentArr = [];
-    let lastArr = [];
-
-    for (let i in uniStatData) {
-      const rd = uniStatData[i];
-      rd.forEach((elm) => {
-        const newData = getSplicing(elm);
-        if (i === 0) {
-          firstArr.push(newData);
-        } else if (i === 3) {
-          lastArr.push(newData);
-        } else {
-          contentArr.push(newData);
-        }
-      });
-    }
-
-    firstArr.push(...contentArr, ...lastArr);
+  request (data, type) {
+    // if (getPageResidenceTime() < OPERATING_TIME && !type) {
+    //   return
+    // }
+    // // 时间超过，重新获取时间戳
+    // setPageResidenceTime()
     let optionsData = {
-      usv: STAT_VERSION, //统计 SDK 版本号
-      t: time, //发送请求时的时间戮
-      requests: JSON.stringify(firstArr),
-    };
-
-    this._reportingRequestData = {};
-    if (getPlatformName() === 'n') {
-      uni.removeStorageSync('__UNI__STAT__DATA')
+      eventId: type,
+      properties: data
     }
 
     if (data.ut === 'h5' || data.ut === 'fox') {
-      this.imageRequest(optionsData)
-      return
-    }
-
-    if (getPlatformName() === 'n' && this.statData.p === 'a') {
+      // this.imageRequest(optionsData)
+      // 网关只支持post
       setTimeout(() => {
-        this._sendRequest(optionsData);
+        this._sendRequest(optionsData)
       }, 200)
       return
     }
     this._sendRequest(optionsData)
   }
-  _sendRequest(optionsData) {
+  _sendRequest (optionsData) {
+    console.log('上送数据：', optionsData)
     uni.request({
       url: STAT_URL,
+      header: {
+        appId: '10000001'
+      },
       method: 'POST',
       // header: {
       //   'content-type': 'application/json' // 默认值
@@ -387,150 +264,150 @@ class Util {
         // }
       },
       fail: (e) => {
+        // 重试3次
         if (++this._retry < 3) {
           setTimeout(() => {
-            this._sendRequest(optionsData);
-          }, 1000);
+            this._sendRequest(optionsData)
+          }, 1000)
         }
       }
-    });
+    })
   }
   /**
    * h5 请求
    */
-  imageRequest(data) {
-    let image = new Image();
-    let options = getSgin(GetEncodeURIComponentOptions(data)).options;
+  imageRequest (data) {
+    let image = new Image()
+    let options = getSgin(GetEncodeURIComponentOptions(data)).options
     image.src = STAT_H5_URL + '?' + options
   }
 
-  sendEvent(key, value) {
+  sendEvent (key, value) {
     // 校验 type 参数
     if (calibration(key, value)) return
 
     if (key === 'title') {
-      this._navigationBarTitle.report = value;
+      this._navigationBarTitle.report = value
       return
     }
     this._sendEventRequest({
       key,
-      value: typeof(value) === 'object' ? JSON.stringify(value) : value
-    }, 1);
+      value: typeof (value) === 'object' ? value : value
+    }, 1)
   }
 }
 
-
 class Stat extends Util {
-  static getInstance() {
+  static getInstance () {
     if (!this.instance) {
-      this.instance = new Stat();
+      this.instance = new Stat()
     }
-    return this.instance;
+    return this.instance
   }
-  constructor() {
+  constructor () {
     super()
-    this.instance = null;
+    this.instance = null
     // 注册拦截器
     if (typeof uni.addInterceptor === 'function') {
-      this.addInterceptorInit();
-      this.interceptLogin();
-      this.interceptShare(true);
-      this.interceptRequestPayment();
+      this.addInterceptorInit()
+      // this.interceptLogin()
+      // this.interceptShare(true)
+      this.interceptRequestPayment()
     }
   }
 
-  addInterceptorInit() {
-    let self = this;
+  addInterceptorInit () {
+    let self = this
     uni.addInterceptor('setNavigationBarTitle', {
-      invoke(args) {
+      invoke (args) {
         self._navigationBarTitle.page = args.title
       }
     })
   }
 
-  interceptLogin() {
-    let self = this;
+  interceptLogin () {
+    let self = this
     uni.addInterceptor('login', {
-      complete() {
-        self._login();
+      complete () {
+        self._login()
       }
     })
   }
 
-  interceptShare(type) {
-    let self = this;
+  interceptShare (type) {
+    let self = this
     if (!type) {
-      self._share();
+      self._share()
       return
     }
     uni.addInterceptor('share', {
-      success() {
-        self._share();
+      success () {
+        self._share()
       },
-      fail() {
-        self._share();
+      fail () {
+        self._share()
       }
     })
   }
 
-  interceptRequestPayment() {
-    let self = this;
+  interceptRequestPayment () {
+    let self = this
     uni.addInterceptor('requestPayment', {
-      success() {
-        self._payment('pay_success');
+      success () {
+        self._payment('pay_success')
       },
-      fail() {
-        self._payment('pay_fail');
+      fail () {
+        self._payment('pay_fail')
       }
     })
   }
 
-  report(options, self) {
-    this.self = self;
+  report (options, self) {
+    this.self = self
     // if (process.env.NODE_ENV === 'development') {
     //   console.log('report init');
     // }
     setPageResidenceTime()
-    this.__licationShow = true;
-    this._sendReportRequest(options, true);
+    this.__licationShow = true
+    this._sendReportRequest(options, true)
   }
 
-  load(options, self) {
+  load (options, self) {
     if (!self.$scope && !self.$mp) {
       const page = getCurrentPages()
       self.$scope = page[page.length - 1]
     }
-    this.self = self;
-    this._query = options;
+    this.self = self
+    this._query = options
   }
 
-  show(self) {
-    this.self = self;
+  show (self) {
+    this.self = self
     if (getPageTypes(self)) {
-      this._pageShow(self);
+      this._pageShow(self)
     } else {
-      this._applicationShow(self);
+      this._applicationShow(self)
     }
   }
 
-  ready(self) {
+  ready (self) {
     // this.self = self;
     // if (getPageTypes(self)) {
     //   this._pageShow(self);
     // }
   }
-  hide(self) {
-    this.self = self;
+  hide (self) {
+    this.self = self
     if (getPageTypes(self)) {
-      this._pageHide(self);
+      this._pageHide(self)
     } else {
-      this._applicationHide(self, true);
+      this._applicationHide(self, true)
     }
   }
-  error(em) {
+  error (em) {
     if (this._platform === 'devtools') {
       if (process.env.NODE_ENV === 'development') {
-        console.info('当前运行环境为开发者工具，不上报数据。');
+        console.info('当前运行环境为开发者工具，不上报数据。')
       }
       // return;
     }
@@ -540,21 +417,22 @@ class Stat extends Util {
     } else {
       emVal = em.stack
     }
-    let options = {
-      ak: this.statData.ak,
-      uuid: this.statData.uuid,
-      lt: '31',
-      ut: this.statData.ut,
-      ch: this.statData.ch,
-      mpsdk: this.statData.mpsdk,
-      mpv: this.statData.mpv,
-      v: this.statData.v,
-      em: emVal,
-      usv: this.statData.usv,
-      t: getTime(),
-      p: this.statData.p
-    }
-    this.request(options);
+    // 当前不需要从上报
+    // let options = {
+    //   ak: this.statData.ak,
+    //   uuid: this.statData.uuid,
+    //   lt: '31',
+    //   ut: this.statData.ut,
+    //   ch: this.statData.ch,
+    //   mpsdk: this.statData.mpsdk,
+    //   mpv: this.statData.mpv,
+    //   v: this.statData.v,
+    //   em: emVal,
+    //   usv: this.statData.usv,
+    //   t: getTime(),
+    //   p: this.statData.p
+    // }
+    // this.request(options)
   }
 }
 export default Stat

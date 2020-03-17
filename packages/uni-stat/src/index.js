@@ -1,54 +1,59 @@
-import Stat from './stat.js';
-const stat = Stat.getInstance();
+import Stat from './stat.js'
+const stat = Stat.getInstance()
 let isHide = false
 const lifecycle = {
-  onLaunch(options) {
-    stat.report(options, this);
+  onLaunch (options) {
+    stat.report(options, this)
   },
-  onReady() {
-    stat.ready(this);
+  onReady () {
+    stat.ready(this)
   },
-  onLoad(options) {
-    stat.load(options, this);
+  onLoad (options) {
+    stat.load(options, this)
     // 重写分享，获取分享上报事件
     if (this.$scope && this.$scope.onShareAppMessage) {
-      let oldShareAppMessage = this.$scope.onShareAppMessage;
-      this.$scope.onShareAppMessage = function(options) {
-        stat.interceptShare(false);
+      let oldShareAppMessage = this.$scope.onShareAppMessage
+      this.$scope.onShareAppMessage = function (options) {
+        stat.interceptShare(false)
         return oldShareAppMessage.call(this, options)
       }
     }
   },
-  onShow() {
+  onShow () {
     isHide = false
-    stat.show(this);
+    stat.show(this)
   },
-  onHide() {
+  onHide () {
     isHide = true
-    stat.hide(this);
+    stat.hide(this)
   },
-  onUnload() {
+  onUnload () {
     if (isHide) {
       isHide = false
       return
     }
-    stat.hide(this);
+    stat.hide(this)
   },
-  onError(e) {
+  onError (e) {
     stat.error(e)
   }
 }
 
-function main() {
+function main () {
   if (process.env.NODE_ENV === 'development') {
-    uni.report = function(type, options) {};
-  }else{
+    // uni.report = function(type, options) {};
     const Vue = require('vue');
-    (Vue.default || Vue).mixin(lifecycle);
-    uni.report = function(type, options) {
-      stat.sendEvent(type, options);
-    };
+    (Vue.default || Vue).mixin(lifecycle)
+    uni.report = function (type, options) {
+      stat.sendEvent(type, options)
+    }
+  } else {
+    const Vue = require('vue');
+    (Vue.default || Vue).mixin(lifecycle)
+    uni.report = function (type, options) {
+      stat.sendEvent(type, options)
+    }
   }
 }
 
-main();
+main()
