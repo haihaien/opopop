@@ -29,7 +29,7 @@ var InitSystemInfo = function () {
     console.log('非原生平台');
   }
   try {
-    foxsdk.device.getAppversion(function (ret) {
+    foxsdk.device.version(function (ret) {
       systemInfo.version = ret.payload.versionName;
     });
   } catch (error) {

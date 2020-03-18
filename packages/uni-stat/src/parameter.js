@@ -4,7 +4,7 @@ import {
 } from './config'
 
 const UUID_VALUE = 'aaaa' // 设备好
-const APP_ID = '10000004' // appid
+const APP_ID = '10000002' // appid
 const APP_VER = '1.0.0.1'// app 版本号
 const OST = 'H5' // 运行环境
 let systemInfo = {
@@ -19,7 +19,8 @@ export const getSystemInfo = () => {
 export const InitSystemInfo = () => {
   try {
     foxsdk.device.getSystemInfo(ret => {
-      systemInfo.appId = ret.payload.appid
+      // systemInfo.appId = ret.payload.appid
+      systemInfo.appId = APP_ID// 覆盖原生字段
       systemInfo.ostype = ret.payload.name
     })
   } catch (error) {
@@ -28,7 +29,7 @@ export const InitSystemInfo = () => {
     console.log('非原生平台')
   }
   try {
-    foxsdk.device.getAppversion(ret => {
+    foxsdk.device.version(ret => {
       systemInfo.version = ret.payload.versionName
     })
   } catch (error) {
