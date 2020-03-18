@@ -5,7 +5,7 @@ var STAT_H5_URL = 'http://192.168.251.163:18080/yump-mgw/log/log-collector/t0001
 var PAGE_PVER_TIME = 100;
 
 var UUID_VALUE = 'aaaa'; // 设备好
-var APP_ID = '10000004'; // appid
+var APP_ID = '10000002'; // appid
 var APP_VER = '1.0.0.1';// app 版本号
 var OST = 'H5'; // 运行环境
 var systemInfo = {
@@ -20,7 +20,8 @@ var getSystemInfo = function () {
 var InitSystemInfo = function () {
   try {
     foxsdk.device.getSystemInfo(function (ret) {
-      systemInfo.appId = ret.payload.appid;
+      // systemInfo.appId = ret.payload.appid
+      systemInfo.appId = APP_ID;// 覆盖原生字段
       systemInfo.ostype = ret.payload.name;
     });
   } catch (error) {
