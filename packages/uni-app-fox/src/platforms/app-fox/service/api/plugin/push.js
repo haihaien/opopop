@@ -4,7 +4,7 @@ import {
 const {
   invokeCallbackHandler: invoke
 } = UniServiceJSBridge
-const pushes = []
+const callbacks = []
 /***
  * @desc 开启推送
  * @param {string} content 消息显示的内容，在系统通知中心中显示的文本内容。
@@ -101,8 +101,8 @@ function invokeListener (ret, callbackId) {
  */
 export function onPush (callbackId) {
   console.log('onpush======', callbackId)
+  callbacks.push(callbackId)
   foxsdk.events.addEventListener('pushMessage', ret => {
-    pushes.push(callbackId)
     invokeListener(ret, callbackId)
   })
 }
@@ -114,7 +114,7 @@ export function onPush (callbackId) {
 export function offPush (callbackId) {
   console.log('offPush======', callbackId)
   foxsdk.events.removeEventListener('pushMessage', ret => {
-    pushes.forEach(callbackId => {
+    callbacks.forEach(callbackId => {
       invokeListener(ret, callbackId)
     })
   })

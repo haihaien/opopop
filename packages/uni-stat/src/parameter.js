@@ -1,46 +1,58 @@
 import {
   PAGE_PVER_TIME,
   APP_PVER_TIME
-} from './config';
+} from './config'
 
-const UUID_KEY = '__DC_STAT_UUID';
-const UUID_VALUE = '__DC_UUID_VALUE';
+const UUID_VALUE = 'aaaa' // 设备好
+const APP_ID = '10000002' // appid
+const APP_VER = '1.0.0.1'// app 版本号
+const OST = 'H5' // 运行环境
+let systemInfo = {
 
-export function getUuid() {
-  let uuid = '';
-  if (getPlatformName() === 'n') {
-    try {
-      uuid = plus.runtime.getDCloudId()
-    } catch (e) {
-      uuid = '';
-    }
-    return uuid
+}
+export const getSystemInfo = () => {
+  if (!systemInfo.appId || !systemInfo.deviceId || !systemInfo.version) {
+    InitSystemInfo()
   }
-
+  return systemInfo
+}
+export const InitSystemInfo = () => {
   try {
-    uuid = uni.getStorageSync(UUID_KEY);
-  } catch (e) {
-    uuid = UUID_VALUE;
+    foxsdk.device.getSystemInfo(ret => {
+      // systemInfo.appId = ret.payload.appid
+      systemInfo.appId = APP_ID// 覆盖原生字段
+      systemInfo.ostype = ret.payload.name
+    })
+  } catch (error) {
+    systemInfo.appId = APP_ID
+    systemInfo.ostype = OST
+    console.log('非原生平台')
   }
-
-  if (!uuid) {
-    uuid = Date.now() + '' + Math.floor(Math.random() * 1e7);
-    try {
-      uni.setStorageSync(UUID_KEY, uuid);
-    } catch (e) {
-      uni.setStorageSync(UUID_KEY, UUID_VALUE);
-    }
+  try {
+    foxsdk.device.version(ret => {
+      systemInfo.version = ret.payload.versionName
+    })
+  } catch (error) {
+    systemInfo.version = APP_VER
+    console.log('非原生平台')
   }
-  return uuid;
+  try {
+    foxsdk.device.getUUID(ret => {
+      systemInfo.deviceId = ret.payload.uuid
+    })
+  } catch (error) {
+    systemInfo.deviceId = UUID_VALUE
+    console.log('非原生平台')
+  }
 }
 
 export const getSgin = (statData) => {
   let arr = Object.keys(statData)
-  let sortArr = arr.sort();
-  let sgin = {};
+  let sortArr = arr.sort()
+  let sgin = {}
   let sginStr = ''
   for (var i in sortArr) {
-    sgin[sortArr[i]] = statData[sortArr[i]];
+    sgin[sortArr[i]] = statData[sortArr[i]]
     sginStr += sortArr[i] + '=' + statData[sortArr[i]] + '&'
   }
   // const options = sginStr.substr(0, sginStr.length - 1)
@@ -49,7 +61,7 @@ export const getSgin = (statData) => {
   return {
     sign: '',
     options: sginStr.substr(0, sginStr.length - 1)
-  };
+  }
 }
 
 export const getSplicing = (data) => {
@@ -61,7 +73,7 @@ export const getSplicing = (data) => {
 }
 
 export const getTime = () => {
-  return parseInt(new Date().getTime() / 1000);
+  return parseInt(new Date().getTime() / 1000)
 }
 
 export const getPlatformName = () => {
@@ -75,7 +87,7 @@ export const getPlatformName = () => {
     'mp-toutiao': 'tt',
     'mp-qq': 'qq'
   }
-  return platformList[process.env.VUE_APP_PLATFORM];
+  return platformList[process.env.VUE_APP_PLATFORM]
 }
 
 export const getPackName = () => {
@@ -87,70 +99,68 @@ export const getPackName = () => {
 }
 
 export const getVersion = () => {
-  return getPlatformName() === 'n' ? plus.runtime.version : '';
+  return getPlatformName() === 'n' ? plus.runtime.version : ''
 }
 
 export const getChannel = () => {
-  const platformName = getPlatformName();
-  let channel = '';
+  const platformName = getPlatformName()
+  let channel = ''
   if (platformName === 'n') {
-    channel = plus.runtime.channel;
+    channel = plus.runtime.channel
   }
   if (platformName === 'wx') {
     // TODO;
   }
-  return channel;
+  return channel
 }
 
 export const getScene = (options) => {
-  const platformName = getPlatformName();
-  let scene = '';
+  const platformName = getPlatformName()
+  let scene = ''
   if (options) {
-    return options;
+    return options
   }
   if (platformName === 'wx') {
-    scene = uni.getLaunchOptionsSync().scene;
+    scene = uni.getLaunchOptionsSync().scene
   }
-  return scene;
+  return scene
 }
 const First__Visit__Time__KEY = 'First__Visit__Time'
 const Last__Visit__Time__KEY = 'Last__Visit__Time'
 
 export const getFirstVisitTime = () => {
-  const timeStorge = uni.getStorageSync(First__Visit__Time__KEY);
-  let time = 0;
+  const timeStorge = uni.getStorageSync(First__Visit__Time__KEY)
+  let time = 0
   if (timeStorge) {
-    time = timeStorge;
+    time = timeStorge
   } else {
-    time = getTime();
-    uni.setStorageSync(First__Visit__Time__KEY, time);
-    uni.removeStorageSync(Last__Visit__Time__KEY);
+    time = getTime()
+    uni.setStorageSync(First__Visit__Time__KEY, time)
+    uni.removeStorageSync(Last__Visit__Time__KEY)
   }
-  return time;
+  return time
 }
 
 export const getLastVisitTime = () => {
-  const timeStorge = uni.getStorageSync(Last__Visit__Time__KEY);
-  let time = 0;
+  const timeStorge = uni.getStorageSync(Last__Visit__Time__KEY)
+  let time = 0
   if (timeStorge) {
-    time = timeStorge;
+    time = timeStorge
   } else {
-    time = '';
+    time = ''
   }
-  uni.setStorageSync(Last__Visit__Time__KEY, getTime());
-  return time;
+  uni.setStorageSync(Last__Visit__Time__KEY, getTime())
+  return time
 }
 
-
 const PAGE_RESIDENCE_TIME = '__page__residence__time'
-let First_Page_residence_time = 0;
-let Last_Page_residence_time = 0;
-
+let First_Page_residence_time = 0
+let Last_Page_residence_time = 0
 
 export const setPageResidenceTime = () => {
   First_Page_residence_time = getTime()
   if (getPlatformName() === 'n') {
-    uni.setStorageSync(PAGE_RESIDENCE_TIME, getTime());
+    uni.setStorageSync(PAGE_RESIDENCE_TIME, getTime())
   }
   return First_Page_residence_time
 }
@@ -158,138 +168,135 @@ export const setPageResidenceTime = () => {
 export const getPageResidenceTime = () => {
   Last_Page_residence_time = getTime()
   if (getPlatformName() === 'n') {
-    First_Page_residence_time = uni.getStorageSync(PAGE_RESIDENCE_TIME);
+    First_Page_residence_time = uni.getStorageSync(PAGE_RESIDENCE_TIME)
   }
   return Last_Page_residence_time - First_Page_residence_time
 }
 const TOTAL__VISIT__COUNT = 'Total__Visit__Count'
 export const getTotalVisitCount = () => {
-  const timeStorge = uni.getStorageSync(TOTAL__VISIT__COUNT);
-  let count = 1;
+  const timeStorge = uni.getStorageSync(TOTAL__VISIT__COUNT)
+  let count = 1
   if (timeStorge) {
-    count = timeStorge;
+    count = timeStorge
     count++
   }
-  uni.setStorageSync(TOTAL__VISIT__COUNT, count);
-  return count;
+  uni.setStorageSync(TOTAL__VISIT__COUNT, count)
+  return count
 }
 
 export const GetEncodeURIComponentOptions = (statData) => {
-  let data = {};
+  let data = {}
   for (let prop in statData) {
-    data[prop] = encodeURIComponent(statData[prop]);
+    data[prop] = encodeURIComponent(statData[prop])
   }
-  return data;
+  return data
 }
 
-let Set__First__Time = 0;
-let Set__Last__Time = 0;
+let Set__First__Time = 0
+let Set__Last__Time = 0
 
 export const getFirstTime = () => {
-  let time = new Date().getTime();
-  Set__First__Time = time;
-  Set__Last__Time = 0;
-  return time;
+  let time = new Date().getTime()
+  Set__First__Time = time
+  Set__Last__Time = 0
+  return time
 }
-
 
 export const getLastTime = () => {
-  let time = new Date().getTime();
-  Set__Last__Time = time;
-  return time;
+  let time = new Date().getTime()
+  Set__Last__Time = time
+  return time
 }
-
-
+// 停留时间 单位ms
 export const getResidenceTime = (type) => {
-  let residenceTime = 0;
+  let residenceTime = 0
   if (Set__First__Time !== 0) {
     residenceTime = Set__Last__Time - Set__First__Time
   }
 
-  residenceTime = parseInt(residenceTime / 1000);
-  residenceTime = residenceTime < 1 ? 1 : residenceTime;
-  if (type === 'app') {
-    let overtime = residenceTime > APP_PVER_TIME ? true : false
-    return {
-      residenceTime,
-      overtime
-    };
-  }
+  residenceTime = residenceTime < 1 ? 1 : residenceTime
+  // 此处不需要
+  // if (type === 'app') {
+  //   let overtime = residenceTime > APP_PVER_TIME
+  //   return {
+  //     residenceTime,
+  //     overtime
+  //   }
+  // }
   if (type === 'page') {
-    let overtime = residenceTime > PAGE_PVER_TIME ? true : false
+    let overtime = residenceTime > PAGE_PVER_TIME
     return {
       residenceTime,
       overtime
-    };
+    }
   }
 
   return {
     residenceTime
-  };
-
+  }
 }
 
 export const getRoute = () => {
-  var pages = getCurrentPages();
-  var page = pages[pages.length - 1];
+  var pages = getCurrentPages()
+  var page = pages[pages.length - 1]
   let _self = page.$vm
 
   if (getPlatformName() === 'bd') {
-    return _self.$mp && _self.$mp.page.is;
+    return _self.$mp && _self.$mp.page.is
   } else {
-    return (_self.$scope && _self.$scope.route) || (_self.$mp && _self.$mp.page.route);
+    return (_self.$scope && _self.$scope.route) || (_self.$mp && _self.$mp.page.route)
   }
-};
+}
 
 export const getPageRoute = (self) => {
-  var pages = getCurrentPages();
-  var page = pages[pages.length - 1];
+  var pages = getCurrentPages()
+  var page = pages[pages.length - 1]
   let _self = page.$vm
-  let query = self._query;
-  let str = query && JSON.stringify(query) !== '{}' ? '?' + JSON.stringify(query) : '';
+  let query = self._query
+  let str = query && JSON.stringify(query) !== '{}' ? '?' + JSON.stringify(query) : ''
   // clear
-  self._query = '';
+  self._query = ''
   if (getPlatformName() === 'bd') {
-    return _self.$mp && _self.$mp.page.is + str;
+    return _self.$mp && _self.$mp.page.is + str
   } else {
-    return (_self.$scope && _self.$scope.route + str )|| (_self.$mp && _self.$mp.page.route + str);
+    return (_self.$scope && _self.$scope.route + str) || (_self.$mp && _self.$mp.page.route + str)
   }
-};
+}
 
 export const getPageTypes = (self) => {
   if (self.mpType === 'page' || (self.$mp && self.$mp.mpType === 'page') || self.$options.mpType === 'page') {
-    return true;
+    return true
   }
-  return false;
+  return false
 }
 
 export const calibration = (eventName, options) => {
   //  login 、 share 、pay_success 、pay_fail 、register 、title
-  if(!eventName){
-    console.error(`uni.report 缺少 [eventName] 参数`);
+  if (!eventName) {
+    console.error(`uni.report 缺少 [eventName] 参数`)
     return true
   }
   if (typeof eventName !== 'string') {
-    console.error(`uni.report [eventName] 参数类型错误,只能为 String 类型`);
+    console.error(`uni.report [eventName] 参数类型错误,只能为 String 类型`)
     return true
   }
   if (eventName.length > 255) {
-    console.error(`uni.report [eventName] 参数长度不能大于 255`);
+    console.error(`uni.report [eventName] 参数长度不能大于 255`)
     return true
   }
 
   if (typeof options !== 'string' && typeof options !== 'object') {
-    console.error(`uni.report [options] 参数类型错误,只能为 String 或 Object 类型`);
+    console.error(`uni.report [options] 参数类型错误,只能为 String 或 Object 类型`)
     return true
   }
 
   if (typeof options === 'string' && options.length > 255) {
-    console.error(`uni.report [options] 参数长度不能大于 255`);
+    console.error(`uni.report [options] 参数长度不能大于 255`)
     return true
   }
 
   if (eventName === 'title' && typeof options !== 'string') {
-    console.error('uni.report [eventName] 参数为 title 时，[options] 参数只能为 String 类型');
+    console.error('uni.report [eventName] 参数为 title 时，[options] 参数只能为 String 类型')
     return true
   }
 }
