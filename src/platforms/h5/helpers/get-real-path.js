@@ -5,7 +5,8 @@ const DATA_RE = /^data:.*,.*/
 
 function addBase (filePath) {
   if (__uniConfig.router.base) {
-    return __uniConfig.router.base + filePath
+    // return __uniConfig.router.base + filePath
+    return '/' + filePath
   }
   return filePath
 }

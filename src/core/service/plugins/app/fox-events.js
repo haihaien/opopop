@@ -6,7 +6,6 @@
  * @Description: 注册全局监听
  */
 const PASS = '0'
-foxsdk.logger.info('全局监听添加====')
 window.eventsCbId = {}
 /**
  * 触发 service 层，与 onMethod 对应
