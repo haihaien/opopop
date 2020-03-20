@@ -26,18 +26,19 @@ function getSavedFileDir (success, fail) {
  */
 export function saveFile ({ tempFilePath } = {}, callbackId) {
   let fileName = tempFilePath.replace(REGEX_FILENAME, '')
+  console.log('fileName==========', fileName)
   if (fileName) {
     let extName = ''
-    if (~fileName.indexOf('.')) {
+    let lastIndex = fileName.lastIndexOf('.')
+    if (~lastIndex) {
       extName = '.' + fileName.split('.').pop()
+      fileName = fileName.substring(0, lastIndex)
     }
-
-    fileName += Date.now();//+ '' + extName
 
     foxsdk.io.resolveLocalFileSystemURL(tempFilePath, entry => { // 读取临时文件 FileEntry
       getSavedFileDir(dir => {
         entry.copyTo(dir.fullPath, fileName, () => { // 复制临时文件 FileEntry，为了避免把相册里的文件删除，使用 copy，微信中是要删除临时文件的
-          const savedFilePath = SAVE_PATH + '/' + fileName
+          const savedFilePath = SAVE_PATH + '/' + fileName + extName
           invoke(callbackId, {
             errMsg: 'saveFile:ok',
             savedFilePath

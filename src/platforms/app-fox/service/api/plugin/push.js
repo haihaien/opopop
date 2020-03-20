@@ -4,7 +4,7 @@ import {
 const {
   invokeCallbackHandler: invoke
 } = UniServiceJSBridge
-
+const callbacks = []
 /***
  * @desc 开启推送
  * @param {string} content 消息显示的内容，在系统通知中心中显示的文本内容。
@@ -82,14 +82,12 @@ export function unsubscribePush ({ notificationId } = {}, callbackId) {
 
 // 处理监听回调
 function invokeListener (ret, callbackId) {
-  foxsdk.logger.info('ret=========', ret)
   if (ret.status === PASS) {
     foxsdk.logger.info('PASS=========', ret)
     invoke(callbackId, {
       errMsg: 'pushListener:ok'
     })
   } else {
-    foxsdk.logger.info('Fail=========', ret)
     invoke(callbackId, {
       errMsg: 'pushListener:fail:' + ret.message,
       code: ret.status,
@@ -102,6 +100,8 @@ function invokeListener (ret, callbackId) {
  *
  */
 export function onPush (callbackId) {
+  console.log('onpush======', callbackId)
+  callbacks.push(callbackId)
   foxsdk.events.addEventListener('pushMessage', ret => {
     invokeListener(ret, callbackId)
   })
@@ -112,7 +112,10 @@ export function onPush (callbackId) {
  *
  */
 export function offPush (callbackId) {
+  console.log('offPush======', callbackId)
   foxsdk.events.removeEventListener('pushMessage', ret => {
-    invokeListener(ret, callbackId)
+    callbacks.forEach(callbackId => {
+      invokeListener(ret, callbackId)
+    })
   })
 }
