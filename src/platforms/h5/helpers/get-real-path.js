@@ -4,8 +4,11 @@ const SCHEME_RE = /^([a-z-]+:)?\/\//i
 const DATA_RE = /^data:.*,.*/
 
 function addBase (filePath) {
+  // if (__uniConfig.router.base) {
+  //   // return __uniConfig.router.base + filePath
+  //   return '/' + filePath
+  // }
   if (__uniConfig.router.base) {
-    // return __uniConfig.router.base + filePath
     return '/' + filePath
   }
   return filePath
@@ -24,9 +27,15 @@ export default function getRealPath (filePath) {
     return filePath
   }
 
-  const pages = getCurrentPages()
-  if (pages.length) {
-    return addBase(getRealRoute(pages[pages.length - 1].$page.route, filePath).substr(1))
+  if (!__uniConfig.router.base) {
+    try {
+      const pages = getCurrentPages()
+      if (pages.length) {
+        return addBase(getRealRoute(pages[pages.length - 1].$page.route, filePath).substr(1))
+      }
+    } catch (error) {
+      console.log('getCurrentPages is error')
+    }
   }
 
   return filePath
