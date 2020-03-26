@@ -83,7 +83,6 @@ export function unsubscribePush ({ notificationId } = {}, callbackId) {
 // 处理监听回调
 function invokeListener (ret, callbackId) {
   if (ret.status === PASS) {
-    foxsdk.logger.info('PASS=========', ret)
     invoke(callbackId, {
       errMsg: 'pushListener:ok'
     })
@@ -100,7 +99,6 @@ function invokeListener (ret, callbackId) {
  *
  */
 export function onPush (callbackId) {
-  console.log('onpush======', callbackId)
   callbacks.push(callbackId)
   foxsdk.events.addEventListener('pushMessage', ret => {
     invokeListener(ret, callbackId)

@@ -34,11 +34,12 @@ const createDownloadTaskById = function (downloadTaskId, { url, header } = {}) {
     }
   })
   downloader.stateChanged(download => {
+    console.log('download进度======', download)
     if (download.downloadedSize && download.totalSize) {
       publishStateChange({
         downloadTaskId,
         state: 'progressUpdate',
-        progress: parseInt(download.downloadedSize / download.totalSize * 100),
+        progress: parseInt(parseFloat(download.downloadedSize) / parseFloat(download.totalSize) * 100),
         totalBytesWritten: download.downloadedSize,
         totalBytesExpectedToWrite: download.totalSize
       })

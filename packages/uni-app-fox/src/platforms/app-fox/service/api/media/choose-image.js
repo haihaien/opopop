@@ -76,6 +76,7 @@ export function chooseImage ({
   sourceType = ['album', 'camera']
 } = {}, callbackId) {
   // sizeType参数转换
+  // wwwwwwwwwwww
   var foxSizeType = String((sizeType.indexOf('original') !== -1 && sizeType.indexOf('compressed') !== -1)
     ? 2 : sizeType.indexOf('compressed') !== -1 ? 1 : 0)
   if (sourceType.length > 1) { // 多选框

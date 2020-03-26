@@ -19,70 +19,70 @@ const createUploadTaskById = function (upoadTaskId, {
   formData = {}
 } = {}) {
   if (files.length === 0) files.push(filePath)
-  if (files.length > 0) {
-    files.forEach((v, i) => {
-      let curName = v.substring(v.lastIndexOf('/') + 1)
-      // 创建任务
-      uploader[i] = foxsdk.uploader.createUpload(url, {
-        timeout: __uniConfig.networkTimeout.uploadFile ? __uniConfig.networkTimeout.uploadFile / 1000 : 120,
-        filename: TEMP_PATH + '/upload/',
-        header,
-        // 需要与其它平台上的表现保持一致，不走重试的逻辑。
-        retry: 0,
-        retryInterval: 0
-      }, task => {
-        if (task.state === foxsdk.uploader.UploadState.Finished) {
-          publishStateChange({
-            upoadTaskId,
-            state: 'success',
-            tempFilePath: task.filename,
-            statusCode: '200'
-          })
-        } else {
-          publishStateChange({
-            upoadTaskId,
-            state: 'fail',
-            statusCode: '200'
-          })
-        }
+  // 创建任务
+  uploader = foxsdk.uploader.createUpload(url, {
+    timeout: __uniConfig.networkTimeout.uploadFile ? __uniConfig.networkTimeout.uploadFile / 1000 : 120,
+    filename: TEMP_PATH + '/upload/',
+    header,
+    // 需要与其它平台上的表现保持一致，不走重试的逻辑。
+    retry: 0,
+    retryInterval: 0
+  }, task => {
+    if (task.state === foxsdk.uploader.UploadState.Finished) {
+      publishStateChange({
+        upoadTaskId,
+        state: 'success',
+        tempFilePath: task.filename,
+        statusCode: '200'
       })
-      uploader[i].addFile(v, {
-        key: 'key' + uploadTaskId + 'index' + i,
-        name: files.length === 1 ? name : curName
-      }, retObj => {
-        if (retObj.status === '0') {
-          foxsdk.logger.info('addfile res success====')
-          publishStateChange({
-            uploadTaskId,
-            state: 'success',
-            statusCode: '200'
-          })
-        } else {
-          publishStateChange({
-            uploadTaskId,
-            state: 'fail',
-            statusCode: '200'
-          })
-        }
+    } else {
+      publishStateChange({
+        upoadTaskId,
+        state: 'fail',
+        statusCode: '200'
       })
-      // 状态监听
-      uploader[i].stateChanged(upload => {
-        if (upload.uploadedSize && upload.totalSize) {
-          publishStateChange({
-            uploadTaskId,
-            state: 'progressUpdate',
-            progress: parseInt(upload.uploadedSize / upload.totalSize * 100),
-            totalBytesWritten: upload.uploadedSize,
-            totalBytesExpectedToWrite: upload.totalSize
-          })
-        }
-      })
-      setTimeout(() => {
-        uploader[i].start()
-      }, 10)
+    }
+  })
+
+  files.forEach((v, i) => {
+    let curName = v.substring(v.lastIndexOf('/') + 1)
+    uploader.addFile(v, {
+      key: 'key' + uploadTaskId + 'index' + i,
+      name: files.length === 1 ? name : curName
+    }, retObj => {
+      if (retObj.status === '0') {
+        publishStateChange({
+          uploadTaskId,
+          state: 'success',
+          statusCode: '200'
+        })
+      } else {
+        publishStateChange({
+          uploadTaskId,
+          state: 'fail',
+          statusCode: '200'
+        })
+      }
     })
-  }
+  })
+  // 状态监听
+  uploader.stateChanged(upload => {
+    if (upload.uploadedSize && upload.totalSize) {
+      publishStateChange({
+        uploadTaskId,
+        state: 'progressUpdate',
+        progress: parseInt(parseFloat(upload.uploadedSize) / parseFloat(upload.totalSize) * 100),
+        totalBytesSent: upload.uploadedSize,
+        totalBytesExpectedToSend: upload.totalSize
+      })
+    }
+  })
+
   uploadTasks[uploadTaskId] = uploader
+  setTimeout(() => {
+    uploader.startAll()
+  }, 10)
+
   return {
     uploadTaskId,
     errMsg: 'createUploadTask:ok'
@@ -94,11 +94,7 @@ export function operateRequestTask ({ uploadTaskId, operationType } = {}) {
   const uploadTask = uploadTasks[uploadTaskId]
   if (uploadTask && operationType === 'abort') {
     delete uploadTasks[uploadTaskId]
-    for (let i = 0, len = uploadTask.length; i < len; i++) {
-      setTimeout(function () {
-        uploadTask[i].abort()
-      }, 10)
-    }
+    uploadTask.abort()
     publishStateChange({
       uploadTaskId,
       state: 'fail',
