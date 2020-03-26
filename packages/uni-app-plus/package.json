@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-app-plus",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "uni-app app-plus",
   "main": "dist/index.js",
   "repository": {

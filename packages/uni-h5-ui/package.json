@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-h5-ui",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "uni-app h5 ui",
   "main": "dist/index.umd.min.js",
   "repository": {
@@ -10,7 +10,6 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-    
   },
   "author": "fxy060608",
   "license": "Apache-2.0",

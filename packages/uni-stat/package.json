@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-stat",
-  "version": "1.0.23-alpha.4",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "repository": {

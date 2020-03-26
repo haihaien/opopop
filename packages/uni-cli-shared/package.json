@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-cli-shared",
-  "version": "0.1.15",
+  "version": "1.0.0",
   "description": "uni-cli-shared",
   "main": "lib/index.js",
   "repository": {

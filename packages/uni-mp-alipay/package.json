@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-mp-alipay",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "uni-app mp-alipay",
   "main": "dist/index.js",
   "repository": {
