@@ -215,10 +215,9 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
         `import 'uni-pages';import 'uni-${process.env.UNI_PLATFORM}';`
     } else if (process.env.UNI_PLATFORM === 'app-fox') {
       console.log(`开发模式调式加载foxsdk.js: ${process.env.FOX_SDK_ENABLE}`)
-      //foxsdk调式,工程中引入
+      // foxsdk调式,工程中引入
       if (process.env.FOX_SDK_ENABLE) {
         beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
-                  `import '@/native-api/dist/fox.sdk.esm.js';` +             
                   `import 'uni-pages';import '@yump/uni-app-fox';`
       } else {
         beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
