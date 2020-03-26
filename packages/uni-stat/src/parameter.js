@@ -7,6 +7,8 @@ const UUID_VALUE = 'aaaa' // 设备好
 const APP_ID = '10000002' // appid
 const APP_VER = '1.0.0.1'// app 版本号
 const OST = 'H5' // 运行环境
+
+
 let systemInfo = {
 
 }

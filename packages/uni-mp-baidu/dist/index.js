@@ -21,6 +21,8 @@ function hasOwn (obj, key) {
 
 function noop () {}
 
+
+
 /**
  * Create a cached version of a pure function.
  */

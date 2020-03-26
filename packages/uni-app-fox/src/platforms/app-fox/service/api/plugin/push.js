@@ -99,7 +99,6 @@ function invokeListener (ret, callbackId) {
  *
  */
 export function onPush (callbackId) {
-  console.log('onpush======', callbackId)
   callbacks.push(callbackId)
   foxsdk.events.addEventListener('pushMessage', ret => {
     invokeListener(ret, callbackId)

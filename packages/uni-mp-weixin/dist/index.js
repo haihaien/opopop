@@ -11,6 +11,8 @@ function isStr (str) {
   return typeof str === 'string'
 }
 
+
+
 function isPlainObject (obj) {
   return _toString.call(obj) === '[object Object]'
 }
