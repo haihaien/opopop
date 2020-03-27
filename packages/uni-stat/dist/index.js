@@ -1,6 +1,11 @@
 import '../package.json';
 
-var STAT_URL = 'http://192.168.251.163:18080/yump-mgw/log/log-collector/t0001';
+var defaultUrl = 'http://192.168.251.163:18080/yump-mgw/log/log-collector/t0001';
+var yuStatConfig = require('yu-stat-config');
+if (yuStatConfig.uniStatistics && yuStatConfig.uniStatistics.url) {
+  defaultUrl = yuStatConfig.uniStatistics.url;
+}
+var STAT_URL = defaultUrl;
 var STAT_H5_URL = 'http://192.168.251.163:18080/yump-mgw/log/log-collector/t0001';
 var PAGE_PVER_TIME = 100;
 
@@ -8,6 +13,8 @@ var UUID_VALUE = 'aaaa'; // 设备好
 var APP_ID = '10000002'; // appid
 var APP_VER = '1.0.0.1';// app 版本号
 var OST = 'H5'; // 运行环境
+
+
 var systemInfo = {
 
 };
@@ -438,6 +445,7 @@ Util.prototype._sendRequest = function _sendRequest (optionsData) {
     var this$1 = this;
 
   console.log('上送数据：', optionsData);
+
   uni.request({
     url: STAT_URL,
     header: {

@@ -248,6 +248,7 @@ class Util {
   }
   _sendRequest (optionsData) {
     console.log('上送数据：', optionsData)
+
     uni.request({
       url: STAT_URL,
       header: {

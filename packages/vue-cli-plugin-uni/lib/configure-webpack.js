@@ -275,6 +275,7 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
           '@': path.resolve(process.env.UNI_INPUT_DIR),
           'vue$': getPlatformVue(),
           'uni-pages': path.resolve(process.env.UNI_INPUT_DIR, 'pages.json'),
+          'yu-stat-config': path.resolve(process.env.UNI_INPUT_DIR, 'manifest.json'),
           '@yump/uni-stat': require.resolve('@yump/uni-stat'),
           'uni-stat-config': path.resolve(process.env.UNI_INPUT_DIR, 'pages.json') +
             '?' +
