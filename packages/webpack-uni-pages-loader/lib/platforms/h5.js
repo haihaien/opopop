@@ -114,6 +114,7 @@ const getPageComponents = function (inputDir, pagesJson) {
       isTabBar,
       tabBarIndex,
       isQuit: isEntry || isTabBar,
+      needAuth: page.needAuth || false, // 在pages.json新增 "needAuth"字段,if true 则需要登录,否则不需要登录
       windowTop
     }
   }).filter(pageComponents => !!pageComponents)
@@ -171,7 +172,8 @@ const genPageRoutes = function (pageComponents) {
       isEntry,
       isTabBar,
       windowTop,
-      tabBarIndex
+      tabBarIndex,
+      needAuth
     }) => {
       return `
 {
@@ -198,6 +200,7 @@ component: {
 },
 meta:{${isQuit ? '\nid:' + (id++) + ',' : ''}
   name:'${name}',
+  needAuth:'${needAuth}',
   isNVue:${isNVue},
   pagePath:'${route}'${isQuit ? ',\nisQuit:true' : ''}${isEntry ? ',\nisEntry:true' : ''}${isTabBar ? ',\nisTabBar:true' : ''}${tabBarIndex !== -1 ? (',\ntabBarIndex:' + tabBarIndex) : ''},
   windowTop:${windowTop}
