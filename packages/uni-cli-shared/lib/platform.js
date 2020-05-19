@@ -547,7 +547,7 @@ module.exports = {
     return platform.vue
   },
   getPlatformCompiler () {
-    if (process.env.UNI_USING_COMPONENTS || process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') {
+    if (process.env.UNI_USING_COMPONENTS || process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas') {
       return require(uniCompiler)
     }
     return require(platform.compiler)

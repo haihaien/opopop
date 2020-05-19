@@ -1,5 +1,5 @@
 {
-  "name": "@yump/mpaas",
+  "name": "@yump/uni-mpaas",
   "version": "1.0.2",
   "description": "uni-app mpaas",
   "main": "dist/index.umd.min.js",
