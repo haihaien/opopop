@@ -58,6 +58,9 @@ module.exports = function (content) {
   if (process.env.UNI_PLATFORM === 'app-fox') {
     return require('./platforms/app-fox')(pagesJson, manifestJson)
   }
+  if (process.env.UNI_PLATFORM === 'mpaas') {
+    return require('./platforms/mpaas')(pagesJson, manifestJson)
+  }
 
   parsePages(pagesJson, function (page) {
     updatePageJson(page.path, renameUsingComponents(parseStyle(page.style)))

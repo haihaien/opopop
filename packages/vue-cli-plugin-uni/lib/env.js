@@ -65,11 +65,11 @@ process.UNI_STAT_CONFIG = {
   appid: manifestJsonObj.appid
 }
 
-//add foxsdk 调试
+// add foxsdk 调试
 process.env.FOX_SDK_ENABLE = false
 if (process.env.NODE_ENV === 'development') {
-  //在项目工程中manifest.json配置foxsdk=>debug属性
-  process.env.FOX_SDK_ENABLE = manifestJsonObj.foxsdk && manifestJsonObj.foxsdk.debug;
+  // 在项目工程中manifest.json配置foxsdk=>debug属性
+  process.env.FOX_SDK_ENABLE = manifestJsonObj.foxsdk && manifestJsonObj.foxsdk.debug
 }
 
 // 默认启用 自定义组件模式
@@ -81,7 +81,7 @@ if (!platformOptions.hasOwnProperty('usingComponents')) {
 }
 // }
 
-if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') {
+if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas') {
   const optimization = platformOptions.optimization
   if (optimization) {
     // 发行模式且主动启用优化
@@ -140,7 +140,7 @@ if (isNVueCompiler) {
 }
 
 if (platformOptions.usingComponents === true) {
-  if (process.env.UNI_PLATFORM !== 'h5' && process.env.UNI_PLATFORM !== 'app-fox') {
+  if (process.env.UNI_PLATFORM !== 'h5' && process.env.UNI_PLATFORM !== 'app-fox' && process.env.UNI_PLATFORM !== 'mpaas') {
     process.env.UNI_USING_COMPONENTS = true
   }
   if (process.env.UNI_PLATFORM === 'app-plus') {
@@ -150,7 +150,7 @@ if (platformOptions.usingComponents === true) {
 
 if (
   process.env.UNI_USING_COMPONENTS ||
-    (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox')
+    (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas')
 ) { // 自定义组件模式或 h5 平台
   const uniStatistics = Object.assign(
     manifestJsonObj.uniStatistics || {},
@@ -186,7 +186,7 @@ const warningMsg =
 
 const needWarning = !platformOptions.usingComponents || usingComponentsAbsent
 // 输出编译器版本等信息
-if (process.env.UNI_PLATFORM !== 'h5' && process.env.UNI_PLATFORM !== 'app-fox') {
+if (process.env.UNI_PLATFORM !== 'h5' && process.env.UNI_PLATFORM !== 'app-fox' && process.env.UNI_PLATFORM !== 'mpaas') {
   try {
     const modeText = '当前项目编译模式：' +
       (platformOptions.usingComponents ? '自定义组件模式' : '非自定义组件模式') +

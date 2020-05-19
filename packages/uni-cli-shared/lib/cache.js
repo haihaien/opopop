@@ -15,7 +15,7 @@ let appJsonUsingComponents = Object.create(null)
 let componentSpecialMethods = Object.create(null)
 
 function getPagesJson () {
-  if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') {
+  if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas') {
     return process.UNI_H5_PAGES_JSON
   }
   const pagesJson = {

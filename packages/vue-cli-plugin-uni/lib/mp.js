@@ -29,7 +29,8 @@ function createUniMPPlugin () {
 function getProvides () {
   const uniPath = require.resolve('@yump/uni-' + process.env.UNI_PLATFORM)
   const provides = {
-    'uni': [uniPath, 'default']
+    'uni': [uniPath, 'default'],
+    'yu': [uniPath, 'default'] // 微信添加yu支持
   }
 
   if (process.env.UNI_USING_COMPONENTS) {

@@ -47,6 +47,9 @@ module.exports = function (content) {
   if (process.env.UNI_USING_COMPONENTS || process.env.UNI_PLATFORM === 'app-fox') {
     return require('./index-new').call(this, content)
   }
+  if (process.env.UNI_USING_COMPONENTS || process.env.UNI_PLATFORM === 'mpaas') {
+    return require('./index-new').call(this, content)
+  }
 
   this.cacheable && this.cacheable()
 
@@ -74,6 +77,9 @@ module.exports = function (content) {
   }
   if (process.env.UNI_PLATFORM === 'app-fox') {
     return require('./platforms/app-fox')(pagesJson, manifestJson)
+  }
+  if (process.env.UNI_PLATFORM === 'mpaas') {
+    return require('./platforms/mpaas')(pagesJson, manifestJson)
   }
 
   const changedEmitFiles = []

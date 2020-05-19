@@ -10,7 +10,6 @@ const {
   ssrCompileToFunctions
 } = require('vue-template-compiler')
 
-
 const platforms = require('./platforms')
 const traverseScript = require('./script/traverse')
 const generateScript = require('./script/generate')
@@ -131,7 +130,8 @@ at ${resourcePath}.vue:1`)
         process.UNI_ENTRY[resourcePath] &&
         process.env.UNI_PLATFORM !== 'app-plus' &&
         process.env.UNI_PLATFORM !== 'h5' &&
-        process.env.UNI_PLATFORM !== 'app-fox'
+        process.env.UNI_PLATFORM !== 'app-fox' &&
+        process.env.UNI_PLATFORM !== 'mpaas'
       ) {
         // 检查是否启用 shadow
         let colorType = false

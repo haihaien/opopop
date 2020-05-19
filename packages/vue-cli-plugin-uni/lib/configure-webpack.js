@@ -198,7 +198,7 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
     }
 
     let useBuiltIns = 'entry'
-    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox') { // 兼容旧版本 h5
+    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas') { // 兼容旧版本 h5
       useBuiltIns = 'usage'
       try {
         const babelConfig = require(path.resolve(process.env.UNI_CLI_CONTEXT, 'babel.config.js'))
@@ -210,7 +210,7 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
 
     let beforeCode = ''
     // TODO解决ES6兼容性问题
-    if (process.env.UNI_PLATFORM === 'h5') {
+    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'mpaas') {
       beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
         `import 'uni-pages';import 'uni-${process.env.UNI_PLATFORM}';`
     } else if (process.env.UNI_PLATFORM === 'app-fox') {
