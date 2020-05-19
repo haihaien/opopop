@@ -210,9 +210,12 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
 
     let beforeCode = ''
     // TODO解决ES6兼容性问题
-    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'mpaas') {
+    if (process.env.UNI_PLATFORM === 'h5') {
       beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
         `import 'uni-pages';import 'uni-${process.env.UNI_PLATFORM}';`
+    } else if (process.env.UNI_PLATFORM === 'mpaas') {
+      beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
+        `import 'uni-pages';import '@yump/uni-mpaas';`
     } else if (process.env.UNI_PLATFORM === 'app-fox') {
       console.log(`开发模式调式加载foxsdk.js: ${process.env.FOX_SDK_ENABLE}`)
       // foxsdk调式,工程中引入
