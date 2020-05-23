@@ -92,13 +92,6 @@ export function createRequestTaskById (requestTaskId, {
     options.isEncrypt = reqHeader.isEncrypt || ''
   }
   try {
-    // AlipayJSBridge.call('rpc', {
-    //   operationType: 'alipay.client.xxxx',
-    //   requestData: [],
-    //   headers:{}
-    //   }, function (result) {
-    //   console.log(result);
-    //   });
     foxsdk.http.request(options, ret => {
       if (aborted) {
         return

@@ -2838,6 +2838,8 @@ var serviceContext = (function () {
           return `can not ${type} a tabbar page`
         }
       } else if (type === 'switchTab') {
+      // TODO暂时不处理
+      routeOptions.meta.isTabBar = true
         if (!routeOptions.meta.isTabBar) {
           return 'can not switch to no-tabBar page'
         }

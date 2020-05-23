@@ -3,7 +3,6 @@
  * 2.引入 Vue 插件(uniVueServicePlugin,uniVueServicePlugin)
  * 3.引入 Vue 组件
  */
-
 import Vue from 'vue'
 
 global.UniViewJSBridge = {

@@ -2,7 +2,7 @@ import {
   setProperties
 } from 'uni-shared'
 
-const setTabBarItemProps = ['text', 'iconPath', 'selectedIconPath']
+const setTabBarItemProps = ['text', 'iconPath', 'selectedIconPath', 'pagePath']
 
 const setTabBarStyleProps = ['color', 'selectedColor', 'backgroundColor', 'borderStyle']
 
