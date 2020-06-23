@@ -16,6 +16,9 @@
             v-if="item.iconPath"
             :class="{'uni-tabbar__icon__diff':!item.text}"
             class="uni-tabbar__icon">
+            <img
+              :src="_getRealPath(item.selectedIconPath)"
+              style="width:0;height:0;display:none" >
             <img :src="_getRealPath($route.meta.pagePath===item.pagePath?item.selectedIconPath:item.iconPath)">
           </div>
           <div
