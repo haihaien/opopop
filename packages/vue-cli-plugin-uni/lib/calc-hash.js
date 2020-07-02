@@ -2,7 +2,7 @@
  * @Author: Aleyn He
  * @Date: 2020-07-02 15:58:22
  * @LastEditors: Aleyn He
- * @LastEditTime: 2020-07-02 18:53:24
+ * @LastEditTime: 2020-07-02 19:53:51
  * @Description: 
  */
 
@@ -27,7 +27,7 @@ function algorithm(fullPath) {
  * @param {*} result 输出结果，传入空对象
  * @param {*} algorithm 算法
  */
-function readFileList(dir, result, algorithm) {
+function readFileList(dir, result, algorithm, root) {
   const files = fs.readdirSync(dir);
   files.forEach((item, index) => {
     let fullPath = path.join(dir, item);
@@ -35,7 +35,7 @@ function readFileList(dir, result, algorithm) {
     relativePath = relativePath.replace(/[\\]+/g, '/');
     const stat = fs.statSync(fullPath);
     if (stat.isDirectory()) {
-      readFileList(path.join(dir, item), result, algorithm);
+      readFileList(fullPath, result, algorithm, root);
     } else {
       result[relativePath] = algorithm(fullPath);
     }
@@ -44,10 +44,8 @@ function readFileList(dir, result, algorithm) {
 
 
 module.exports = function (root) {
-  // let platform = 'h5'
-  // let root = path.resolve(__dirname, `dist/build/${platform}`);
   let result = {};
-  readFileList(root, result, algorithm);
+  readFileList(root, result, algorithm, root);
   // 写入文件version.manifest
   fs.writeFileSync(path.resolve(root, 'version.manifest'), JSON.stringify(result));
 }

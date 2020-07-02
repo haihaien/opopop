@@ -166,6 +166,12 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
     // 如果在 HBuilderX 中
     removeForkTsCheckerWebpackPlugin(webpackConfig.plugins)
 
+    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas') { 
+      webpackConfig.optimization.runtimeChunk = {
+        name: 'manifest'
+      }
+    }
+
     let platformWebpackConfig = platformOptions.webpackConfig
     if (typeof platformWebpackConfig === 'function') {
       platformWebpackConfig = platformWebpackConfig(webpackConfig)
@@ -230,12 +236,6 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
       }
     } else {
       beforeCode = `import 'uni-pages';`
-    }
-
-    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas') { 
-      platformWebpackConfig.optimization.runtimeChunk = {
-        name: 'manifest'
-      }
     }
 
     const rules = [{
