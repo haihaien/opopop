@@ -232,6 +232,12 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
       beforeCode = `import 'uni-pages';`
     }
 
+    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas') { 
+      platformWebpackConfig.optimization.runtimeChunk = {
+        name: 'manifest'
+      }
+    }
+
     const rules = [{
       test: path.resolve(process.env.UNI_INPUT_DIR, 'pages.json'),
       use: [{

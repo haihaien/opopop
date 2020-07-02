@@ -121,6 +121,12 @@ async function build (args, api, options) {
         return reject(`Build failed with errors.`)
       }
 
+      if (process.env.UNI_PLATFORM === 'h5'
+        || process.env.UNI_PLATFORM === 'app-fox'
+        || process.env.UNI_PLATFORM === 'mpaas') { 
+        require('../lib/calc-hash')(path.resolve(webpackConfig.output.path))
+      }
+
       if (!args.silent && process.env.UNI_PLATFORM !== 'app-plus') {
         const targetDirShort = path.relative(
           api.service.context,
