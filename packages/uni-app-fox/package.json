@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-app-fox",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "uni-app app-fox",
   "main": "dist/index.umd.min.js",
   "repository": {
