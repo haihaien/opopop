@@ -115,7 +115,26 @@ export function chooseVideo ({
   sourceType = ['album', 'camera']
 } = {}, callbackId) {
   if (sourceType.length > 1) { // 多选框
-    foxsdk.nativeUI.actionsheet({ 'title': '选择视频', 'cancel': '取消', 'buttons': ['拍摄', '从手机相册选择'] }, ret => {
+    let chooseVideoText = {
+      title: '选择视频',
+      cancel: '取消',
+      buttons: [ '拍摄', '从手机相册选择' ]
+    }
+    if (typeof getApp().$t === 'function') {
+      try {
+        let localeText = getApp().$t('frameworkChooseVideo')
+        chooseVideoText.title = localeText.title || chooseVideoText.title
+        chooseVideoText.cancel = localeText.cancel || chooseVideoText.cancel
+        chooseVideoText.buttons[0] = localeText.button0 || chooseVideoText.buttons[0]
+        chooseVideoText.buttons[1] = localeText.button1 || chooseVideoText.buttons[1]
+      } catch (e) {
+      }
+    }
+    foxsdk.nativeUI.actionsheet({
+      title: chooseVideoText.title,
+      cancel: chooseVideoText.cancel,
+      buttons: chooseVideoText.buttons
+    }, ret => {
       if (ret.status === PASS) {
         if (ret.payload.index === 0) {
           // 拍摄选择

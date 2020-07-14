@@ -80,7 +80,26 @@ export function chooseImage ({
   var foxSizeType = String((sizeType.indexOf('original') !== -1 && sizeType.indexOf('compressed') !== -1)
     ? 2 : sizeType.indexOf('compressed') !== -1 ? 1 : 0)
   if (sourceType.length > 1) { // 多选框
-    foxsdk.nativeUI.actionsheet({ 'title': '选择照片', 'cancel': '取消', 'buttons': ['拍摄', '从手机相册选择'] }, ret => {
+    let chooseImageText = {
+      title: '选择照片',
+      cancel: '取消',
+      buttons: [ '拍摄', '从手机相册选择' ]
+    }
+    if (typeof getApp().$t === 'function') {
+      try {
+        let localeText = getApp().$t('frameworkChooseImage')
+        chooseImageText.title = localeText.title || chooseImageText.title
+        chooseImageText.cancel = localeText.cancel || chooseImageText.cancel
+        chooseImageText.buttons[0] = localeText.button0 || chooseImageText.buttons[0]
+        chooseImageText.buttons[1] = localeText.button1 || chooseImageText.buttons[1]
+      } catch (e) {
+      }
+    }
+    foxsdk.nativeUI.actionsheet({
+      title: chooseImageText.title,
+      cancel: chooseImageText.cancel,
+      buttons: chooseImageText.buttons
+    }, ret => {
       if (ret.status === PASS) {
         if (ret.payload.index === 0) {
           // 拍摄选择

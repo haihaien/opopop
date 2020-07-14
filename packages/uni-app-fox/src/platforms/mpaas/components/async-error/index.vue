@@ -2,7 +2,7 @@
   <div
     class="uni-async-error"
     @click="_onClick">
-    网络不给力，点击屏幕重试
+    {{ asyncError.tips }}
   </div>
 </template>
 <style>
@@ -20,6 +20,17 @@
 <script>
 export default {
   name: 'AsyncError',
+  computed: {
+    asyncError () {
+      let tips = {
+        tips: '网络不给力，点击屏幕重试'
+      }
+      if (typeof this.$t === 'function') {
+        tips = this.$t('asyncError') || tips
+      }
+      return tips
+    }
+  },
   methods: {
     _onClick () {
       // TODO 临时采用 reload
