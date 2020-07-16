@@ -166,7 +166,9 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
     // 如果在 HBuilderX 中
     removeForkTsCheckerWebpackPlugin(webpackConfig.plugins)
 
-    if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_PLATFORM === 'app-fox' || process.env.UNI_PLATFORM === 'mpaas') { 
+    if (process.env.NODE_ENV !== 'development' && (process.env.UNI_PLATFORM === 'h5'
+      || process.env.UNI_PLATFORM === 'app-fox'
+      || process.env.UNI_PLATFORM === 'mpaas')) {
       webpackConfig.optimization.runtimeChunk = {
         name: 'manifest'
       }
