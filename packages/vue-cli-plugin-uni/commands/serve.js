@@ -1,5 +1,6 @@
 const {
   info,
+  error,
   openBrowser,
   IpcMessenger
 } = require('@vue/cli-shared-utils')
@@ -42,6 +43,8 @@ module.exports = (api, options) => {
     const launchEditorMiddleware = require('launch-editor-middleware')
     const validateWebpackConfig = require('@vue/cli-service/lib/util/validateWebpackConfig')
     const isAbsoluteUrl = require('@vue/cli-service/lib/util/isAbsoluteUrl')
+    const verify = require('../lib/verify')
+    if (!verify(info, error)) return
 
     // resolve webpack config
     const webpackConfig = api.resolveWebpackConfig()

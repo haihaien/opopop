@@ -48,11 +48,16 @@ async function build (args, api, options) {
   const webpack = require('webpack')
   const validateWebpackConfig = require('@vue/cli-service/lib/util/validateWebpackConfig')
   const {
+    info,
+    error,
     log,
     done,
     logWithSpinner,
     stopSpinner
   } = require('@vue/cli-shared-utils')
+
+  const verify = require('../lib/verify')
+  if (!verify(info, error)) return
 
   const runByAliIde = process.env.BUILD_ENV === 'ali-ide'
 
