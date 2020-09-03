@@ -1,6 +1,6 @@
 {
   "name": "@yump/uni-mpaas",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "uni-app mpaas",
   "main": "dist/index.umd.min.js",
   "repository": {
