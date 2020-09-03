@@ -249,7 +249,7 @@ function createInvokeCallback (apiName, params = {}, extras = {}) {
 }
 
 export function invokeCallbackHandler (invokeCallbackId, res) {
-  console.log('执行回调...\n')
+  console.log('\n')
   if (typeof invokeCallbackId === 'number') {
     const invokeCallback = invokeCallbacks[invokeCallbackId]
     if (invokeCallback) {
