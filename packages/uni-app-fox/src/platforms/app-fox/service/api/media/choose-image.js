@@ -77,6 +77,7 @@ export function chooseImage ({
 } = {}, callbackId) {
   // sizeType参数转换
   // wwwwwwwwwwww
+  console.log('111')
   var foxSizeType = String((sizeType.indexOf('original') !== -1 && sizeType.indexOf('compressed') !== -1)
     ? 2 : sizeType.indexOf('compressed') !== -1 ? 1 : 0)
   if (sourceType.length > 1) { // 多选框
